@@ -1,0 +1,34 @@
+﻿namespace Assets.CodeBase.Constants
+{
+    public static class VisualElementNames
+    {
+        public static class ConnectionMenu
+        {
+            public const string ContentPanel = "ContentPanel";
+
+            public static class ConnectionChoicePanel
+            {
+                public const string HostButton = "HostButton";
+                public const string ClientButton = "ClientButton";
+                public const string ExitButton = "ExitButton";
+            }
+
+            public abstract class ConnectionGamePanel
+            {
+                public const string JoinIP = "JoinIP";
+                public const string JoinPort = "JoinPort";
+                public const string CancelButton = "CancelButton";
+            }
+
+            public abstract class JoinGamePanel : ConnectionGamePanel
+            {
+                public const string JoinButton = "JoinButton";
+            }
+
+            public abstract class HostGamePanel : ConnectionGamePanel
+            {
+                public const string HostButton = "HostButton";
+            }
+        }
+    }
+}

@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Sheets/Styles.uss?fileID=7433441132597879392&amp;guid=7f3401d2eec7b714cb1ee61023de67e1&amp;type=3#Styles" />
+    <ui:VisualElement name="RootPanel" style="flex-grow: 1; flex-shrink: 0; flex-direction: row;">
+        <ui:VisualElement name="LeftPanel" style="flex-grow: 2; flex-shrink: 0;" />
+        <ui:VisualElement name="CentralPanel" class="panel" style="flex-grow: 0; flex-shrink: 0; width: 50%;">
+            <ui:VisualElement style="flex-grow: 2; flex-shrink: 0;" />
+            <ui:VisualElement name="ContentPanel" class="panel" style="flex-grow: 3;" />
+            <ui:VisualElement style="flex-grow: 1; flex-shrink: 0;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="RightPanel" style="flex-grow: 2; flex-shrink: 0;" />
+    </ui:VisualElement>
+</ui:UXML>
