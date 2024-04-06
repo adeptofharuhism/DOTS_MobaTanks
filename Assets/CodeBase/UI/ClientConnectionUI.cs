@@ -1,5 +1,9 @@
 ﻿using System;
+using Unity.Entities;
+using Unity.NetCode;
+using Unity.Networking.Transport;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 namespace Assets.CodeBase.UI
@@ -18,9 +22,8 @@ namespace Assets.CodeBase.UI
         private VisualElement _joinGamePanelInstantiated;
         private TextField _joinIPInput;
         private TextField _joinPortInput;
-        
+
         private VisualElement _hostGamePanelInstantiated;
-        private TextField _hostIPInput;
         private TextField _hostPortInput;
 
         private void OnEnable() {
@@ -73,7 +76,6 @@ namespace Assets.CodeBase.UI
         }
 
         private void SetupHostGamePanel() {
-            _hostIPInput = _hostGamePanelInstantiated.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.JoinIP);
             _hostPortInput = _hostGamePanelInstantiated.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.JoinPort);
 
             _hostGamePanelInstantiated
@@ -98,11 +100,18 @@ namespace Assets.CodeBase.UI
             Application.Quit();
 
         private void OnClickJoinAsClient(ClickEvent evt) {
-            Debug.Log("Join");
+            DestroyLocalSimulationWorld();
+            SceneManager.LoadScene(1);
+
+            StartClient(_joinIPInput.text, ushort.Parse(_joinPortInput.text));
         }
 
         private void OnClickHostButton(ClickEvent evt) {
-            Debug.Log("Host");
+            DestroyLocalSimulationWorld();
+            SceneManager.LoadScene(1);
+
+            StartServer(ushort.Parse(_hostPortInput.text));
+            StartClient(LocalHostIP, ushort.Parse(_hostPortInput.text));
         }
 
         private void OnClickCancel(ClickEvent evt) {
@@ -114,5 +123,40 @@ namespace Assets.CodeBase.UI
             if (_contentPanel.childCount > 0)
                 _contentPanel.RemoveAt(0);
         }
+
+        #region Rewrite As Service
+        private const string LocalHostIP = "127.0.0.1";
+
+        private void DestroyLocalSimulationWorld() {
+            foreach (World world in World.All)
+                if (world.Flags == WorldFlags.Game) {
+                    world.Dispose();
+                    break;
+                }
+        }
+
+        private void StartServer(ushort port) {
+            World serverWorld = ClientServerBootstrap.CreateServerWorld(Constants.WorldNames.ServerWorldName);
+
+            NetworkEndpoint serverEndpoint = NetworkEndpoint.AnyIpv4.WithPort(port);
+
+            using (EntityQuery networkDriverQuery =
+                serverWorld.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>()))
+                networkDriverQuery.GetSingletonRW<NetworkStreamDriver>().ValueRW.Listen(serverEndpoint);
+        }
+
+        private void StartClient(string ipAddress, ushort port) {
+            World clientWorld = ClientServerBootstrap.CreateClientWorld(Constants.WorldNames.ClientWorldName);
+            World.DefaultGameObjectInjectionWorld = clientWorld;
+
+            NetworkEndpoint connectionEndpoint = NetworkEndpoint.Parse(ipAddress, port);
+
+            using (EntityQuery networkDriverQuery =
+                clientWorld.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>()))
+                networkDriverQuery.GetSingletonRW<NetworkStreamDriver>().ValueRW.Connect(clientWorld.EntityManager, connectionEndpoint);
+
+            //Initial RPC place
+        }
+        #endregion
     }
 }

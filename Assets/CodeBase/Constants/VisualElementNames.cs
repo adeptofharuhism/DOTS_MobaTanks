@@ -15,13 +15,13 @@
 
             public abstract class ConnectionGamePanel
             {
-                public const string JoinIP = "JoinIP";
                 public const string JoinPort = "JoinPort";
                 public const string CancelButton = "CancelButton";
             }
 
             public abstract class JoinGamePanel : ConnectionGamePanel
             {
+                public const string JoinIP = "JoinIP";
                 public const string JoinButton = "JoinButton";
             }
 
