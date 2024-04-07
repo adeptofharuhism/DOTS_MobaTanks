@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Assets.CodeBase.GameEntrySystems;
 using Unity.Entities;
 using Unity.NetCode;
 using Unity.Networking.Transport;
@@ -20,10 +20,12 @@ namespace Assets.CodeBase.UI
         private VisualElement _connectionChoicePanelInstantiated;
 
         private VisualElement _joinGamePanelInstantiated;
+        private TextField _joinPlayerName;
         private TextField _joinIPInput;
         private TextField _joinPortInput;
 
         private VisualElement _hostGamePanelInstantiated;
+        private TextField _hostPlayerName;
         private TextField _hostPortInput;
 
         private void OnEnable() {
@@ -66,6 +68,7 @@ namespace Assets.CodeBase.UI
         private void SetupJoinGamePanel() {
             _joinIPInput = _joinGamePanelInstantiated.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.JoinGamePanel.JoinIP);
             _joinPortInput = _joinGamePanelInstantiated.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.JoinGamePanel.JoinPort);
+            _joinPlayerName = _joinGamePanelInstantiated.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.JoinGamePanel.PlayerName);
 
             _joinGamePanelInstantiated
                 .Q<Button>(Constants.VisualElementNames.ConnectionMenu.JoinGamePanel.JoinButton)
@@ -77,6 +80,7 @@ namespace Assets.CodeBase.UI
 
         private void SetupHostGamePanel() {
             _hostPortInput = _hostGamePanelInstantiated.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.JoinPort);
+            _hostPlayerName = _hostGamePanelInstantiated.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.PlayerName);
 
             _hostGamePanelInstantiated
                 .Q<Button>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.HostButton)
@@ -103,7 +107,7 @@ namespace Assets.CodeBase.UI
             DestroyLocalSimulationWorld();
             SceneManager.LoadScene(1);
 
-            StartClient(_joinIPInput.text, ushort.Parse(_joinPortInput.text));
+            StartClient(_joinIPInput.text, ushort.Parse(_joinPortInput.text), _joinPlayerName.text);
         }
 
         private void OnClickHostButton(ClickEvent evt) {
@@ -111,7 +115,7 @@ namespace Assets.CodeBase.UI
             SceneManager.LoadScene(1);
 
             StartServer(ushort.Parse(_hostPortInput.text));
-            StartClient(LocalHostIP, ushort.Parse(_hostPortInput.text));
+            StartClient(LocalHostIP, ushort.Parse(_hostPortInput.text), _hostPlayerName.text);
         }
 
         private void OnClickCancel(ClickEvent evt) {
@@ -145,7 +149,7 @@ namespace Assets.CodeBase.UI
                 networkDriverQuery.GetSingletonRW<NetworkStreamDriver>().ValueRW.Listen(serverEndpoint);
         }
 
-        private void StartClient(string ipAddress, ushort port) {
+        private void StartClient(string ipAddress, ushort port, string playerName) {
             World clientWorld = ClientServerBootstrap.CreateClientWorld(Constants.WorldNames.ClientWorldName);
             World.DefaultGameObjectInjectionWorld = clientWorld;
 
@@ -155,7 +159,10 @@ namespace Assets.CodeBase.UI
                 clientWorld.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>()))
                 networkDriverQuery.GetSingletonRW<NetworkStreamDriver>().ValueRW.Connect(clientWorld.EntityManager, connectionEndpoint);
 
-            //Initial RPC place
+            Entity connectionDataEntity = clientWorld.EntityManager.CreateEntity();
+            clientWorld.EntityManager.AddComponentData(connectionDataEntity, new ConnectionRequestData {
+                PlayerName = playerName
+            });
         }
         #endregion
     }

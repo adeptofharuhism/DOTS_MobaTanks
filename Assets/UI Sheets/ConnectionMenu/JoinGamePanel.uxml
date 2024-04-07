@@ -1,6 +1,7 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <ui:VisualElement name="JoinGamePanel" style="flex-grow: 1; flex-shrink: 0;">
         <ui:Label tabindex="-1" text="JOIN GAME" parse-escape-sequences="true" display-tooltip-when-elided="true" class="headerText" />
+        <ui:TextField picking-mode="Ignore" label="Name:" value="Dingus" name="PlayerName" class="inputField" />
         <ui:TextField picking-mode="Ignore" label="IP:" value="127.0.0.1" name="JoinIP" class="inputField" />
         <ui:TextField picking-mode="Ignore" label="Port:" value="7979" name="JoinPort" class="inputField" />
         <ui:Button text="Join" parse-escape-sequences="true" display-tooltip-when-elided="true" name="JoinButton" class="connectionChoiceButton" />

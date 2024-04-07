@@ -15,6 +15,7 @@
 
             public abstract class ConnectionGamePanel
             {
+                public const string PlayerName = "PlayerName";
                 public const string JoinPort = "JoinPort";
                 public const string CancelButton = "CancelButton";
             }

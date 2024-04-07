@@ -1,6 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <ui:VisualElement name="HostGamePanel" style="flex-grow: 1; flex-shrink: 0;">
         <ui:Label tabindex="-1" text="HOST GAME" parse-escape-sequences="true" display-tooltip-when-elided="true" class="headerText" />
+        <ui:TextField picking-mode="Ignore" label="Name:" value="Bingus" name="PlayerName" class="inputField" />
         <ui:TextField picking-mode="Ignore" label="Port:" value="7979" name="JoinPort" class="inputField" />
         <ui:Button text="Host" parse-escape-sequences="true" display-tooltip-when-elided="true" name="HostButton" class="connectionChoiceButton" />
         <ui:VisualElement style="flex-grow: 1; flex-shrink: 0;" />
