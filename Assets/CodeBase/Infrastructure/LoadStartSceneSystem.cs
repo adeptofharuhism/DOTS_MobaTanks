@@ -1,3 +1,5 @@
+#if UNITY_EDITOR
+
 using Unity.Entities;
 using UnityEngine.SceneManagement;
 
@@ -17,3 +19,5 @@ namespace Assets.CodeBase.Infrastructure
         protected override void OnUpdate() { }
     }
 }
+
+#endif
