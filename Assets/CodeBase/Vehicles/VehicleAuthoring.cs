@@ -1,11 +1,14 @@
-﻿using Assets.CodeBase.Input;
-using Unity.Entities;
+﻿using Unity.Entities;
 using UnityEngine;
 
 namespace Assets.CodeBase.Vehicles
 {
     public class VehicleAuthoring : MonoBehaviour
     {
+        [SerializeField] private int _wheelAmount;
+
+        public int WheelAmount { get => _wheelAmount; set => _wheelAmount = value; }
+
         public class VehicleBaker : Baker<VehicleAuthoring>
         {
             public override void Bake(VehicleAuthoring authoring) {
@@ -16,6 +19,7 @@ namespace Assets.CodeBase.Vehicles
                 AddComponent<NotOwnerVehicleTag>(vehicle);
 
                 AddComponent<VehicleMovementInput>(vehicle);
+                AddComponent(vehicle, new VehicleWheelAmount { Value = authoring.WheelAmount });
             }
         }
     }

@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3953763525089416586}
+  - component: {fileID: 6988320513507141232}
   m_Layer: 0
   m_Name: RightWheel
   m_TagString: Untagged
@@ -32,6 +33,22 @@ Transform:
   - {fileID: 5918956372106895171}
   m_Father: {fileID: 1473621064980694066}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6988320513507141232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 670077562300986742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a40d7b3ac9fa8e64aaea0aeb60a6754d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _wheelModel: {fileID: 0}
+  _forceApplicationPoint: {fileID: 0}
+  _hasAcceleration: 0
+  _rotationType: 0
 --- !u!1 &913823876073090949
 GameObject:
   m_ObjectHideFlags: 0
@@ -75,6 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4078115287019378891}
+  - component: {fileID: 4243116401492703848}
   m_Layer: 0
   m_Name: RightWheel
   m_TagString: Untagged
@@ -98,6 +116,22 @@ Transform:
   - {fileID: 473258012032658185}
   m_Father: {fileID: 6917727968050399267}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4243116401492703848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1362328630123505964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a40d7b3ac9fa8e64aaea0aeb60a6754d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _wheelModel: {fileID: 0}
+  _forceApplicationPoint: {fileID: 0}
+  _hasAcceleration: 0
+  _rotationType: 0
 --- !u!1 &1732677915652471426
 GameObject:
   m_ObjectHideFlags: 0
@@ -283,6 +317,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1871917506612447907}
+  - component: {fileID: 3942770432184072969}
   m_Layer: 0
   m_Name: LeftWheel
   m_TagString: Untagged
@@ -306,6 +341,22 @@ Transform:
   - {fileID: 7288625723332567623}
   m_Father: {fileID: 6198664353389614704}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3942770432184072969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2718903230799816560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a40d7b3ac9fa8e64aaea0aeb60a6754d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _wheelModel: {fileID: 0}
+  _forceApplicationPoint: {fileID: 0}
+  _hasAcceleration: 0
+  _rotationType: 0
 --- !u!1 &3425788011590036803
 GameObject:
   m_ObjectHideFlags: 0
@@ -490,7 +541,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MotionType: 0
   m_Smoothing: 0
-  m_Mass: 1
+  m_Mass: 10
   m_LinearDamping: 0.01
   m_AngularDamping: 0.05
   m_InitialLinearVelocity:
@@ -616,6 +667,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8039058235320885138}
+  - component: {fileID: 3453510287819760288}
   m_Layer: 0
   m_Name: RightWheel
   m_TagString: Untagged
@@ -639,6 +691,22 @@ Transform:
   - {fileID: 3372583272369174565}
   m_Father: {fileID: 6198664353389614704}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3453510287819760288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8020278241938212024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a40d7b3ac9fa8e64aaea0aeb60a6754d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _wheelModel: {fileID: 0}
+  _forceApplicationPoint: {fileID: 0}
+  _hasAcceleration: 0
+  _rotationType: 0
 --- !u!1 &8139817459670929170
 GameObject:
   m_ObjectHideFlags: 0
@@ -648,6 +716,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1621925087173534933}
+  - component: {fileID: 5621750874295902981}
   m_Layer: 0
   m_Name: LeftWheel
   m_TagString: Untagged
@@ -671,6 +740,22 @@ Transform:
   - {fileID: 3984222203095643042}
   m_Father: {fileID: 6917727968050399267}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5621750874295902981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8139817459670929170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a40d7b3ac9fa8e64aaea0aeb60a6754d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _wheelModel: {fileID: 0}
+  _forceApplicationPoint: {fileID: 0}
+  _hasAcceleration: 0
+  _rotationType: 0
 --- !u!1 &8697472393521666485
 GameObject:
   m_ObjectHideFlags: 0
@@ -713,6 +798,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2366245024028102019}
+  - component: {fileID: 3394368690650107983}
   m_Layer: 0
   m_Name: LeftWheel
   m_TagString: Untagged
@@ -736,6 +822,22 @@ Transform:
   - {fileID: 3446902378171926173}
   m_Father: {fileID: 1473621064980694066}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3394368690650107983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9075000874276573195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a40d7b3ac9fa8e64aaea0aeb60a6754d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _wheelModel: {fileID: 0}
+  _forceApplicationPoint: {fileID: 0}
+  _hasAcceleration: 0
+  _rotationType: 0
 --- !u!1001 &79904649358675170
 PrefabInstance:
   m_ObjectHideFlags: 0
