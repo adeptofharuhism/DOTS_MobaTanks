@@ -2,7 +2,7 @@
 {
     public static class WorldNames
     {
-        public const string ServerWorldName = "Server World";
-        public const string ClientWorldName = "Client World";
+        public const string ServerWorld = "Server World";
+        public const string ClientWorld = "Client World";
     }
 }

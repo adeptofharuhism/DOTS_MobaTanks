@@ -140,7 +140,7 @@ namespace Assets.CodeBase.UI
         }
 
         private void StartServer(ushort port) {
-            World serverWorld = ClientServerBootstrap.CreateServerWorld(Constants.WorldNames.ServerWorldName);
+            World serverWorld = ClientServerBootstrap.CreateServerWorld(Constants.WorldNames.ServerWorld);
 
             NetworkEndpoint serverEndpoint = NetworkEndpoint.AnyIpv4.WithPort(port);
 
@@ -150,7 +150,7 @@ namespace Assets.CodeBase.UI
         }
 
         private void StartClient(string ipAddress, ushort port, string playerName) {
-            World clientWorld = ClientServerBootstrap.CreateClientWorld(Constants.WorldNames.ClientWorldName);
+            World clientWorld = ClientServerBootstrap.CreateClientWorld(Constants.WorldNames.ClientWorld);
             World.DefaultGameObjectInjectionWorld = clientWorld;
 
             NetworkEndpoint connectionEndpoint = NetworkEndpoint.Parse(ipAddress, port);

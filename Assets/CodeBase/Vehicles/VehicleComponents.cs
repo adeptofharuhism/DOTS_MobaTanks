@@ -19,10 +19,4 @@ namespace Assets.CodeBase.Vehicles
     {
         public int Value;
     }
-
-    public struct VehicleSpeed : IComponentData
-    {
-        public float Forward;
-        public float Backwards;
-    }
 }
