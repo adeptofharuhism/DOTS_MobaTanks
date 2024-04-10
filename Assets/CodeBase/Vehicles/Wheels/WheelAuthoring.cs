@@ -6,6 +6,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
     public class WheelAuthoring : MonoBehaviour
     {
         [SerializeField] private int _wheelIndex;
+        [SerializeField] private GameObject _parent;
 
         [SerializeField] private GameObject _wheelModel;
         [SerializeField] private GameObject _forceApplicationPoint;
@@ -14,6 +15,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
         [SerializeField] private WheelParameters _wheelParameters;
 
         public int WheelIndex { get => _wheelIndex; set => _wheelIndex = value; }
+        public GameObject Parent { get => _parent; set => _parent = value; }
 
         public GameObject WheelModel => _wheelModel;
         public GameObject ForceCastPoint => _forceApplicationPoint;
@@ -32,6 +34,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
             }
 
             private void AddCommonWheelComponents(Entity wheel, WheelAuthoring authoring) {
+                AddComponent<NewWheelTag>(wheel);
                 AddComponent(wheel, new WheelIndex { Value = authoring.WheelIndex });
                 AddComponent(wheel, new WheelForceCastPoint { Value = GetEntity(authoring.ForceCastPoint, TransformUsageFlags.Dynamic) });
                 AddComponent(wheel, new WheelModelParameters {
@@ -39,9 +42,17 @@ namespace Assets.CodeBase.Vehicles.Wheels
                     Diameter = authoring.WheelParameters.WheelDiameter
                 });
 
-                AddComponent(wheel, new WheelHasGroundContact { Value = false });
                 AddComponent(wheel, new WheelSpringRestDistance { Value = authoring.WheelParameters.SpringRestDistance });
-                AddComponent(wheel, new WheelCompressedSpringLength { Value = authoring.WheelParameters.SpringRestDistance });
+                AddComponent(wheel, new WheelSpringCompression {
+                    SpringLength = authoring.WheelParameters.SpringRestDistance,
+                    CompressionLength = 0
+                });
+                AddComponent(wheel, new WheelSpringStrength {
+                    Damper = authoring.WheelParameters.SpringDamper,
+                    Strength = authoring.WheelParameters.SpringStrength
+                });
+
+                AddComponent(wheel, new WheelLinearVelocity { Value = Unity.Mathematics.float3.zero });
             }
 
             private void AddRotatingWheelComponents(Entity wheel, WheelAuthoring authoring) {

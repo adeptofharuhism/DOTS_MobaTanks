@@ -14,8 +14,10 @@ namespace Assets.CodeBase.Vehicles
                 VehicleAuthoring vehicleAuthoring = (VehicleAuthoring)target;
                 WheelAuthoring[] wheelAuthoringComponents = vehicleAuthoring.GetComponentsInChildren<WheelAuthoring>();
 
-                for (int i = 0; i < wheelAuthoringComponents.Length; i++)
+                for (int i = 0; i < wheelAuthoringComponents.Length; i++) {
                     wheelAuthoringComponents[i].WheelIndex = i;
+                    wheelAuthoringComponents[i].Parent = vehicleAuthoring.gameObject;
+                }
 
                 vehicleAuthoring.WheelAmount = wheelAuthoringComponents.Length;
 

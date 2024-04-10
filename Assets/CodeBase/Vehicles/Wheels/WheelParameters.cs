@@ -7,5 +7,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
     {
         public float SpringRestDistance;
         public float WheelDiameter;
+        public float SpringStrength;
+        public float SpringDamper;
     }
 }

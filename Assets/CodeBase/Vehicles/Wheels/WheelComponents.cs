@@ -1,4 +1,5 @@
 ﻿using Unity.Entities;
+using Unity.Mathematics;
 
 namespace Assets.CodeBase.Vehicles.Wheels
 {
@@ -9,9 +10,13 @@ namespace Assets.CodeBase.Vehicles.Wheels
         Counterclockwise
     }
 
-    public struct WheelHasGroundContact : IComponentData
+    public struct NewWheelTag : IComponentData { }
+    public struct WheelInitializedTag : IComponentData { }
+    public struct WheelHasGroundContactTag : IComponentData { }
+
+    public struct WheelParent : IComponentData
     {
-        public bool Value;
+        public Entity Value;
     }
 
     public struct WheelForceCastPoint : IComponentData
@@ -25,6 +30,11 @@ namespace Assets.CodeBase.Vehicles.Wheels
         public float Diameter;
     }
 
+    public struct WheelLinearVelocity : IComponentData
+    {
+        public float3 Value;
+    }
+
     public struct WheelIndex : IComponentData
     {
         public int Value;
@@ -35,8 +45,15 @@ namespace Assets.CodeBase.Vehicles.Wheels
         public float Value;
     }
 
-    public struct WheelCompressedSpringLength : IComponentData
+    public struct WheelSpringCompression : IComponentData
     {
-        public float Value;
+        public float SpringLength;
+        public float CompressionLength;
+    }
+
+    public struct WheelSpringStrength : IComponentData
+    {
+        public float Strength;
+        public float Damper;
     }
 }
