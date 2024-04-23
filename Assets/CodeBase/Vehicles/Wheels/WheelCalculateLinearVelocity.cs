@@ -38,7 +38,16 @@ namespace Assets.CodeBase.Vehicles.Wheels
                         forceCastTransform.ValueRO.Position);
 
                 ecb.SetComponent(wheel, new WheelLinearVelocity { Value = linearVelocity });
+                ecb.SetComponent(wheel, new WheelAxisProjectedVelocity {
+                    Value = new float3(
+                        CalculateVelocityOnAxis(linearVelocity, forceCastTransform.ValueRO.Right),
+                        CalculateVelocityOnAxis(linearVelocity, forceCastTransform.ValueRO.Up),
+                        CalculateVelocityOnAxis(linearVelocity, forceCastTransform.ValueRO.Forward))
+                });
             }
         }
+
+        private float CalculateVelocityOnAxis(float3 linearVelocity, float3 axis) =>
+            math.dot(linearVelocity, axis);
     }
 }

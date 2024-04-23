@@ -55,45 +55,4 @@ namespace Assets.CodeBase.Vehicles.Wheels
             }
         }
     }
-
-    [UpdateInGroup(typeof(PhysicsSystemGroup))]
-    [UpdateAfter(typeof(WheelLookForGroundContactSystem))]
-    public partial struct WheelSpringForceCalculationSystem : ISystem
-    {
-        public void OnCreate(ref SystemState state) {
-            state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
-        }
-
-        public void OnUpdate(ref SystemState state) {
-            EntityCommandBuffer ecb =
-                SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
-                .CreateCommandBuffer(state.WorldUnmanaged);
-
-            foreach (var (springCompression, linearVelocity, springStrength, forceCastPosition, parent)
-                in SystemAPI.Query<WheelSpringCompression, WheelLinearVelocity, WheelSpringStrength, WheelForceCastPoint, WheelParent>()
-                  .WithAll<WheelInitializedTag, WheelHasGroundContactTag>()) {
-
-                RefRO<LocalToWorld> forceCastTransform = SystemAPI.GetComponentRO<LocalToWorld>(forceCastPosition.Value);
-
-                float3 forceCastUp = forceCastTransform.ValueRO.Up;
-
-                float yAxisVelocity = math.dot(forceCastUp, linearVelocity.Value);
-                float yForceValue =
-                    (springStrength.Strength * springCompression.CompressionLength)
-                    - (springStrength.Damper * yAxisVelocity);
-
-                float3 yForceVector = forceCastUp * yForceValue * SystemAPI.Time.DeltaTime;
-
-                RefRO<LocalToWorld> parentTransform = SystemAPI.GetComponentRO<LocalToWorld>(parent.Value);
-
-                Unity.Physics.Extensions.PhysicsComponentExtensions.ApplyImpulse(
-                    ref SystemAPI.GetComponentRW<PhysicsVelocity>(parent.Value).ValueRW,
-                    SystemAPI.GetComponentRW<PhysicsMass>(parent.Value).ValueRW,
-                    parentTransform.ValueRO.Position,
-                    parentTransform.ValueRO.Rotation,
-                    yForceVector,
-                    forceCastTransform.ValueRO.Position);
-            }
-        }
-    }
 }

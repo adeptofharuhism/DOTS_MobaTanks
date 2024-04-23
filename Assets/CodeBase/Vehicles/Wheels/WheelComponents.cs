@@ -35,6 +35,11 @@ namespace Assets.CodeBase.Vehicles.Wheels
         public float3 Value;
     }
 
+    public struct WheelAxisProjectedVelocity : IComponentData
+    {
+        public float3 Value;
+    }
+
     public struct WheelIndex : IComponentData
     {
         public int Value;
@@ -55,5 +60,20 @@ namespace Assets.CodeBase.Vehicles.Wheels
     {
         public float Strength;
         public float Damper;
+    }
+
+    public struct WheelAxisForceSpring : IComponentData
+    {
+        public float3 Value;
+    }
+
+    public struct WheelAxisForceSteering : IComponentData
+    {
+        public float3 Value;
+    }
+
+    public struct WheelAxisForceAcceleration : IComponentData
+    {
+        public float3 Value;
     }
 }

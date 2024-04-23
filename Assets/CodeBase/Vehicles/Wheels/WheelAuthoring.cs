@@ -53,6 +53,11 @@ namespace Assets.CodeBase.Vehicles.Wheels
                 });
 
                 AddComponent(wheel, new WheelLinearVelocity { Value = Unity.Mathematics.float3.zero });
+                AddComponent(wheel, new WheelAxisProjectedVelocity { Value = Unity.Mathematics.float3.zero });
+
+                AddComponent(wheel, new WheelAxisForceSpring { Value = Unity.Mathematics.float3.zero });
+                AddComponent(wheel, new WheelAxisForceSteering { Value = Unity.Mathematics.float3.zero });
+                AddComponent(wheel, new WheelAxisForceAcceleration { Value = Unity.Mathematics.float3.zero });
             }
 
             private void AddRotatingWheelComponents(Entity wheel, WheelAuthoring authoring) {
