@@ -76,4 +76,13 @@ namespace Assets.CodeBase.Vehicles.Wheels
     {
         public float3 Value;
     }
+
+    public struct WheelBrakingTag : IComponentData { }
+    public struct WheelAcceleratingTag : IComponentData { }
+    public struct WheelHasAccelerationTag : IComponentData { }
+
+    public struct WheelAccelerationInput : IComponentData
+    {
+        public float3 Value;
+    }
 }

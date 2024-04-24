@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c64b20f213a18d048aa81e6684b25005, type: 3}
-  m_Name: EBL Wheels
+  m_Name: EBL Wheels Front
   m_EditorClassIdentifier: 
   SpringRestDistance: 2.5
   WheelDiameter: 0.95
-  SpringStrength: 69
-  SpringDamper: 12
+  SpringStrength: 100
+  SpringDamper: 20

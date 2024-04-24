@@ -1,5 +1,4 @@
-﻿using Assets.CodeBase.Input;
-using Unity.Entities;
+﻿using Unity.Entities;
 using Unity.Mathematics;
 using Unity.NetCode;
 

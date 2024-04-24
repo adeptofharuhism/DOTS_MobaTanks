@@ -1,6 +1,5 @@
 ﻿using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Physics;
 using Unity.Physics.Systems;
 using Unity.Transforms;
 
@@ -32,6 +31,10 @@ namespace Assets.CodeBase.Vehicles.Wheels
                     (springStrength.Strength * springCompression.CompressionLength)
                     - (springStrength.Damper * axisProjectedVelocity.Value.y);
 
+                //UnityEngine.Debug.Log($"{yForceValue}");
+                //UnityEngine.Debug.DrawLine(forceCastTransform.ValueRO.Position, forceCastTransform.ValueRO.Position + forceCastTransform.ValueRO.Up * (springStrength.Strength * springCompression.CompressionLength), UnityEngine.Color.green);
+                //UnityEngine.Debug.DrawLine(forceCastTransform.ValueRO.Position, forceCastTransform.ValueRO.Position + forceCastTransform.ValueRO.Up * (-(springStrength.Damper * axisProjectedVelocity.Value.y)), UnityEngine.Color.red);
+
                 float3 yForceVector = forceCastUp * yForceValue * SystemAPI.Time.DeltaTime;
 
                 ecb.SetComponent(wheel, new WheelAxisForceSpring { Value = yForceVector });
@@ -39,13 +42,41 @@ namespace Assets.CodeBase.Vehicles.Wheels
         }
     }
 
+    //[UpdateInGroup(typeof(GhostInputSystemGroup))]
+    //[UpdateAfter(typeof(VehicleMovementInputSystem))]
+    //public partial struct WheelSetAccelerationInputSystem : ISystem
+    //{
+    //    public void OnUpdate(ref SystemState state) {
+
+    //    }
+    //}
+
     [UpdateInGroup(typeof(PhysicsSystemGroup))]
     [UpdateAfter(typeof(WheelLookForGroundContactSystem))]
-    public partial struct WheelSteeringForceCalculationSystem : ISystem
+    public partial struct WheelAccelerationForceCalculationSystem : ISystem
     {
-        private const float Epsilon = 1E-06f;
-        private const float MinimalTraction = .1f;
-        private const float MaximalTraction = .5f;
+        public void OnCreate(ref SystemState state) {
+            state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
+        }
+
+        public void OnUpdate(ref SystemState state) {
+            EntityCommandBuffer ecb =
+                SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
+                .CreateCommandBuffer(state.WorldUnmanaged);
+
+            foreach (var v
+                in SystemAPI.Query<WheelAxisProjectedVelocity>()) {
+
+
+            }
+        }
+    }
+
+    [UpdateInGroup(typeof(PhysicsSystemGroup))]
+    [UpdateAfter(typeof(WheelLookForGroundContactSystem))]
+    public partial struct WheelBrakingForceCalculationSystem : ISystem
+    {
+        private const float BrakingStrength = 1;
 
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
@@ -58,58 +89,29 @@ namespace Assets.CodeBase.Vehicles.Wheels
 
             foreach (var (axisProjectedVelocity, forceCastPoint, wheel)
                 in SystemAPI.Query<WheelAxisProjectedVelocity, WheelForceCastPoint>()
-                .WithAll<WheelInitializedTag, WheelHasGroundContactTag>()
+                .WithAll<WheelBrakingTag, WheelInitializedTag, WheelHasGroundContactTag>()
                 .WithEntityAccess()) {
 
                 RefRO<LocalToWorld> forceCastTransform = SystemAPI.GetComponentRO<LocalToWorld>(forceCastPoint.Value);
 
-                float xAxisToHorizontalVelocityRatio =
-                    math.square(axisProjectedVelocity.Value.x)
-                    / (Epsilon + math.square(axisProjectedVelocity.Value.x) + math.square(axisProjectedVelocity.Value.z));
-                float tractionCoefficient = math.lerp(MinimalTraction, MaximalTraction, xAxisToHorizontalVelocityRatio);
+                float3 forceCastForward = forceCastTransform.ValueRO.Forward;
 
-                float xForceValue = tractionCoefficient * axisProjectedVelocity.Value.x;
+                float braking = CalculateBraking(axisProjectedVelocity.Value.z);
+                float zForceValue = braking;// * SystemAPI.Time.DeltaTime;
+                float3 zForceVector = forceCastForward * zForceValue;
 
-                float3 xForceVector = -forceCastTransform.ValueRO.Right * xForceValue;
-
-                ecb.SetComponent(wheel, new WheelAxisForceSteering { Value = xForceVector });
+                ecb.SetComponent(wheel, new WheelAxisForceAcceleration { Value = zForceVector });
             }
         }
-    }
 
-    [UpdateInGroup(typeof(PhysicsSystemGroup))]
-    [UpdateAfter(typeof(WheelSpringForceCalculationSystem))]
-    [UpdateAfter(typeof(WheelSteeringForceCalculationSystem))]
-    public partial struct WheelForceApplySystem : ISystem
-    {
-        public void OnCreate(ref SystemState state) {
-            state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
-        }
+        private float CalculateBraking(float velocity) {
+            if (velocity > BrakingStrength)
+                return -BrakingStrength;
 
-        public void OnUpdate(ref SystemState state) {
-            EntityCommandBuffer ecb =
-                SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
-                .CreateCommandBuffer(state.WorldUnmanaged);
+            if (velocity < -BrakingStrength)
+                return BrakingStrength;
 
-            foreach (var (springForce, steeringForce, accelerationForce, forceCastPoint, parent)
-                in SystemAPI.Query<WheelAxisForceSpring, WheelAxisForceSteering, WheelAxisForceAcceleration, WheelForceCastPoint, WheelParent>()
-                .WithAll<WheelInitializedTag, WheelHasGroundContactTag>()) {
-
-                RefRO<LocalToWorld> forceCastTransform = SystemAPI.GetComponentRO<LocalToWorld>(forceCastPoint.Value);
-                RefRO<LocalToWorld> parentTransform = SystemAPI.GetComponentRO<LocalToWorld>(parent.Value);
-                RefRW<PhysicsVelocity> parentVelocity = SystemAPI.GetComponentRW<PhysicsVelocity>(parent.Value);
-                RefRW<PhysicsMass> parentMass = SystemAPI.GetComponentRW<PhysicsMass>(parent.Value);
-
-                float3 forceVector = springForce.Value + steeringForce.Value + accelerationForce.Value;
-
-                Unity.Physics.Extensions.PhysicsComponentExtensions.ApplyImpulse(
-                    ref parentVelocity.ValueRW,
-                    parentMass.ValueRW,
-                    parentTransform.ValueRO.Position,
-                    parentTransform.ValueRO.Rotation,
-                    forceVector,
-                    forceCastTransform.ValueRO.Position);
-            }
+            return -velocity;
         }
     }
 }
