@@ -15,4 +15,5 @@ MonoBehaviour:
   SpringRestDistance: 2.5
   WheelDiameter: 0.95
   SpringStrength: 69
-  SpringDamper: 12
+  SpringDamper: 8.28
+  MaxRotationAngle: 7

@@ -29,8 +29,12 @@ namespace Assets.CodeBase.Vehicles.Wheels
                 Entity wheel = GetEntity(TransformUsageFlags.Dynamic);
 
                 AddCommonWheelComponents(wheel, authoring);
-                AddRotatingWheelComponents(wheel, authoring);
-                AddAcceleratedWheelComponents(wheel, authoring);
+
+                if (authoring.RotationType != WheelRotationType.None)
+                    AddRotatingWheelComponents(wheel, authoring);
+
+                if (authoring.HasAcceleration)
+                    AddAcceleratedWheelComponents(wheel, authoring);
             }
 
             private void AddCommonWheelComponents(Entity wheel, WheelAuthoring authoring) {
@@ -63,11 +67,17 @@ namespace Assets.CodeBase.Vehicles.Wheels
             }
 
             private void AddRotatingWheelComponents(Entity wheel, WheelAuthoring authoring) {
-
+                AddComponent<WheelHasRotationTag>(wheel);
+                AddComponent(wheel, new WheelRotationInput { Value = 0 });
+                AddComponent(wheel, new WheelRotationParameters {
+                    MaxRotationAngle = authoring.WheelParameters.MaxRotationAngle,
+                    RotatesClockwise = authoring.RotationType == WheelRotationType.Clockwise ? true : false
+                });
             }
 
             private void AddAcceleratedWheelComponents(Entity wheel, WheelAuthoring authoring) {
                 AddComponent<WheelHasAccelerationTag>(wheel);
+                AddComponent(wheel, new WheelAccelerationInput { Value = 0 });
             }
         }
     }

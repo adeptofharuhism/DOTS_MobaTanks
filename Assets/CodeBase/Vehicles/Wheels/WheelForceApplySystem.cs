@@ -23,14 +23,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
                 RefRW<PhysicsVelocity> parentVelocity = SystemAPI.GetComponentRW<PhysicsVelocity>(parent.Value);
                 RefRW<PhysicsMass> parentMass = SystemAPI.GetComponentRW<PhysicsMass>(parent.Value);
 
-                float3 forceVector = springForce.Value;// + accelerationForce.Value;// + steeringForce.Value;
-
-                //if (index.Value == 0) {
-                //    UnityEngine.Debug.DrawLine(forceCastTransform.ValueRO.Position, forceCastTransform.ValueRO.Position + forceVector, UnityEngine.Color.magenta);
-                //    UnityEngine.Debug.DrawLine(forceCastTransform.ValueRO.Position, forceCastTransform.ValueRO.Position + springForce.Value, UnityEngine.Color.green);
-                //    //UnityEngine.Debug.DrawLine(forceCastTransform.ValueRO.Position, forceCastTransform.ValueRO.Position + steeringForce.Value, UnityEngine.Color.red);
-                //    //UnityEngine.Debug.DrawLine(forceCastTransform.ValueRO.Position, forceCastTransform.ValueRO.Position + accelerationForce.Value, UnityEngine.Color.blue);
-                //}
+                float3 forceVector = springForce.Value + accelerationForce.Value + steeringForce.Value;
 
                 Unity.Physics.Extensions.PhysicsComponentExtensions.ApplyImpulse(
                     ref parentVelocity.ValueRW,

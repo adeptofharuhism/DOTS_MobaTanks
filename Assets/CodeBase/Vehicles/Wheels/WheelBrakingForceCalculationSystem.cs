@@ -7,11 +7,10 @@ namespace Assets.CodeBase.Vehicles.Wheels
 {
     [UpdateInGroup(typeof(PhysicsSystemGroup))]
     [UpdateAfter(typeof(WheelLookForGroundContactSystem))]
-    public partial struct WheelSteeringForceCalculationSystem : ISystem
+    public partial struct WheelBrakingForceCalculationSystem : ISystem
     {
-        private const float Epsilon = 1E-06f;
-        private const float MinimalTraction = .1f;
-        private const float MaximalTraction = 1f;
+        private const float Epsilon = .2f;
+        private const float BrakingStrength = 5f;
 
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
@@ -24,22 +23,29 @@ namespace Assets.CodeBase.Vehicles.Wheels
 
             foreach (var (axisProjectedVelocity, forceCastPoint, wheel)
                 in SystemAPI.Query<WheelAxisProjectedVelocity, WheelForceCastPoint>()
-                .WithAll<WheelInitializedTag, WheelHasGroundContactTag>()
+                .WithAll<WheelBrakingTag, WheelInitializedTag, WheelHasGroundContactTag>()
                 .WithEntityAccess()) {
 
                 RefRO<LocalToWorld> forceCastTransform = SystemAPI.GetComponentRO<LocalToWorld>(forceCastPoint.Value);
 
-                float xAxisToHorizontalVelocityRatio =
-                    math.square(axisProjectedVelocity.Value.x)
-                    / (Epsilon + math.square(axisProjectedVelocity.Value.x) + math.square(axisProjectedVelocity.Value.z));
-                float tractionCoefficient = math.lerp(MinimalTraction, MaximalTraction, xAxisToHorizontalVelocityRatio);
+                float3 forceCastForward = forceCastTransform.ValueRO.Forward;
 
-                float xForceValue = tractionCoefficient * axisProjectedVelocity.Value.x;
+                float braking = CalculateBraking(axisProjectedVelocity.Value.z);
+                float zForceValue = braking * SystemAPI.Time.DeltaTime;
+                float3 zForceVector = forceCastForward * zForceValue;
 
-                float3 xForceVector = -forceCastTransform.ValueRO.Right * xForceValue;
-
-                ecb.SetComponent(wheel, new WheelAxisForceSteering { Value = xForceVector });
+                ecb.SetComponent(wheel, new WheelAxisForceAcceleration { Value = zForceVector });
             }
+        }
+
+        private float CalculateBraking(float velocity) {
+            if (velocity > Epsilon)
+                return -BrakingStrength;
+
+            if (velocity < -Epsilon)
+                return BrakingStrength;
+
+            return -velocity;
         }
     }
 }

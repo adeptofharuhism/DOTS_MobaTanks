@@ -83,6 +83,18 @@ namespace Assets.CodeBase.Vehicles.Wheels
 
     public struct WheelAccelerationInput : IComponentData
     {
-        public float3 Value;
+        public float Value;
+    }
+
+    public struct WheelHasRotationTag : IComponentData { }
+
+    public struct WheelRotationInput : IComponentData
+    {
+        public float Value;
+    }
+
+    public struct WheelRotationParameters : IComponentData {
+        public bool RotatesClockwise;
+        public float MaxRotationAngle;
     }
 }
