@@ -10,8 +10,6 @@ namespace Assets.CodeBase.Vehicles.Wheels
     public partial struct WheelSteeringForceCalculationSystem : ISystem
     {
         private const float Epsilon = 1E-06f;
-        private const float MinimalTraction = .1f;
-        private const float MaximalTraction = .6f;
 
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
@@ -22,8 +20,8 @@ namespace Assets.CodeBase.Vehicles.Wheels
                 SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
                 .CreateCommandBuffer(state.WorldUnmanaged);
 
-            foreach (var (axisProjectedVelocity, forceCastPoint, wheel)
-                in SystemAPI.Query<WheelAxisProjectedVelocity, WheelForceCastPoint>()
+            foreach (var (steeringParameters, axisProjectedVelocity, forceCastPoint, wheel)
+                in SystemAPI.Query<WheelSteeringParameters, WheelAxisProjectedVelocity, WheelForceCastPoint>()
                 .WithAll<WheelInitializedTag, WheelHasGroundContactTag>()
                 .WithEntityAccess()) {
 
@@ -32,7 +30,9 @@ namespace Assets.CodeBase.Vehicles.Wheels
                 float xAxisToHorizontalVelocityRatio =
                     math.square(axisProjectedVelocity.Value.x)
                     / (Epsilon + math.square(axisProjectedVelocity.Value.x) + math.square(axisProjectedVelocity.Value.z));
-                float tractionCoefficient = math.lerp(MinimalTraction, MaximalTraction, xAxisToHorizontalVelocityRatio);
+
+                float tractionCoefficient = 
+                    math.lerp(steeringParameters.MaximalSteering, steeringParameters.MinimalSteering, xAxisToHorizontalVelocityRatio);
 
                 float xForceValue = tractionCoefficient * axisProjectedVelocity.Value.x;
 

@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using System;
+using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics.Systems;
 using Unity.Transforms;
@@ -10,10 +11,10 @@ namespace Assets.CodeBase.Vehicles.Wheels
     public partial struct WheelAccelerationForceCalculationSystem : ISystem
     {
         private const float Epsilon = 1e-06f;
-        private const float MaxSpeed = 14f;
-        private const float MaxSpeedBackwards = -6f;
-        private const float HardBreakingEngineCoefficient = 0;
-        private const float HardBreakingForceMultiplier = 1.42f;
+        private const float HyperbolicOffsetY = 1.02f;
+        private const float HyperbolaAngleMultiplier = 0.03f;
+        private const float HyperbolicOffsetX = -1.03f;
+        private const float HardBrakingVelocityValue = 0;
 
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
@@ -24,8 +25,8 @@ namespace Assets.CodeBase.Vehicles.Wheels
                 SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
                 .CreateCommandBuffer(state.WorldUnmanaged);
 
-            foreach (var (accelerationInput, axisProjectedVelocity, forceCastPosition, wheel)
-                in SystemAPI.Query<WheelAccelerationInput, WheelAxisProjectedVelocity, WheelForceCastPoint>()
+            foreach (var (accelerationParameters, accelerationInput, axisProjectedVelocity, forceCastPosition, wheel)
+                in SystemAPI.Query<WheelAccelerationParameters, WheelAccelerationInput, WheelAxisProjectedVelocity, WheelForceCastPoint>()
                 .WithAll<WheelInitializedTag, WheelHasGroundContactTag, WheelAcceleratingTag>()
                 .WithEntityAccess()) {
 
@@ -34,17 +35,24 @@ namespace Assets.CodeBase.Vehicles.Wheels
                 float3 forceCastForward = forceCastTransform.ValueRO.Forward;
 
                 float zForceValue;
-                if (accelerationInput.Value > Epsilon) {
-                    if (axisProjectedVelocity.Value.z > MaxSpeed)
-                        zForceValue = 0;
-                    else
-                        zForceValue = CalculateAccelerationForce(accelerationInput.Value, axisProjectedVelocity.Value.z, MaxSpeed);
-                } else {
-                    if (axisProjectedVelocity.Value.z < MaxSpeedBackwards)
-                        zForceValue = 0;
-                    else 
-                        zForceValue = CalculateAccelerationForce(accelerationInput.Value, axisProjectedVelocity.Value.z, MaxSpeedBackwards);
-                }
+                if (accelerationInput.Value > Epsilon)
+                    zForceValue = axisProjectedVelocity.Value.z > accelerationParameters.MaxVelocity
+                        ? 0
+                        : CalculateAccelerationForce(
+                            accelerationInput.Value, 
+                            axisProjectedVelocity.Value.z, 
+                            accelerationParameters.MaxVelocity, 
+                            accelerationParameters.HardBrakingForceMultiplier,
+                            accelerationParameters.EngineForceMultiplier);
+                else
+                    zForceValue = axisProjectedVelocity.Value.z < accelerationParameters.MaxVelocityBackwards
+                        ? 0
+                        : CalculateAccelerationForce(
+                            accelerationInput.Value, 
+                            axisProjectedVelocity.Value.z, 
+                            accelerationParameters.MaxVelocityBackwards,
+                            accelerationParameters.HardBrakingForceMultiplier,
+                            accelerationParameters.EngineForceMultiplier);
 
                 float3 zForceVector = forceCastForward * zForceValue;
 
@@ -52,17 +60,23 @@ namespace Assets.CodeBase.Vehicles.Wheels
             }
         }
 
-        private float CalculateAccelerationForce(float accelerationInput, float velocityZ, float maxSpeed) {
-            float zForce;
-            if (velocityZ * accelerationInput > 0)
-                zForce = CalculateEngineForce(accelerationInput, velocityZ, maxSpeed);
-            else
-                zForce = CalculateEngineForce(accelerationInput, HardBreakingEngineCoefficient, maxSpeed) * HardBreakingForceMultiplier;
+        private float CalculateAccelerationForce(
+            float accelerationInput,
+            float velocityZ,
+            float maxSpeed,
+            float hardBrakingForceMultiplier,
+            float engineForceMultiplier) =>
 
-            return zForce;
-        }
+            (velocityZ * accelerationInput > 0
+                ? CalculateEngineForce(accelerationInput, velocityZ, maxSpeed)
+                : CalculateEngineForce(accelerationInput, HardBrakingVelocityValue, maxSpeed)
+                    * hardBrakingForceMultiplier
+            ) * engineForceMultiplier;
 
         private float CalculateEngineForce(float accelerationInput, float velocity, float maxSpeed) =>
-            accelerationInput * (-.5f * (velocity / maxSpeed) + 1f);
+            accelerationInput * HyperbolicCurve(velocity / maxSpeed);
+
+        private float HyperbolicCurve(float x) =>
+            HyperbolicOffsetY + (HyperbolaAngleMultiplier / (x + HyperbolicOffsetX));
     }
 }

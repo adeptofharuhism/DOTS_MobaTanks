@@ -12,5 +12,13 @@ namespace Assets.CodeBase.Vehicles.Wheels
         public float SpringDamper;
         [Header("Rotation")]
         public float MaxRotationAngle;
+        [Header("Steering")]
+        public float MaxSteeringTraction;
+        public float MinSteeringTraction;
+        [Header("Acceleration")]
+        public float MaxVelocity;
+        public float MaxVelocityBackwards;
+        public float EngineForceMultiplier;
+        public float HardBrakingForceMultiplier;
     }
 }

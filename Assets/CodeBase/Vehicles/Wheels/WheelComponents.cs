@@ -45,6 +45,12 @@ namespace Assets.CodeBase.Vehicles.Wheels
         public int Value;
     }
 
+    public struct WheelSteeringParameters : IComponentData
+    {
+        public float MaximalSteering;
+        public float MinimalSteering;
+    }
+
     public struct WheelSpringRestDistance : IComponentData
     {
         public float Value;
@@ -86,6 +92,13 @@ namespace Assets.CodeBase.Vehicles.Wheels
         public float Value;
     }
 
+    public struct WheelAccelerationParameters : IComponentData {
+        public float MaxVelocity;
+        public float MaxVelocityBackwards;
+        public float EngineForceMultiplier;
+        public float HardBrakingForceMultiplier;
+    }
+
     public struct WheelHasRotationTag : IComponentData { }
 
     public struct WheelRotationInput : IComponentData
@@ -93,7 +106,8 @@ namespace Assets.CodeBase.Vehicles.Wheels
         public float Value;
     }
 
-    public struct WheelRotationParameters : IComponentData {
+    public struct WheelRotationParameters : IComponentData
+    {
         public bool RotatesClockwise;
         public float MaxRotationAngle;
     }

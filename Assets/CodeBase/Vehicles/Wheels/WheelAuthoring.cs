@@ -54,6 +54,11 @@ namespace Assets.CodeBase.Vehicles.Wheels
                     Strength = authoring.WheelParameters.SpringStrength
                 });
 
+                AddComponent(wheel, new WheelSteeringParameters {
+                    MaximalSteering = authoring.WheelParameters.MaxSteeringTraction,
+                    MinimalSteering = authoring.WheelParameters.MinSteeringTraction,
+                });
+
                 AddComponent(wheel, new WheelLinearVelocity { Value = Unity.Mathematics.float3.zero });
                 AddComponent(wheel, new WheelAxisProjectedVelocity { Value = Unity.Mathematics.float3.zero });
 
@@ -76,6 +81,12 @@ namespace Assets.CodeBase.Vehicles.Wheels
             private void AddAcceleratedWheelComponents(Entity wheel, WheelAuthoring authoring) {
                 AddComponent<WheelHasAccelerationTag>(wheel);
                 AddComponent(wheel, new WheelAccelerationInput { Value = 0 });
+                AddComponent(wheel, new WheelAccelerationParameters {
+                    MaxVelocity = authoring.WheelParameters.MaxVelocity,
+                    MaxVelocityBackwards = authoring.WheelParameters.MaxVelocityBackwards,
+                    EngineForceMultiplier = authoring.WheelParameters.EngineForceMultiplier,
+                    HardBrakingForceMultiplier = authoring.WheelParameters.HardBrakingForceMultiplier
+                });
             }
         }
     }
