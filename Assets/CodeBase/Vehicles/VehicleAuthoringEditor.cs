@@ -16,7 +16,6 @@ namespace Assets.CodeBase.Vehicles
 
                 for (int i = 0; i < wheelAuthoringComponents.Length; i++) {
                     wheelAuthoringComponents[i].WheelIndex = i;
-                    wheelAuthoringComponents[i].Parent = vehicleAuthoring.gameObject;
                 }
 
                 vehicleAuthoring.WheelAmount = wheelAuthoringComponents.Length;

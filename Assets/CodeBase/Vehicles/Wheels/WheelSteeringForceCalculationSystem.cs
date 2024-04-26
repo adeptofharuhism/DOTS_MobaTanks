@@ -11,7 +11,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
     {
         private const float Epsilon = 1E-06f;
         private const float MinimalTraction = .1f;
-        private const float MaximalTraction = 1f;
+        private const float MaximalTraction = .6f;
 
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();

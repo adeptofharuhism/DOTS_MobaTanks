@@ -6,7 +6,6 @@ namespace Assets.CodeBase.Vehicles.Wheels
     public class WheelAuthoring : MonoBehaviour
     {
         [SerializeField] private int _wheelIndex;
-        [SerializeField] private GameObject _parent;
 
         [SerializeField] private GameObject _wheelModel;
         [SerializeField] private GameObject _forceApplicationPoint;
@@ -15,7 +14,6 @@ namespace Assets.CodeBase.Vehicles.Wheels
         [SerializeField] private WheelParameters _wheelParameters;
 
         public int WheelIndex { get => _wheelIndex; set => _wheelIndex = value; }
-        public GameObject Parent { get => _parent; set => _parent = value; }
 
         public GameObject WheelModel => _wheelModel;
         public GameObject ForceCastPoint => _forceApplicationPoint;

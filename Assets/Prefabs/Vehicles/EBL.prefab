@@ -46,7 +46,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _wheelIndex: 1
-  _parent: {fileID: 0}
   _wheelModel: {fileID: 3906275361743036740}
   _forceApplicationPoint: {fileID: 670077562300986742}
   _hasAcceleration: 0
@@ -132,7 +131,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _wheelIndex: 3
-  _parent: {fileID: 0}
   _wheelModel: {fileID: 4561082129017868275}
   _forceApplicationPoint: {fileID: 1362328630123505964}
   _hasAcceleration: 1
@@ -392,7 +390,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _wheelIndex: 4
-  _parent: {fileID: 0}
   _wheelModel: {fileID: 7081863597677090434}
   _forceApplicationPoint: {fileID: 2718903230799816560}
   _hasAcceleration: 1
@@ -906,7 +903,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _wheelIndex: 5
-  _parent: {fileID: 0}
   _wheelModel: {fileID: 3226841673060339667}
   _forceApplicationPoint: {fileID: 8020278241938212024}
   _hasAcceleration: 1
@@ -958,7 +954,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _wheelIndex: 2
-  _parent: {fileID: 0}
   _wheelModel: {fileID: 2445389362363482388}
   _forceApplicationPoint: {fileID: 8139817459670929170}
   _hasAcceleration: 1
@@ -1043,7 +1038,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _wheelIndex: 0
-  _parent: {fileID: 0}
   _wheelModel: {fileID: 4783633925281332193}
   _forceApplicationPoint: {fileID: 9075000874276573195}
   _hasAcceleration: 0
