@@ -1,4 +1,4 @@
-﻿using Assets.CodeBase.GameEntrySystems;
+﻿using Assets.CodeBase.GameEntry;
 using Unity.Entities;
 using Unity.NetCode;
 using Unity.Networking.Transport;

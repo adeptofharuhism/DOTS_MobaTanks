@@ -1,4 +1,5 @@
-﻿using Assets.CodeBase.Vehicles.Wheels;
+﻿#if UNITY_EDITOR
+using Assets.CodeBase.Vehicles.Wheels;
 using UnityEditor;
 using UnityEngine;
 
@@ -25,3 +26,4 @@ namespace Assets.CodeBase.Vehicles
         }
     }
 }
+#endif

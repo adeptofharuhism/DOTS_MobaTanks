@@ -2,7 +2,7 @@
 using Unity.Entities;
 using Unity.NetCode;
 
-namespace Assets.CodeBase.GameEntrySystems
+namespace Assets.CodeBase.GameEntry
 {
     [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
     public partial struct ClientRequestGameEntrySystem : ISystem
