@@ -1,4 +1,5 @@
-﻿using Unity.Collections;
+﻿using Assets.CodeBase.Infrastructure.PrefabInjection;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.NetCode;
 
@@ -17,6 +18,7 @@ namespace Assets.CodeBase.GameEntry
 
             state.RequireForUpdate(_pendingNetworkQuery);
             state.RequireForUpdate<ConnectionRequestData>();
+            state.RequireForUpdate<GamePrefabs>();
         }
 
         public void OnUpdate(ref SystemState state) {

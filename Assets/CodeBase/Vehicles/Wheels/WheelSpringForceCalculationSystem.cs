@@ -31,7 +31,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
                     (springStrength.Strength * springCompression.CompressionLength)
                     - (springStrength.Damper * axisProjectedVelocity.Value.y);
 
-                float3 yForceVector = forceCastUp * yForceValue * SystemAPI.Time.DeltaTime;
+                float3 yForceVector = forceCastUp * yForceValue  * SystemAPI.Time.DeltaTime;
 
                 ecb.SetComponent(wheel, new WheelAxisForceSpring { Value = yForceVector });
             }
