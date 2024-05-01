@@ -14,8 +14,13 @@ namespace Assets.CodeBase.Vehicles.Wheels
     public partial struct WheelForceApplySystem : ISystem
     {
         public void OnUpdate(ref SystemState state) {
-            foreach (var (springForce, steeringForce, accelerationForce, forceCastPoint, parent, index)
-                in SystemAPI.Query<WheelAxisForceSpring, WheelAxisForceSteering, WheelAxisForceAcceleration, WheelForceCastPoint, WheelParent, WheelIndex>()
+            foreach (var (springForce, steeringForce, accelerationForce, forceCastPoint, parent)
+                in SystemAPI.Query<
+                    WheelAxisForceSpring,
+                    WheelAxisForceSteering,
+                    WheelAxisForceAcceleration,
+                    WheelForceCastPoint,
+                    WheelParent>()
                 .WithAll<WheelInitializedTag, WheelHasGroundContactTag>()) {
 
                 RefRO<LocalToWorld> forceCastTransform = SystemAPI.GetComponentRO<LocalToWorld>(forceCastPoint.Value);

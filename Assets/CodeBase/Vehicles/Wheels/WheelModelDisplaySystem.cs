@@ -9,10 +9,10 @@ namespace Assets.CodeBase.Vehicles.Wheels
     {
         public void OnUpdate(ref SystemState state) {
             foreach (var (compressedLength, modelParameters)
-                in SystemAPI.Query<WheelSpringCompression, WheelModelParameters>()) {
+                in SystemAPI.Query<WheelSpringLengthCompressed, WheelModelParameters>()) {
 
                 RefRW<LocalTransform> modelTransform = SystemAPI.GetComponentRW<LocalTransform>(modelParameters.ModelContainer);
-                modelTransform.ValueRW.Position.y = modelParameters.Diameter - compressedLength.SpringLength;
+                modelTransform.ValueRW.Position.y = modelParameters.Diameter - compressedLength.Value;
             }
         }
     }

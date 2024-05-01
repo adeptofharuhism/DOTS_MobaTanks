@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64b20f213a18d048aa81e6684b25005, type: 3}
   m_Name: EBL Wheels
   m_EditorClassIdentifier: 
-  SpringRestDistance: 2.5
+  SpringRestDistance: 2.95
   WheelDiameter: 0.95
   SpringStrength: 60
   SpringDamper: 6
   MaxRotationAngle: 7
-  MaxSteeringTraction: 0.6
-  MinSteeringTraction: 0.2
-  MaxVelocity: 24
+  MaxSteeringTraction: 0.5
+  MinSteeringTraction: 0.1
+  MaxVelocity: 64
   MaxVelocityBackwards: -8
   EngineForceMultiplier: 1.2
   HardBrakingForceMultiplier: 1.44

@@ -1,5 +1,6 @@
 ﻿using Unity.Entities;
 using Unity.Mathematics;
+using Unity.NetCode;
 
 namespace Assets.CodeBase.Vehicles.Wheels
 {
@@ -58,8 +59,12 @@ namespace Assets.CodeBase.Vehicles.Wheels
 
     public struct WheelSpringCompression : IComponentData
     {
-        public float SpringLength;
-        public float CompressionLength;
+        public float Value;
+    }
+
+    public struct WheelSpringLengthCompressed : IComponentData
+    {
+        public float Value;
     }
 
     public struct WheelSpringStrength : IComponentData
@@ -92,7 +97,8 @@ namespace Assets.CodeBase.Vehicles.Wheels
         public float Value;
     }
 
-    public struct WheelAccelerationParameters : IComponentData {
+    public struct WheelAccelerationParameters : IComponentData
+    {
         public float MaxVelocity;
         public float MaxVelocityBackwards;
         public float EngineForceMultiplier;
@@ -110,5 +116,10 @@ namespace Assets.CodeBase.Vehicles.Wheels
     {
         public bool RotatesClockwise;
         public float MaxRotationAngle;
+    }
+
+    public struct WheelLatestForceApplyTick : IComponentData
+    {
+        public NetworkTick Value;
     }
 }

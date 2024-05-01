@@ -33,11 +33,11 @@ namespace Assets.CodeBase.Vehicles.Wheels
                 .WithAll<WheelInitializedTag>()
                 .WithEntityAccess()) {
 
-                RefRO<LocalToWorld> transform = SystemAPI.GetComponentRO<LocalToWorld>(forceCastPoint.Value);
+                RefRO<LocalToWorld> forceCastTransform = SystemAPI.GetComponentRO<LocalToWorld>(forceCastPoint.Value);
 
                 RaycastInput raycastInput = new RaycastInput {
-                    Start = transform.ValueRO.Position,
-                    End = transform.ValueRO.Position - math.normalize(transform.ValueRO.Up) * springRestDistance.Value,
+                    Start = forceCastTransform.ValueRO.Position,
+                    End = forceCastTransform.ValueRO.Position - math.normalize(forceCastTransform.ValueRO.Up) * springRestDistance.Value,
                     Filter = _collisionFilter
                 };
 
@@ -48,10 +48,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
                     ecb.RemoveComponent<WheelHasGroundContactTag>(wheel);
 
                 float compressionCoefficient = hasHit ? closestHit.Fraction : 1;
-                ecb.SetComponent(wheel, new WheelSpringCompression {
-                    SpringLength = springRestDistance.Value * compressionCoefficient,
-                    CompressionLength = springRestDistance.Value * (1 - compressionCoefficient)
-                });
+                ecb.SetComponent(wheel, new WheelSpringCompression { Value = springRestDistance.Value * (1 - compressionCoefficient) });
             }
         }
     }

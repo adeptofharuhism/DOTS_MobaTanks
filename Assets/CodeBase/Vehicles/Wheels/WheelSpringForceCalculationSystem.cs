@@ -28,7 +28,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
                 float3 forceCastUp = forceCastTransform.ValueRO.Up;
 
                 float yForceValue =
-                    (springStrength.Strength * springCompression.CompressionLength)
+                    (springStrength.Strength * springCompression.Value)
                     - (springStrength.Damper * axisProjectedVelocity.Value.y);
 
                 float3 yForceVector = forceCastUp * yForceValue  * SystemAPI.Time.DeltaTime;

@@ -45,10 +45,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
                 });
 
                 AddComponent(wheel, new WheelSpringRestDistance { Value = authoring.WheelParameters.SpringRestDistance });
-                AddComponent(wheel, new WheelSpringCompression {
-                    SpringLength = authoring.WheelParameters.SpringRestDistance,
-                    CompressionLength = 0
-                });
+                AddComponent(wheel, new WheelSpringCompression { Value = 0 });
                 AddComponent(wheel, new WheelSpringStrength {
                     Damper = authoring.WheelParameters.SpringDamper,
                     Strength = authoring.WheelParameters.SpringStrength
