@@ -1,4 +1,5 @@
 ﻿using Unity.Entities;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Assets.CodeBase.Vehicles
@@ -20,6 +21,20 @@ namespace Assets.CodeBase.Vehicles
 
                 AddComponent<VehicleMovementInput>(vehicle);
                 AddComponent(vehicle, new VehicleWheelAmount { Value = authoring.WheelAmount });
+
+                DynamicBuffer<VehicleSpringLengthCompressedBuffer> springBuffer = AddBuffer<VehicleSpringLengthCompressedBuffer>(vehicle);
+                for (int i = 0; i < authoring.WheelAmount; i++)
+                    springBuffer.Add(new VehicleSpringLengthCompressedBuffer {
+                        Index = i,
+                        Value = 0
+                    });
+
+                DynamicBuffer<VehicleRotationBuffer> rotationBuffer = AddBuffer<VehicleRotationBuffer>(vehicle);
+                for (int i = 0; i < authoring.WheelAmount; i++)
+                    rotationBuffer.Add(new VehicleRotationBuffer {
+                        Index = i,
+                        Value = quaternion.identity
+                    });
             }
         }
     }

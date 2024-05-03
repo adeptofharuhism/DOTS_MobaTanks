@@ -10,23 +10,16 @@ namespace Assets.CodeBase.Vehicles.Wheels
     {
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<NewWheelTag>();
-            state.RequireForUpdate<NetworkTime>();
         }
 
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
-
-            NetworkTick currentTick = SystemAPI.GetSingleton<NetworkTime>().ServerTick;
 
             foreach (var (newWheel, wheel)
                 in SystemAPI.Query<NewWheelTag>()
                 .WithEntityAccess()) {
 
                 ecb.AddComponent(wheel, new WheelParent { Value = GetHighestParentOfEntity(ref state, wheel) });
-                ecb.AddComponent(wheel, new WheelLatestForceApplyTick { Value = currentTick });
-
-                if (state.WorldUnmanaged.IsClient())
-                    ecb.AddComponent(wheel, new WheelSpringLengthCompressed { Value = 0 });
 
                 ecb.RemoveComponent<NewWheelTag>(wheel);
                 ecb.AddComponent<WheelInitializedTag>(wheel);

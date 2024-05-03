@@ -23,7 +23,7 @@ namespace Assets.CodeBase.GameEntry
 
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
-
+            
             Entity vehiclePrefab = SystemAPI.GetSingleton<GamePrefabs>().Vehicle;
 
             foreach (var (newPlayerData, requestSource, requestEntity)

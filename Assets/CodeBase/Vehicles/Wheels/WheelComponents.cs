@@ -62,11 +62,6 @@ namespace Assets.CodeBase.Vehicles.Wheels
         public float Value;
     }
 
-    public struct WheelSpringLengthCompressed : IComponentData
-    {
-        public float Value;
-    }
-
     public struct WheelSpringStrength : IComponentData
     {
         public float Strength;
@@ -118,8 +113,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
         public float MaxRotationAngle;
     }
 
-    public struct WheelLatestForceApplyTick : IComponentData
-    {
-        public NetworkTick Value;
+    public struct WheelRotationCurrent : IComponentData {
+        public quaternion Value;
     }
 }

@@ -17,9 +17,9 @@ MonoBehaviour:
   SpringStrength: 60
   SpringDamper: 6
   MaxRotationAngle: 7
-  MaxSteeringTraction: 0.5
+  MaxSteeringTraction: 0.45
   MinSteeringTraction: 0.1
-  MaxVelocity: 64
+  MaxVelocity: 30
   MaxVelocityBackwards: -8
-  EngineForceMultiplier: 1.2
+  EngineForceMultiplier: 3
   HardBrakingForceMultiplier: 1.44
