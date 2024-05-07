@@ -57,12 +57,12 @@ namespace Assets.CodeBase.Vehicles.Wheels
                     MinimalSteering = authoring.WheelParameters.MinSteeringTraction,
                 });
 
-                AddComponent(wheel, new WheelLinearVelocity { Value = Unity.Mathematics.float3.zero });
-                AddComponent(wheel, new WheelAxisProjectedVelocity { Value = Unity.Mathematics.float3.zero });
+                AddComponent(wheel, new WheelLinearVelocity { Value = float3.zero });
+                AddComponent(wheel, new WheelAxisProjectedVelocity { Value = float3.zero });
 
-                AddComponent(wheel, new WheelAxisForceSpring { Value = Unity.Mathematics.float3.zero });
-                AddComponent(wheel, new WheelAxisForceSteering { Value = Unity.Mathematics.float3.zero });
-                AddComponent(wheel, new WheelAxisForceAcceleration { Value = Unity.Mathematics.float3.zero });
+                AddComponent(wheel, new WheelAxisForceSpring { Value = float3.zero });
+                AddComponent(wheel, new WheelAxisForceSteering { Value = float3.zero });
+                AddComponent(wheel, new WheelAxisForceAcceleration { Value = float3.zero });
 
                 AddComponent<WheelBrakingTag>(wheel);
             }

@@ -18,7 +18,7 @@ namespace Assets.CodeBase.GameEntry
 
             state.RequireForUpdate(_pendingNetworkQuery);
             state.RequireForUpdate<ConnectionRequestData>();
-            state.RequireForUpdate<GamePrefabs>();
+            state.RequireForUpdate<TimeForPrefabsToPreparePassedTag>();
         }
 
         public void OnUpdate(ref SystemState state) {

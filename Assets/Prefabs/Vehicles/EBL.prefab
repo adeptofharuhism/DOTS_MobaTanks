@@ -393,7 +393,7 @@ MonoBehaviour:
   _wheelModel: {fileID: 7081863597677090434}
   _forceApplicationPoint: {fileID: 2718903230799816560}
   _hasAcceleration: 1
-  _rotationType: 0
+  _rotationType: 2
   _wheelParameters: {fileID: 11400000, guid: 6bdd64c9df6cbf14bb232972ff7ca0a9, type: 2}
 --- !u!1 &3226841673060339667
 GameObject:
@@ -906,7 +906,7 @@ MonoBehaviour:
   _wheelModel: {fileID: 3226841673060339667}
   _forceApplicationPoint: {fileID: 8020278241938212024}
   _hasAcceleration: 1
-  _rotationType: 0
+  _rotationType: 2
   _wheelParameters: {fileID: 11400000, guid: 6bdd64c9df6cbf14bb232972ff7ca0a9, type: 2}
 --- !u!1 &8139817459670929170
 GameObject:
