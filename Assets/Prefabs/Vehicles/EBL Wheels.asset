@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SpringRestDistance: 2.95
   WheelDiameter: 0.95
-  SpringStrength: 60
-  SpringDamper: 6.6
-  MaxRotationAngle: 7
+  SpringStrength: 50
+  SpringDamper: 8
+  MaxRotationAngle: 10
   MaxSteeringTraction: 0.35
-  MinSteeringTraction: 0.1
+  MinSteeringTraction: 0.15
   MaxVelocity: 40
   MaxVelocityBackwards: -10
   EngineForceMultiplier: 3

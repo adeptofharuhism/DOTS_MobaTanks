@@ -23,7 +23,7 @@ namespace Assets.CodeBase.GameEntry
 
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
-            
+
             Entity vehiclePrefab = SystemAPI.GetSingleton<GamePrefabs>().Vehicle;
 
             foreach (var (newPlayerData, requestSource, requestEntity)
@@ -39,7 +39,7 @@ namespace Assets.CodeBase.GameEntry
                 Entity newVehicle = ecb.Instantiate(vehiclePrefab);
                 ecb.SetName(newVehicle, VehicleName);
 
-                float3 vehicleSpawnPosition = new float3(5 * clientId, 5, 0);
+                float3 vehicleSpawnPosition = new float3(-260 + 5 * clientId, 5, 50);
                 LocalTransform vehicleTransform = LocalTransform.FromPosition(vehicleSpawnPosition);
 
                 ecb.SetComponent(newVehicle, vehicleTransform);
