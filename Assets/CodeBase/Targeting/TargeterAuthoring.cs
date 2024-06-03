@@ -5,7 +5,9 @@ namespace Assets.CodeBase.Targeting
 {
     public class TargeterAuthoring : MonoBehaviour
     {
-        [SerializeField] private float TargetSearchRange = 20;
+        [SerializeField] private float _targetSearchRange = 20;
+
+        public float TargetSearchRange => _targetSearchRange;
 
         public class TargeterBaker : Baker<TargeterAuthoring>
         {

@@ -8,6 +8,7 @@ using Unity.Transforms;
 namespace Assets.CodeBase.Targeting
 {
     [UpdateInGroup(typeof(PhysicsSystemGroup), OrderLast = true)]
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct TargetSearchSystem : ISystem
     {
         private CollisionFilter _collisionFilter;
@@ -22,14 +23,10 @@ namespace Assets.CodeBase.Targeting
             _random = Random.CreateFromIndex(42);
 
             state.RequireForUpdate<PhysicsWorldSingleton>();
-            state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
         }
 
         public void OnUpdate(ref SystemState state) {
             CollisionWorld collisionWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().CollisionWorld;
-            EntityCommandBuffer ecb =
-                SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
-                .CreateCommandBuffer(state.WorldUnmanaged);
 
             foreach (var (range, targeterTransform, currentTarget)
                 in SystemAPI.Query<TargeterRange, RefRO<LocalToWorld>, RefRW<CurrentTarget>>()

@@ -637,7 +637,6 @@ GameObject:
   - component: {fileID: 5016090859143917645}
   - component: {fileID: -8204569237400224555}
   - component: {fileID: 1451701759757599482}
-  - component: {fileID: 5162372953183268897}
   m_Layer: 0
   m_Name: EBL
   m_TagString: Untagged
@@ -771,19 +770,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 444c005e68eb0a548aa0a263c3d839b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5162372953183268897
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6390093006432525959}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6309f434d0c808148ada518ba91b76f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TargetSearchRange: 20
 --- !u!1 &7081863597677090434
 GameObject:
   m_ObjectHideFlags: 0
@@ -995,6 +981,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2953653051913504959}
+  - component: {fileID: 7141867607636368883}
+  - component: {fileID: 9181942405972210341}
   m_Layer: 0
   m_Name: Turret
   m_TagString: Untagged
@@ -1019,6 +1007,34 @@ Transform:
   - {fileID: 1585800236315486767}
   m_Father: {fileID: 485122638541454851}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7141867607636368883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8697472393521666485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e22692060a2942499ce6bba2740fb1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _projectileSpawnPoint: {fileID: 6281094611802548079}
+  _projectilePrefab: {fileID: 7753857312031998921, guid: a0a20acee63892649a363a278a484e7f,
+    type: 3}
+--- !u!114 &9181942405972210341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8697472393521666485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6309f434d0c808148ada518ba91b76f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _targetSearchRange: 20
 --- !u!1 &9075000874276573195
 GameObject:
   m_ObjectHideFlags: 0
