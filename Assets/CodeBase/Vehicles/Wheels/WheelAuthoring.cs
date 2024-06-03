@@ -69,7 +69,6 @@ namespace Assets.CodeBase.Vehicles.Wheels
 
             private void AddRotatingWheelComponents(Entity wheel, WheelAuthoring authoring) {
                 AddComponent<WheelHasRotationTag>(wheel);
-                AddComponent(wheel, new WheelRotationCurrent { Value = quaternion.identity });
                 AddComponent(wheel, new WheelRotationInput { Value = 0 });
                 AddComponent(wheel, new WheelRotationParameters {
                     MaxRotationAngle = authoring.WheelParameters.MaxRotationAngle,

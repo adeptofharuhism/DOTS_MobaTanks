@@ -10,8 +10,8 @@ namespace Assets.CodeBase.Vehicles.Wheels
     public partial struct WheelRotationSystem : ISystem
     {
         public void OnUpdate(ref SystemState state) {
-            foreach (var (rotationInput, rotationParameters, forceCastPoint, rotationCurrent)
-                in SystemAPI.Query<WheelRotationInput, WheelRotationParameters, WheelForceCastPoint, RefRW<WheelRotationCurrent>>()
+            foreach (var (rotationInput, rotationParameters, forceCastPoint)
+                in SystemAPI.Query<WheelRotationInput, WheelRotationParameters, WheelForceCastPoint>()
                 .WithAll<WheelHasRotationTag, WheelInitializedTag, Simulate>()) {
 
                 RefRW<LocalTransform> forceCastTransform = SystemAPI.GetComponentRW<LocalTransform>(forceCastPoint.Value);
@@ -22,7 +22,6 @@ namespace Assets.CodeBase.Vehicles.Wheels
                 quaternion currentRotation = quaternion.Euler(0, math.radians(rotationAngle), 0);
 
                 forceCastTransform.ValueRW.Rotation = currentRotation;
-                rotationCurrent.ValueRW.Value = currentRotation;
             }
         }
     }

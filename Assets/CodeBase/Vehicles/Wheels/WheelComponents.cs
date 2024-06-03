@@ -112,8 +112,4 @@ namespace Assets.CodeBase.Vehicles.Wheels
         public bool RotatesClockwise;
         public float MaxRotationAngle;
     }
-
-    public struct WheelRotationCurrent : IComponentData {
-        public quaternion Value;
-    }
 }

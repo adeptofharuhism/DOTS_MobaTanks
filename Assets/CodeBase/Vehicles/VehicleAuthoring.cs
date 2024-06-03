@@ -28,13 +28,6 @@ namespace Assets.CodeBase.Vehicles
                         Index = i,
                         Value = 0
                     });
-
-                DynamicBuffer<VehicleRotationBuffer> rotationBuffer = AddBuffer<VehicleRotationBuffer>(vehicle);
-                for (int i = 0; i < authoring.WheelAmount; i++)
-                    rotationBuffer.Add(new VehicleRotationBuffer {
-                        Index = i,
-                        Value = quaternion.identity
-                    });
             }
         }
     }

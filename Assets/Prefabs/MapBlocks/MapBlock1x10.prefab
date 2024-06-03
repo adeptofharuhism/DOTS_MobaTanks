@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: 3923282474612685994, guid: 4dd83c341a48bab4a93f006161ceff30,
         type: 3}
       propertyPath: m_Name
-      value: MapBlock1x10 Variant
+      value: MapBlock1x10
       objectReference: {fileID: 0}
     - target: {fileID: 7473373703507231827, guid: 4dd83c341a48bab4a93f006161ceff30,
         type: 3}

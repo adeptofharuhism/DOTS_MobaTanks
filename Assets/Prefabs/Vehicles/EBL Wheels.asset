@@ -15,11 +15,11 @@ MonoBehaviour:
   SpringRestDistance: 2.95
   WheelDiameter: 0.95
   SpringStrength: 50
-  SpringDamper: 8
+  SpringDamper: 11
   MaxRotationAngle: 10
   MaxSteeringTraction: 0.35
   MinSteeringTraction: 0.15
-  MaxVelocity: 40
+  MaxVelocity: 25
   MaxVelocityBackwards: -10
-  EngineForceMultiplier: 3
-  HardBrakingForceMultiplier: 1.44
+  EngineForceMultiplier: 2.5
+  HardBrakingForceMultiplier: 2
