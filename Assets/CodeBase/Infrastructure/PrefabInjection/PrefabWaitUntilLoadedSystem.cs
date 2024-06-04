@@ -26,7 +26,6 @@ namespace Assets.CodeBase.Infrastructure.PrefabInjection
 
                 ecb.Playback(state.EntityManager);
 
-                UnityEngine.Debug.Log("System disabled");
                 state.Enabled = false;
             }
         }

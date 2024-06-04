@@ -7,17 +7,46 @@ using Unity.Transforms;
 namespace Assets.CodeBase.Weapon
 {
     [UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
-    public partial struct WeaponProjectileSpawnSystem : ISystem
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
+    public partial struct WeaponCooldownSystem : ISystem
     {
-        public void OnCreate(ref SystemState state) {
-
-        }
-
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
-            foreach (var (projectilePrefab, currentTarget, projectileSpawnPoint)
-                in SystemAPI.Query<WeaponProjectilePrefab, CurrentTarget, WeaponProjectileSpawnPoint>()) {
+            foreach (var (cooldown, timeOnCooldown, weapon)
+                in SystemAPI.Query<WeaponCooldown, RefRW<WeaponTimeOnCooldown>>()
+                .WithAll<WeaponOnCooldownTag>()
+                .WithEntityAccess()) {
+
+                timeOnCooldown.ValueRW.Value += SystemAPI.Time.DeltaTime;
+
+                if (timeOnCooldown.ValueRW.Value > cooldown.Value) {
+                    timeOnCooldown.ValueRW.Value = 0;
+
+                    ecb.AddComponent<WeaponReadyToFireTag>(weapon);
+                    ecb.RemoveComponent<WeaponOnCooldownTag>(weapon);
+                }
+            }
+
+            ecb.Playback(state.EntityManager);
+        }
+    }
+
+    [UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
+    [UpdateAfter(typeof(WeaponCooldownSystem))]
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
+    public partial struct WeaponProjectileSpawnSystem : ISystem
+    {
+        public void OnUpdate(ref SystemState state) {
+            EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
+
+            foreach (var (projectilePrefab, currentTarget, projectileSpawnPoint, weapon)
+                in SystemAPI.Query<WeaponProjectilePrefab, CurrentTarget, WeaponProjectileSpawnPoint>()
+                .WithAll<WeaponReadyToFireTag>()
+                .WithEntityAccess()) {
+
+                ecb.AddComponent<WeaponOnCooldownTag>(weapon);
+                ecb.RemoveComponent<WeaponReadyToFireTag>(weapon);
 
                 if (currentTarget.Value == Entity.Null)
                     continue;
