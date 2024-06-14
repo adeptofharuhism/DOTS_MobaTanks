@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Assets.CodeBase.Weapon
 {
+    [RequireComponent(typeof(Targeting.TargeterAuthoring))]
     public class WeaponAuthoring : MonoBehaviour
     {
         [Header("Projectile spawn parameters")]

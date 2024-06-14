@@ -1,10 +1,11 @@
 ﻿using Unity.Entities;
-using Unity.NetCode;
+using Unity.Physics.Systems;
 using Unity.Transforms;
 
 namespace Assets.CodeBase.Weapon.Projectile
 {
-    [UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
+    [UpdateInGroup(typeof(PhysicsSystemGroup))]
+    [UpdateAfter(typeof(ProjectileCollisionDetectionSystem))]
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct ProjectileMoveSystem : ISystem
     {
