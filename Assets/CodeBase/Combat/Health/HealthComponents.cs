@@ -1,5 +1,8 @@
 ﻿using Unity.Entities;
+using Unity.Mathematics;
 using Unity.NetCode;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.CodeBase.Combat.Health
 {
@@ -23,5 +26,26 @@ namespace Assets.CodeBase.Combat.Health
     public struct DamageThisFrame : IComponentData
     {
         public float Value;
+    }
+
+    [GhostComponent(PrefabType = GhostPrefabType.Client)]
+    public struct HealthBarInitializationTag : IComponentData { }
+
+    [GhostComponent(PrefabType = GhostPrefabType.Client)]
+    public struct HealthBarOffset : IComponentData
+    {
+        public float3 Value;
+    }
+
+    [GhostComponent(PrefabType = GhostPrefabType.Client)]
+    public class HealthBarUIReference : ICleanupComponentData
+    {
+        public GameObject Value;
+    }
+
+    [GhostComponent(PrefabType = GhostPrefabType.Client)]
+    public class HealthBarSliderReference : ICleanupComponentData
+    {
+        public Slider Value;
     }
 }

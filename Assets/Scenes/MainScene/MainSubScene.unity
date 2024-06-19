@@ -43257,7 +43257,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52a6b5a68ebb24a48b507a88b92e216c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Vehicle: {fileID: 6390093006432525959, guid: 7e62d577bf51161449ee253948b3ebf3, type: 3}
+  _vehicle: {fileID: 6390093006432525959, guid: 7e62d577bf51161449ee253948b3ebf3,
+    type: 3}
+  _healthBar: {fileID: 833135816210540181, guid: e864a0dcc51687745bf99c7e62974144,
+    type: 3}
 --- !u!1001 &1931265496
 PrefabInstance:
   m_ObjectHideFlags: 0

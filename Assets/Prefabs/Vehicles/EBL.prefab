@@ -784,6 +784,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maximalHealth: 1000
+  _healthBarOffset: {x: 0, y: 5, z: 0}
 --- !u!1 &7081863597677090434
 GameObject:
   m_ObjectHideFlags: 0
