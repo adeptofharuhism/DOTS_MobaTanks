@@ -205,14 +205,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 20404813}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26d916d2d96923b46820825c06842d02, type: 3}
+  m_Script: {fileID: 11500000, guid: ca6b596a20c3c92469b70aa23021afb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _lookOffset:
     x: 0
-    y: 30
-    z: -30
-  _smoothTime: 0.3
+    y: 40
+    z: -40
+  _smoothTime: 0.35
+  _cameraAdvanceMultiplier: 2288
 --- !u!1 &330836209
 GameObject:
   m_ObjectHideFlags: 0
