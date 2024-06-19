@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 6935125675724934186}
   - component: {fileID: 9061272106278070489}
   - component: {fileID: 5176562694532315988}
+  - component: {fileID: -6872524787853247002}
   m_Layer: 0
   m_Name: TestTarget
   m_TagString: Untagged
@@ -328,3 +329,16 @@ MonoBehaviour:
   TrackInterpolationDelay: 0
   GhostGroup: 0
   UsePreSerialization: 0
+--- !u!114 &-6872524787853247002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 867912590647823101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93f3042af9f24fd47bc00cf454a7a1ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maximalHealth: 100

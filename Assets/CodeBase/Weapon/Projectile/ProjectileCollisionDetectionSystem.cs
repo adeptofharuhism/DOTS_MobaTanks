@@ -1,7 +1,7 @@
-﻿using Assets.CodeBase.Infrastructure.Destruction;
+﻿using Assets.CodeBase.Combat.Health;
+using Assets.CodeBase.Infrastructure.Destruction;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.NetCode;
 using Unity.Physics;
 using Unity.Physics.Systems;
 using Unity.Transforms;
@@ -21,17 +21,14 @@ namespace Assets.CodeBase.Weapon.Projectile
             };
 
             state.RequireForUpdate<PhysicsWorldSingleton>();
-            state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
         }
 
         public void OnUpdate(ref SystemState state) {
             CollisionWorld collisionWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().CollisionWorld;
-            EntityCommandBuffer ecb =
-                SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
-                .CreateCommandBuffer(state.WorldUnmanaged);
+            EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            foreach (var (speed, transform, projectile)
-                in SystemAPI.Query<ProjectileSpeed, RefRO<LocalToWorld>>()
+            foreach (var (speed, damage, transform, projectile)
+                in SystemAPI.Query<ProjectileSpeed, ProjectileDamage, RefRO<LocalToWorld>>()
                 .WithEntityAccess()) {
 
                 RaycastInput raycastInput = new RaycastInput {
@@ -44,9 +41,22 @@ namespace Assets.CodeBase.Weapon.Projectile
                 bool hasHit = collisionWorld.CastRay(raycastInput, ref hitList);
 
                 if (hasHit) {
+                    foreach (RaycastHit hit in hitList) {
+                        if (SystemAPI.HasBuffer<DamageBufferElement>(hit.Entity)) {
+                            DynamicBuffer<DamageBufferElement> damageBuffer =
+                                SystemAPI.GetBuffer<DamageBufferElement>(hit.Entity);
+
+                            damageBuffer.Add(new DamageBufferElement { Value = damage.Value });
+
+                            break;
+                        }
+                    }
+
                     ecb.AddComponent<DestroyEntityTag>(projectile);
                 }
             }
+
+            ecb.Playback(state.EntityManager);
         }
     }
 }

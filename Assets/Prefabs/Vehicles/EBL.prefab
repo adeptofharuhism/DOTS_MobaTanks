@@ -637,6 +637,7 @@ GameObject:
   - component: {fileID: 5016090859143917645}
   - component: {fileID: -8204569237400224555}
   - component: {fileID: 1451701759757599482}
+  - component: {fileID: -611474000109150624}
   m_Layer: 0
   m_Name: EBL
   m_TagString: Untagged
@@ -770,6 +771,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 444c005e68eb0a548aa0a263c3d839b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-611474000109150624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6390093006432525959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93f3042af9f24fd47bc00cf454a7a1ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maximalHealth: 1000
 --- !u!1 &7081863597677090434
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,4 +6,9 @@ namespace Assets.CodeBase.Weapon.Projectile
     {
         public float Value;
     }
+
+    public partial struct ProjectileDamage : IComponentData
+    {
+        public float Value;
+    }
 }
