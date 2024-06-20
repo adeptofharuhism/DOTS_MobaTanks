@@ -5,6 +5,7 @@ using UnityEngine;
 using Assets.CodeBase.Infrastructure.PrefabInjection;
 using Unity.Mathematics;
 using Unity.Transforms;
+using Assets.CodeBase.Combat.Teams;
 
 namespace Assets.CodeBase.GameEntry
 {
@@ -13,7 +14,11 @@ namespace Assets.CodeBase.GameEntry
     {
         private const string VehicleName = "Vehicle";
 
+        private int _playersInGame;
+
         public void OnCreate(ref SystemState state) {
+            _playersInGame = 0;
+
             EntityQueryBuilder newPlayerDataRequestQuery = new EntityQueryBuilder(Allocator.Temp)
                 .WithAll<SetNewPlayerDataRequest, ReceiveRpcCommandRequest>();
             state.RequireForUpdate(state.GetEntityQuery(newPlayerDataRequestQuery));
@@ -37,18 +42,38 @@ namespace Assets.CodeBase.GameEntry
                 Debug.Log($"Connected {newPlayerData.PlayerName} with Client Id: {clientId}");
 
                 Entity newVehicle = ecb.Instantiate(vehiclePrefab);
-                ecb.SetName(newVehicle, VehicleName);
+                ecb.SetName(newVehicle, newPlayerData.PlayerName);
 
-                float3 vehicleSpawnPosition = new float3(-260 + 5 * clientId, 5, 50);
-                LocalTransform vehicleTransform = LocalTransform.FromPosition(vehicleSpawnPosition);
-
-                ecb.SetComponent(newVehicle, vehicleTransform);
                 ecb.SetComponent(newVehicle, new GhostOwner { NetworkId = clientId });
 
                 ecb.AppendToBuffer(requestSource.SourceConnection, new LinkedEntityGroup { Value = newVehicle });
+
+                TeamType newPlayerTeam = GetNewPlayerTeam();
+                ecb.SetComponent(newVehicle, new UnitTeam { Value = newPlayerTeam });
+
+                int teamSideMultiplier;
+                if (newPlayerTeam == TeamType.Blue) {
+                    teamSideMultiplier = -1;
+                } else {
+                    teamSideMultiplier = 1;
+                }
+
+                float3 vehicleSpawnPosition = new float3((260 + 5 * clientId) * teamSideMultiplier, 5, 50);
+                LocalTransform vehicleTransform = LocalTransform.FromPosition(vehicleSpawnPosition);
+                ecb.SetComponent(newVehicle, vehicleTransform);
             }
 
             ecb.Playback(state.EntityManager);
+        }
+
+        private TeamType GetNewPlayerTeam() {
+            TeamType result;
+            if (_playersInGame++ % 2 == 0)
+                result = TeamType.Blue;
+            else
+                result = TeamType.Orange;
+
+            return result;
         }
     }
 }
