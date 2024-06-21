@@ -213,7 +213,6 @@ MonoBehaviour:
     y: 40
     z: -40
   _smoothTime: 0.35
-  _cameraAdvanceMultiplier: 2288
 --- !u!1 &330836209
 GameObject:
   m_ObjectHideFlags: 0
