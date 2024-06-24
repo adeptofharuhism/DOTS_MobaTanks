@@ -42,7 +42,7 @@ namespace Assets.CodeBase.Vehicles.Turrets
                 float d23 = slotPoint1.z - slotPoint0.z;
                 float d33 = slotPoint2.z - slotPoint0.z;
 
-                float A = d22 * d33 + d23 * d32;
+                float A = d22 * d33 - d23 * d32;
                 float B = d23 * d31 - d21 * d33;
                 float C = d21 * d32 - d22 * d31;
                 float D = -(A * slotPoint0.x + B * slotPoint0.y + C * slotPoint0.z);
