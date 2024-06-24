@@ -1,4 +1,5 @@
-﻿using Assets.CodeBase.Targeting;
+﻿using Assets.CodeBase.Combat.Teams;
+using Assets.CodeBase.Targeting;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.NetCode;
@@ -15,8 +16,8 @@ namespace Assets.CodeBase.Weapon
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
-            foreach (var (projectilePrefab, currentTarget, projectileSpawnPoint, weapon)
-                in SystemAPI.Query<WeaponProjectilePrefab, CurrentTarget, WeaponProjectileSpawnPoint>()
+            foreach (var (projectilePrefab, currentTarget, projectileSpawnPoint, team, weapon)
+                in SystemAPI.Query<WeaponProjectilePrefab, CurrentTarget, WeaponProjectileSpawnPoint, UnitTeam>()
                 .WithAll<WeaponReadyToFireTag>()
                 .WithEntityAccess()) {
 
@@ -39,6 +40,7 @@ namespace Assets.CodeBase.Weapon
                 Entity projectile = ecb.Instantiate(projectilePrefab.Value);
 
                 ecb.SetComponent(projectile, projectileSpawnTransform);
+                ecb.SetComponent(projectile, new UnitTeam { Value = team.Value });
             }
 
             ecb.Playback(state.EntityManager);

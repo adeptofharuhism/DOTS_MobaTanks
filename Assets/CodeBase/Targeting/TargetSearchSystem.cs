@@ -1,4 +1,5 @@
-﻿using Unity.Collections;
+﻿using Assets.CodeBase.Combat.Teams;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
@@ -11,6 +12,8 @@ namespace Assets.CodeBase.Targeting
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct TargetSearchSystem : ISystem
     {
+        private const int RandomSeed = 42;
+
         private CollisionFilter _collisionFilter;
         private Random _random;
 
@@ -20,7 +23,7 @@ namespace Assets.CodeBase.Targeting
                 CollidesWith = 1 << 4
             };
 
-            _random = Random.CreateFromIndex(42);
+            _random = Random.CreateFromIndex(RandomSeed);
 
             state.RequireForUpdate<PhysicsWorldSingleton>();
         }
@@ -28,8 +31,8 @@ namespace Assets.CodeBase.Targeting
         public void OnUpdate(ref SystemState state) {
             CollisionWorld collisionWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().CollisionWorld;
 
-            foreach (var (range, targeterTransform, currentTarget)
-                in SystemAPI.Query<TargeterRange, RefRO<LocalToWorld>, RefRW<CurrentTarget>>()
+            foreach (var (range, targeterTransform, currentTarget, team)
+                in SystemAPI.Query<TargeterRange, RefRO<LocalToWorld>, RefRW<CurrentTarget>, UnitTeam>()
                 .WithAll<Targeter>()) {
 
                 NativeList<DistanceHit> distanceHits = new NativeList<DistanceHit>(Allocator.Temp);
@@ -41,13 +44,28 @@ namespace Assets.CodeBase.Targeting
                     _collisionFilter,
                     QueryInteraction.IgnoreTriggers);
 
-                if (distanceHits.Length == 0)
-                    currentTarget.ValueRW.Value = Entity.Null;
-                else {
-                    int targetIndex = _random.NextInt(distanceHits.Length - 1);
-                    currentTarget.ValueRW.Value = distanceHits[targetIndex].Entity;
-                }
+                RemoveAlliedUnits(ref state, ref distanceHits, team);
+
+                currentTarget.ValueRW.Value = SelectRandomTarget(ref distanceHits);
             }
+        }
+
+        private void RemoveAlliedUnits(ref SystemState state, ref NativeList<DistanceHit> distanceHits, UnitTeam team) {
+            for (int i = 0; i < distanceHits.Length;) {
+                UnitTeam targetTeam = SystemAPI.GetComponent<UnitTeam>(distanceHits[i].Entity);
+                if (team.Value == targetTeam.Value)
+                    distanceHits.RemoveAt(i);
+                else
+                    i++;
+            }
+        }
+
+        private Entity SelectRandomTarget(ref NativeList<DistanceHit> distanceHits) {
+            if (distanceHits.Length == 0)
+                return Entity.Null;
+
+            int targetIndex = _random.NextInt(distanceHits.Length - 1);
+            return distanceHits[targetIndex].Entity;
         }
     }
 }

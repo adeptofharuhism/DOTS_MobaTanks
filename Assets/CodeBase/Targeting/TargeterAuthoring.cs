@@ -1,8 +1,10 @@
-﻿using Unity.Entities;
+﻿using Assets.CodeBase.Combat.Teams;
+using Unity.Entities;
 using UnityEngine;
 
 namespace Assets.CodeBase.Targeting
 {
+    [RequireComponent(typeof(TeamAuthoring))]
     public class TargeterAuthoring : MonoBehaviour
     {
         [SerializeField] private float _targetSearchRange = 20;

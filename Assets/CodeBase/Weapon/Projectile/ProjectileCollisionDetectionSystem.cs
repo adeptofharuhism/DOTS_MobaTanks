@@ -1,4 +1,5 @@
 ﻿using Assets.CodeBase.Combat.Health;
+using Assets.CodeBase.Combat.Teams;
 using Assets.CodeBase.Infrastructure.Destruction;
 using Unity.Collections;
 using Unity.Entities;
@@ -27,8 +28,8 @@ namespace Assets.CodeBase.Weapon.Projectile
             CollisionWorld collisionWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().CollisionWorld;
             EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            foreach (var (speed, damage, transform, projectile)
-                in SystemAPI.Query<ProjectileSpeed, ProjectileDamage, RefRO<LocalToWorld>>()
+            foreach (var (speed, damage, transform, team, projectile)
+                in SystemAPI.Query<ProjectileSpeed, ProjectileDamage, RefRO<LocalToWorld>, UnitTeam>()
                 .WithEntityAccess()) {
 
                 RaycastInput raycastInput = new RaycastInput {
@@ -42,21 +43,40 @@ namespace Assets.CodeBase.Weapon.Projectile
 
                 if (hasHit) {
                     foreach (RaycastHit hit in hitList) {
-                        if (SystemAPI.HasBuffer<DamageBufferElement>(hit.Entity)) {
-                            DynamicBuffer<DamageBufferElement> damageBuffer =
-                                SystemAPI.GetBuffer<DamageBufferElement>(hit.Entity);
+                        UnitTeam hitTeam = GetUnitTeam(ref state, hit.Entity);
 
-                            damageBuffer.Add(new DamageBufferElement { Value = damage.Value });
+                        if (hitTeam.Value == team.Value)
+                            continue;
 
-                            break;
-                        }
+                        TryDoDamage(ref state, hit.Entity, damage.Value);
+
+                        ecb.AddComponent<DestroyEntityTag>(projectile);
+                        break;
                     }
-
-                    ecb.AddComponent<DestroyEntityTag>(projectile);
                 }
             }
 
             ecb.Playback(state.EntityManager);
+        }
+
+        private UnitTeam GetUnitTeam(ref SystemState state, Entity entity) {
+            UnitTeam team;
+
+            bool hasTeam = SystemAPI.HasComponent<UnitTeam>(entity);
+            if (hasTeam)
+                team = SystemAPI.GetComponent<UnitTeam>(entity);
+            else team = new UnitTeam { Value = TeamType.None };
+
+            return team;
+        }
+
+        private void TryDoDamage(ref SystemState state, Entity entity, float damage) {
+            if (SystemAPI.HasBuffer<DamageBufferElement>(entity)) {
+                DynamicBuffer<DamageBufferElement> damageBuffer =
+                    SystemAPI.GetBuffer<DamageBufferElement>(entity);
+
+                damageBuffer.Add(new DamageBufferElement { Value = damage });
+            }
         }
     }
 }

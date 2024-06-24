@@ -135,7 +135,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _projectileSpeed: 120
-  _projectileDamage: 0
+  _projectileDamage: 50
 --- !u!114 &-4599503149747094318
 MonoBehaviour:
   m_ObjectHideFlags: 0

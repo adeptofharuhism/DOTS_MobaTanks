@@ -1,8 +1,10 @@
-﻿using Unity.Entities;
+﻿using Assets.CodeBase.Combat.Teams;
+using Unity.Entities;
 using UnityEngine;
 
 namespace Assets.CodeBase.Weapon
 {
+    [RequireComponent(typeof(TeamAuthoring))]
     [RequireComponent(typeof(Targeting.TargeterAuthoring))]
     public class WeaponAuthoring : MonoBehaviour
     {
