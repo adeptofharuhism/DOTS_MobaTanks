@@ -34,6 +34,8 @@ namespace Assets.CodeBase.Vehicles.Turrets
                 AddComponent(entity, new TurretWeaponPrefab {
                     Value = GetEntity(authoring.TurretParameters.TurretWeaponPrefab, TransformUsageFlags.Dynamic)
                 });
+
+                AddComponent(entity, new TurretRotationAngle { Value = 0 });
             }
         }
     }

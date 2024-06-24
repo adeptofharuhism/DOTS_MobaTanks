@@ -34,4 +34,16 @@ namespace Assets.CodeBase.Vehicles.Turrets
     {
         public Entity Value;
     }
+
+    public struct TurretRotationAngle : IComponentData
+    {
+        [GhostField(Quantization = 0)] public float Value;
+    }
+
+    public partial struct WeaponHasTurret : IComponentData { }
+
+    public partial struct WeaponParent : IComponentData
+    {
+        public Entity Value;
+    }
 }
