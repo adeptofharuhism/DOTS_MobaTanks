@@ -28,9 +28,12 @@ namespace Assets.CodeBase.Vehicles.Turrets
                 RefRO<LocalToWorld> slotTransform = SystemAPI.GetComponentRO<LocalToWorld>(slot.Value);
                 RefRO<LocalToWorld> targetTransform = SystemAPI.GetComponentRO<LocalToWorld>(target.Value);
 
+                float3 slotForward = slotTransform.ValueRO.Forward;
+                float3 slotRight = slotTransform.ValueRO.Right;
+
                 float3 slotPoint0 = slotTransform.ValueRO.Position;
-                float3 slotPoint1 = slotTransform.ValueRO.Position + slotTransform.ValueRO.Forward;
-                float3 slotPoint2 = slotTransform.ValueRO.Position + slotTransform.ValueRO.Right;
+                float3 slotPoint1 = slotTransform.ValueRO.Position + slotForward;
+                float3 slotPoint2 = slotTransform.ValueRO.Position + slotRight;
 
                 float d21 = slotPoint1.x - slotPoint0.x;
                 float d31 = slotPoint2.x - slotPoint0.x;
@@ -53,7 +56,17 @@ namespace Assets.CodeBase.Vehicles.Turrets
                     B * T + P.y,
                     C * T + P.z);
 
-                //ecb.SetComponent(parent.Value, new TurretRotationAngle { Value = lookAngle });
+                float3 lookVector = H - slotPoint0;
+                lookVector = math.normalize(lookVector);
+                float lookAndForwardDot = math.dot(lookVector, slotForward);
+                float lookAngle = math.acos(lookAndForwardDot);
+
+                float rightAndLookDot = math.dot(lookVector, slotRight);
+                float rightAndLookAngle = math.acos(rightAndLookDot);
+                if (rightAndLookAngle > math.PIHALF)
+                    lookAngle *= -1;
+
+                ecb.SetComponent(parent.Value, new TurretRotationAngle { Value = lookAngle });
             }
 
             ecb.Playback(state.EntityManager);
