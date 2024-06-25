@@ -48,4 +48,10 @@ namespace Assets.CodeBase.Combat.Health
     {
         public Slider Value;
     }
+
+    [GhostComponent(PrefabType = GhostPrefabType.Client)]
+    public class HealthBarColorReference : ICleanupComponentData
+    {
+        public HealthBarColor Value;
+    }
 }

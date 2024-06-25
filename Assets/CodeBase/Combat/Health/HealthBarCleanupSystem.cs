@@ -25,6 +25,7 @@ namespace Assets.CodeBase.Combat.Health
                 Object.Destroy(healthBar.Value);
                 ecb.RemoveComponent<HealthBarUIReference>(entity);
                 ecb.RemoveComponent<HealthBarSliderReference>(entity);
+                ecb.RemoveComponent<HealthBarColorReference>(entity);
             }
         }
     }
