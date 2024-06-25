@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Assets.CodeBase.Combat.Teams;
+using Unity.Entities;
 using Unity.Transforms;
 
 namespace Assets.CodeBase.Vehicles.Turrets
@@ -10,8 +11,8 @@ namespace Assets.CodeBase.Vehicles.Turrets
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
-            foreach (var (model, modelPrefab, slot, entity)
-                in SystemAPI.Query<RefRW<TurretModel>, TurretModelPrefab, TurretSlot>()
+            foreach (var (modelPrefab, slot, team, entity)
+                in SystemAPI.Query<TurretModelPrefab, TurretSlot, UnitTeam>()
                 .WithAll<TurretUninitialized>()
                 .WithEntityAccess()) {
 
@@ -23,6 +24,8 @@ namespace Assets.CodeBase.Vehicles.Turrets
                 RefRO<LocalToWorld> slotTransform = SystemAPI.GetComponentRO<LocalToWorld>(slot.Value);
                 LocalTransform modelTransform = LocalTransform.FromPosition(slotTransform.ValueRO.Position);
                 ecb.SetComponent(newModel, modelTransform);
+
+                ecb.SetComponent(newModel, new UnitTeam { Value = team.Value });
 
                 ecb.SetComponent(entity, new TurretModel { Value = newModel });
             }

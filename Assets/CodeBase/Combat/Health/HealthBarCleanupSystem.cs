@@ -21,7 +21,7 @@ namespace Assets.CodeBase.Combat.Health
                 in SystemAPI.Query<HealthBarUIReference, HealthBarSliderReference>()
                 .WithNone<LocalTransform>()
                 .WithEntityAccess()) {
-
+                
                 Object.Destroy(healthBar.Value);
                 ecb.RemoveComponent<HealthBarUIReference>(entity);
                 ecb.RemoveComponent<HealthBarSliderReference>(entity);

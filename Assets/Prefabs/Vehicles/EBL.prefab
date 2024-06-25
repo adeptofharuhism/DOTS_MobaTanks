@@ -640,6 +640,7 @@ GameObject:
   - component: {fileID: -3657005763334146209}
   - component: {fileID: -611474000109150624}
   - component: {fileID: 9116985977004669682}
+  - component: {fileID: 1079137612744046412}
   m_Layer: 0
   m_Name: EBL
   m_TagString: Untagged
@@ -829,6 +830,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _teamType: 0
+--- !u!114 &1079137612744046412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6390093006432525959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87ae9a46e0af7b7438753baf477f5e53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7081863597677090434
 GameObject:
   m_ObjectHideFlags: 0
