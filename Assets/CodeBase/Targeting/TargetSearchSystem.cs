@@ -46,7 +46,8 @@ namespace Assets.CodeBase.Targeting
 
                 RemoveAlliedUnits(ref state, ref distanceHits, team);
 
-                currentTarget.ValueRW.Value = SelectRandomTarget(ref distanceHits);
+                Entity targetEntity = SelectRandomTarget(ref distanceHits);
+                currentTarget.ValueRW.Value = SelectTargetingPoint(ref state, targetEntity);
             }
         }
 
@@ -66,6 +67,13 @@ namespace Assets.CodeBase.Targeting
 
             int targetIndex = _random.NextInt(distanceHits.Length - 1);
             return distanceHits[targetIndex].Entity;
+        }
+
+        private Entity SelectTargetingPoint(ref SystemState state, Entity entity) {
+            if (SystemAPI.HasComponent<TargetPosition>(entity))
+                return SystemAPI.GetComponent<TargetPosition>(entity).Value;
+
+            return entity;
         }
     }
 }
