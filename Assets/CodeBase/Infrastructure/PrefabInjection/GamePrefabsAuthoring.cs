@@ -10,9 +10,11 @@ namespace Assets.CodeBase.Infrastructure.PrefabInjection
 
         [Header("UI Objects")]
         [SerializeField] private GameObject _healthBar;
+        [SerializeField] private GameObject _vehicleHealthBar;
 
         public GameObject Vehicle => _vehicle;
         public GameObject HealthBar => _healthBar;
+        public GameObject VehicleHealthBar => _vehicleHealthBar;
 
         public class GamePrefabsBaker : Baker<GamePrefabsAuthoring>
         {
@@ -24,7 +26,8 @@ namespace Assets.CodeBase.Infrastructure.PrefabInjection
                 });
 
                 AddComponentObject(entity, new UIPrefabs {
-                    HealthBar = authoring.HealthBar
+                    HealthBar = authoring.HealthBar,
+                    VehicleHealthBar = authoring.VehicleHealthBar,
                 });
             }
         }

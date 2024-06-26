@@ -17,15 +17,17 @@ namespace Assets.CodeBase.Combat.Health
                 SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
                 .CreateCommandBuffer(state.WorldUnmanaged);
 
-            foreach (var (healthBar, slider, entity)
-                in SystemAPI.Query<HealthBarUIReference, HealthBarSliderReference>()
+            foreach (var (healthBar, entity)
+                in SystemAPI.Query<HealthBarUIReference>()
                 .WithNone<LocalTransform>()
                 .WithEntityAccess()) {
-                
+
                 Object.Destroy(healthBar.Value);
                 ecb.RemoveComponent<HealthBarUIReference>(entity);
                 ecb.RemoveComponent<HealthBarSliderReference>(entity);
                 ecb.RemoveComponent<HealthBarColorReference>(entity);
+                ecb.RemoveComponent<HealthBarCounterReference>(entity);
+                ecb.RemoveComponent<HealthBarPlayerName>(entity);
             }
         }
     }

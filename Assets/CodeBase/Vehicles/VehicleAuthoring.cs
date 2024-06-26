@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Assets.CodeBase.Combat.Health;
+using Unity.Entities;
 using UnityEngine;
 
 namespace Assets.CodeBase.Vehicles
@@ -27,6 +28,8 @@ namespace Assets.CodeBase.Vehicles
                         Index = i,
                         Value = 0
                     });
+
+                AddComponent(vehicle, new PlayerName { Value = string.Empty });
             }
         }
     }

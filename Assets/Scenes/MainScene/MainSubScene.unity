@@ -43505,6 +43505,8 @@ MonoBehaviour:
     type: 3}
   _healthBar: {fileID: 833135816210540181, guid: e864a0dcc51687745bf99c7e62974144,
     type: 3}
+  _vehicleHealthBar: {fileID: 6828316143617664204, guid: e090be061daf8774b93452b508a35c97,
+    type: 3}
 --- !u!1001 &1931265496
 PrefabInstance:
   m_ObjectHideFlags: 0

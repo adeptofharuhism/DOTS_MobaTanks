@@ -13,5 +13,6 @@ namespace Assets.CodeBase.Infrastructure.PrefabInjection
     public class UIPrefabs : IComponentData
     {
         public GameObject HealthBar;
+        public GameObject VehicleHealthBar;
     }
 }

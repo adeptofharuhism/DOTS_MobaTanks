@@ -1,10 +1,10 @@
 ﻿using Assets.CodeBase.Combat.Teams;
 using Assets.CodeBase.Infrastructure.PrefabInjection;
+using Assets.CodeBase.Vehicles;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
-using UnityEngine.Pool;
 using UnityEngine.UI;
 
 namespace Assets.CodeBase.Combat.Health
@@ -25,8 +25,13 @@ namespace Assets.CodeBase.Combat.Health
                 .WithAll<HealthBarInitializationTag>()
                 .WithEntityAccess()) {
 
+                bool isVehicle = SystemAPI.HasComponent<VehicleTag>(entity);
+
                 float3 spawnPosition = transform.Position + healthBarOffset.Value;
-                GameObject healthBarPrefab = SystemAPI.ManagedAPI.GetSingleton<UIPrefabs>().HealthBar;
+                GameObject healthBarPrefab =
+                    (isVehicle)
+                    ? SystemAPI.ManagedAPI.GetSingleton<UIPrefabs>().VehicleHealthBar
+                    : SystemAPI.ManagedAPI.GetSingleton<UIPrefabs>().HealthBar;
 
                 GameObject newHealthBar = Object.Instantiate(healthBarPrefab, spawnPosition, Quaternion.identity);
                 Slider slider = newHealthBar.GetComponentInChildren<Slider>();
@@ -34,12 +39,21 @@ namespace Assets.CodeBase.Combat.Health
                 HealthBarColor color = newHealthBar.GetComponent<HealthBarColor>();
                 InitializeColor(ref state, entity, color);
 
+                if (isVehicle) {
+                    HealthBarPlayerName playerName = newHealthBar.GetComponent<HealthBarPlayerName>();
+                    ecb.AddComponent(entity, new HealthBarPlayerNameReference { Value = playerName });
+                    ecb.AddComponent<InitializePlayerNameTag>(entity);
+
+                    HealthBarCounter counter = newHealthBar.GetComponent<HealthBarCounter>();
+                    ecb.AddComponent(entity, new HealthBarCounterReference { Value = counter });
+                }
+
                 ecb.AddComponent(entity, new HealthBarUIReference { Value = newHealthBar });
                 ecb.AddComponent(entity, new HealthBarSliderReference { Value = slider });
                 ecb.AddComponent(entity, new HealthBarColorReference { Value = color });
                 ecb.RemoveComponent<HealthBarInitializationTag>(entity);
             }
-        
+
             ecb.Playback(state.EntityManager);
         }
 

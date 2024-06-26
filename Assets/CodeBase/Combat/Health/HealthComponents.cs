@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Unity.Collections;
+using Unity.Entities;
 using Unity.Mathematics;
 using Unity.NetCode;
 using UnityEngine;
@@ -53,5 +54,25 @@ namespace Assets.CodeBase.Combat.Health
     public class HealthBarColorReference : ICleanupComponentData
     {
         public HealthBarColor Value;
+    }
+
+    public struct VehicleHealthTag : IComponentData { }
+    public struct InitializePlayerNameTag : IComponentData { }
+
+    public struct PlayerName : IComponentData
+    {
+        [GhostField] public FixedString64Bytes Value;
+    }
+
+    [GhostComponent(PrefabType = GhostPrefabType.Client)]
+    public class HealthBarPlayerNameReference : ICleanupComponentData
+    {
+        public HealthBarPlayerName Value;
+    }
+
+    [GhostComponent(PrefabType = GhostPrefabType.Client)]
+    public class HealthBarCounterReference : ICleanupComponentData
+    {
+        public HealthBarCounter Value;
     }
 }

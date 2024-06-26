@@ -6,14 +6,13 @@ using Assets.CodeBase.Infrastructure.PrefabInjection;
 using Unity.Mathematics;
 using Unity.Transforms;
 using Assets.CodeBase.Combat.Teams;
+using Assets.CodeBase.Combat.Health;
 
 namespace Assets.CodeBase.GameEntry
 {
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct ServerProcessGameEntrySystem : ISystem
     {
-        private const string VehicleName = "Vehicle";
-
         private int _playersInGame;
 
         public void OnCreate(ref SystemState state) {
@@ -43,6 +42,7 @@ namespace Assets.CodeBase.GameEntry
 
                 Entity newVehicle = ecb.Instantiate(vehiclePrefab);
                 ecb.SetName(newVehicle, newPlayerData.PlayerName);
+                ecb.SetComponent(newVehicle, new PlayerName { Value = newPlayerData.PlayerName });
 
                 ecb.SetComponent(newVehicle, new GhostOwner { NetworkId = clientId });
 
