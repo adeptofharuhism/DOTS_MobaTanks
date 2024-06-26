@@ -27,6 +27,8 @@ namespace Assets.CodeBase.Vehicles.Turrets
 
                 ecb.SetComponent(newModel, new UnitTeam { Value = team.Value });
 
+                ecb.AppendToBuffer(entity, new LinkedEntityGroup { Value = newModel });
+
                 ecb.SetComponent(entity, new TurretModel { Value = newModel });
             }
 

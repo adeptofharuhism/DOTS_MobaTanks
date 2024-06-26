@@ -31,6 +31,8 @@ namespace Assets.CodeBase.Vehicles.Turrets
                 ecb.AddComponent(newWeapon, new WeaponParent { Value = entity });
                 ecb.AddComponent<WeaponHasTurret>(newWeapon);
 
+                ecb.AppendToBuffer(entity, new LinkedEntityGroup { Value = newWeapon });
+
                 ecb.SetComponent(entity, new TurretWeapon { Value = newWeapon });
             }
 
