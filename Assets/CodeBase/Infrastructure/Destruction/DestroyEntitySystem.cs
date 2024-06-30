@@ -13,11 +13,11 @@ namespace Assets.CodeBase.Infrastructure.Destruction
         }
 
         public void OnUpdate(ref SystemState state) {
-            EntityCommandBuffer ecb = 
+            EntityCommandBuffer ecb =
                 SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()
                 .CreateCommandBuffer(state.WorldUnmanaged);
 
-            foreach(var (transform, entity)
+            foreach (var (transform, entity)
                 in SystemAPI.Query<RefRW<LocalTransform>>()
                 .WithAll<DestroyEntityTag>()
                 .WithEntityAccess()) {

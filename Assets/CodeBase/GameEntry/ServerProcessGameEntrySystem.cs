@@ -7,6 +7,8 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using Assets.CodeBase.Combat.Teams;
 using Assets.CodeBase.Combat.Health;
+using Assets.CodeBase.Infrastructure.Respawn;
+using Assets.CodeBase.Infrastructure.Destruction;
 
 namespace Assets.CodeBase.GameEntry
 {
@@ -40,27 +42,23 @@ namespace Assets.CodeBase.GameEntry
                 int clientId = SystemAPI.GetComponent<NetworkId>(requestSource.SourceConnection).Value;
                 Debug.Log($"Connected {newPlayerData.PlayerName} with Client Id: {clientId}");
 
-                Entity newVehicle = ecb.Instantiate(vehiclePrefab);
-                ecb.SetName(newVehicle, newPlayerData.PlayerName);
-                ecb.SetComponent(newVehicle, new PlayerName { Value = newPlayerData.PlayerName });
-
-                ecb.SetComponent(newVehicle, new GhostOwner { NetworkId = clientId });
-
-                ecb.AppendToBuffer(requestSource.SourceConnection, new LinkedEntityGroup { Value = newVehicle });
-
                 TeamType newPlayerTeam = GetNewPlayerTeam();
-                ecb.SetComponent(newVehicle, new UnitTeam { Value = newPlayerTeam });
 
-                int teamSideMultiplier;
-                if (newPlayerTeam == TeamType.Blue) {
-                    teamSideMultiplier = -1;
-                } else {
-                    teamSideMultiplier = 1;
-                }
+                Entity vehicleRespawnParameters = ecb.CreateEntity();
+                ecb.SetName(vehicleRespawnParameters, $"{newPlayerData.PlayerName}RespawnParameters");
+                ecb.AddComponent(vehicleRespawnParameters, new VehicleRespawnParameters {
+                    ClientId = clientId,
+                    Team = newPlayerTeam,
+                    VehiclePrefab = vehiclePrefab,
+                    PlayerName = newPlayerData.PlayerName,
+                    SpawnPosition = GetSpawnPosition(newPlayerTeam),
+                });
+                ecb.AddComponent(vehicleRespawnParameters, new RespawnCooldown { Value = 10 });
+                ecb.AddComponent<TimeToRespawn>(vehicleRespawnParameters);
+                ecb.AddComponent<ShouldRespawnTag>(vehicleRespawnParameters);
+                ecb.AddComponent<RespawnedEntity>(vehicleRespawnParameters);
 
-                float3 vehicleSpawnPosition = new float3((260 + 5 * clientId) * teamSideMultiplier, 5, 50);
-                LocalTransform vehicleTransform = LocalTransform.FromPosition(vehicleSpawnPosition);
-                ecb.SetComponent(newVehicle, vehicleTransform);
+                ecb.AppendToBuffer(requestSource.SourceConnection, new LinkedEntityGroup { Value = vehicleRespawnParameters });
             }
 
             ecb.Playback(state.EntityManager);
@@ -74,6 +72,19 @@ namespace Assets.CodeBase.GameEntry
                 result = TeamType.Orange;
 
             return result;
+        }
+
+        private float3 GetSpawnPosition(TeamType team) =>
+            new float3((260 + 5 * (_playersInGame / 2)) * GetTeamSideMultiplier(team), 5, 50);
+
+        private int GetTeamSideMultiplier(TeamType team) {
+            int teamSideMultiplier;
+            if (team == TeamType.Blue)
+                teamSideMultiplier = -1;
+            else
+                teamSideMultiplier = 1;
+
+            return teamSideMultiplier;
         }
     }
 }
