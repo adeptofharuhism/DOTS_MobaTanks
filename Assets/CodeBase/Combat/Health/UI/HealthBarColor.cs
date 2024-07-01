@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assets.CodeBase.Combat.Health
+namespace Assets.CodeBase.Combat.Health.UI
 {
     public class HealthBarColor : MonoBehaviour
     {

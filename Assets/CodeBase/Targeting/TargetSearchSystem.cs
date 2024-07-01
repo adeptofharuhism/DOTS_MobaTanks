@@ -1,4 +1,5 @@
 ﻿using Assets.CodeBase.Combat.Teams;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -28,6 +29,7 @@ namespace Assets.CodeBase.Targeting
             state.RequireForUpdate<PhysicsWorldSingleton>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             CollisionWorld collisionWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().CollisionWorld;
 
@@ -51,6 +53,7 @@ namespace Assets.CodeBase.Targeting
             }
         }
 
+        [BurstCompile]
         private void RemoveAlliedUnits(ref SystemState state, ref NativeList<DistanceHit> distanceHits, UnitTeam team) {
             for (int i = 0; i < distanceHits.Length;) {
                 UnitTeam targetTeam = SystemAPI.GetComponent<UnitTeam>(distanceHits[i].Entity);
@@ -61,6 +64,7 @@ namespace Assets.CodeBase.Targeting
             }
         }
 
+        [BurstCompile]
         private Entity SelectRandomTarget(ref NativeList<DistanceHit> distanceHits) {
             if (distanceHits.Length == 0)
                 return Entity.Null;
@@ -69,6 +73,7 @@ namespace Assets.CodeBase.Targeting
             return distanceHits[targetIndex].Entity;
         }
 
+        [BurstCompile]
         private Entity SelectTargetingPoint(ref SystemState state, Entity entity) {
             if (SystemAPI.HasComponent<TargetPosition>(entity))
                 return SystemAPI.GetComponent<TargetPosition>(entity).Value;

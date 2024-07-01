@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Unity.Burst;
+using Unity.Entities;
 using Unity.Physics.Systems;
 using Unity.Transforms;
 
@@ -9,6 +10,7 @@ namespace Assets.CodeBase.Weapon.Projectile
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct ProjectileMoveSystem : ISystem
     {
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (transform, speed)
                 in SystemAPI.Query<RefRW<LocalTransform>, ProjectileSpeed>()) {

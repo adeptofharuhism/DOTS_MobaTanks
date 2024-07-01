@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Unity.Burst;
+using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics.Systems;
 using Unity.Transforms;
@@ -16,6 +17,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
             state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb =
                 SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
@@ -30,14 +32,18 @@ namespace Assets.CodeBase.Vehicles.Wheels
 
                 float3 forceCastForward = forceCastTransform.ValueRO.Forward;
 
-                float braking = CalculateBraking(axisProjectedVelocity.Value.z);
-                float zForceValue = braking * SystemAPI.Time.DeltaTime;
-                float3 zForceVector = forceCastForward * zForceValue;
+                float3 zForceVector = 
+                    forceCastForward * CalculateZForce(ref state, axisProjectedVelocity.Value.z);
 
                 ecb.SetComponent(wheel, new WheelAxisForceAcceleration { Value = zForceVector });
             }
         }
 
+        [BurstCompile]
+        private float CalculateZForce(ref SystemState state, float velocityZ) =>
+            CalculateBraking(velocityZ) * SystemAPI.Time.DeltaTime;
+
+        [BurstCompile]
         private float CalculateBraking(float velocity) {
             if (velocity > Epsilon)
                 return -BrakingStrength;

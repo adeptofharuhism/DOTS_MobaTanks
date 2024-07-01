@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Unity.Burst;
+using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics.Systems;
 using Unity.Transforms;
@@ -13,6 +14,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
             state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb =
                 SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
@@ -27,14 +29,26 @@ namespace Assets.CodeBase.Vehicles.Wheels
 
                 float3 forceCastUp = forceCastTransform.ValueRO.Up;
 
-                float yForceValue =
-                    (springStrength.Strength * springCompression.Value)
-                    - (springStrength.Damper * axisProjectedVelocity.Value.y);
-
-                float3 yForceVector = forceCastUp * yForceValue  * SystemAPI.Time.DeltaTime;
+                float3 yForceVector =
+                    forceCastUp * CalculateYForce(
+                        ref state,
+                        springStrength.Strength,
+                        springCompression.Value,
+                        springStrength.Damper,
+                        axisProjectedVelocity.Value.y);
 
                 ecb.SetComponent(wheel, new WheelAxisForceSpring { Value = yForceVector });
             }
         }
+
+        [BurstCompile]
+        private float CalculateYForce(
+            ref SystemState state,
+            float springStrength,
+            float springCompression,
+            float springDamper,
+            float velocityY) =>
+
+            (springStrength * springCompression - springDamper * velocityY) * SystemAPI.Time.DeltaTime;
     }
 }

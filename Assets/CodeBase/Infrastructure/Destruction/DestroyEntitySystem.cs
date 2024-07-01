@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Unity.Burst;
+using Unity.Entities;
 using Unity.NetCode;
 using Unity.Transforms;
 
@@ -12,6 +13,7 @@ namespace Assets.CodeBase.Infrastructure.Destruction
             state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb =
                 SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>()

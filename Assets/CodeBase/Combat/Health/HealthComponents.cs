@@ -2,8 +2,6 @@
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.NetCode;
-using UnityEngine;
-using UnityEngine.UI;
 
 namespace Assets.CodeBase.Combat.Health
 {
@@ -38,41 +36,11 @@ namespace Assets.CodeBase.Combat.Health
         public float3 Value;
     }
 
-    [GhostComponent(PrefabType = GhostPrefabType.Client)]
-    public class HealthBarUIReference : ICleanupComponentData
-    {
-        public GameObject Value;
-    }
-
-    [GhostComponent(PrefabType = GhostPrefabType.Client)]
-    public class HealthBarSliderReference : ICleanupComponentData
-    {
-        public Slider Value;
-    }
-
-    [GhostComponent(PrefabType = GhostPrefabType.Client)]
-    public class HealthBarColorReference : ICleanupComponentData
-    {
-        public HealthBarColor Value;
-    }
-
     public struct VehicleHealthTag : IComponentData { }
     public struct InitializePlayerNameTag : IComponentData { }
 
     public struct PlayerName : IComponentData
     {
         [GhostField] public FixedString64Bytes Value;
-    }
-
-    [GhostComponent(PrefabType = GhostPrefabType.Client)]
-    public class HealthBarPlayerNameReference : ICleanupComponentData
-    {
-        public HealthBarPlayerName Value;
-    }
-
-    [GhostComponent(PrefabType = GhostPrefabType.Client)]
-    public class HealthBarCounterReference : ICleanupComponentData
-    {
-        public HealthBarCounter Value;
     }
 }

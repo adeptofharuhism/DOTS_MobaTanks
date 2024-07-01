@@ -1,5 +1,6 @@
 ﻿using Assets.CodeBase.Combat.Teams;
 using Assets.CodeBase.Targeting;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.NetCode;
@@ -13,6 +14,7 @@ namespace Assets.CodeBase.Weapon
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct WeaponProjectileSpawnSystem : ISystem
     {
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 

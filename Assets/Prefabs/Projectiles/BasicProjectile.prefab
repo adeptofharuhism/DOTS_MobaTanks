@@ -122,7 +122,7 @@ MonoBehaviour:
   SupportAutoCommandTarget: 1
   TrackInterpolationDelay: 0
   GhostGroup: 0
-  UsePreSerialization: 0
+  UsePreSerialization: 1
 --- !u!114 &-3571208237390883436
 MonoBehaviour:
   m_ObjectHideFlags: 0

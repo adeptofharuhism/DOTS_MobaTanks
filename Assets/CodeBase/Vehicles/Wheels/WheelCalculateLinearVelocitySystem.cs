@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Unity.Burst;
+using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Physics.Systems;
@@ -8,12 +9,13 @@ namespace Assets.CodeBase.Vehicles.Wheels
 {
     [UpdateInGroup(typeof(PhysicsSystemGroup))]
     [UpdateAfter(typeof(PhysicsSimulationGroup))]
-    public partial struct WheelCalculateLinearVelocity : ISystem
+    public partial struct WheelCalculateLinearVelocitySystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb =
                 SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
@@ -47,6 +49,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
             }
         }
 
+        [BurstCompile]
         private float CalculateVelocityOnAxis(float3 linearVelocity, float3 axis) =>
             math.dot(linearVelocity, axis);
     }

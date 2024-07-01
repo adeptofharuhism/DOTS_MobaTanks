@@ -1,6 +1,7 @@
 ﻿using Assets.CodeBase.Combat.Health;
 using Assets.CodeBase.Combat.Teams;
 using Assets.CodeBase.Infrastructure.Destruction;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Physics;
@@ -24,6 +25,7 @@ namespace Assets.CodeBase.Weapon.Projectile
             state.RequireForUpdate<PhysicsWorldSingleton>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             CollisionWorld collisionWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().CollisionWorld;
             EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
@@ -59,6 +61,7 @@ namespace Assets.CodeBase.Weapon.Projectile
             ecb.Playback(state.EntityManager);
         }
 
+        [BurstCompile]
         private UnitTeam GetUnitTeam(ref SystemState state, Entity entity) {
             UnitTeam team;
 
@@ -70,10 +73,10 @@ namespace Assets.CodeBase.Weapon.Projectile
             return team;
         }
 
+        [BurstCompile]
         private void TryDoDamage(ref SystemState state, Entity entity, float damage) {
             if (SystemAPI.HasBuffer<DamageBufferElement>(entity)) {
-                DynamicBuffer<DamageBufferElement> damageBuffer =
-                    SystemAPI.GetBuffer<DamageBufferElement>(entity);
+                DynamicBuffer<DamageBufferElement> damageBuffer = SystemAPI.GetBuffer<DamageBufferElement>(entity);
 
                 damageBuffer.Add(new DamageBufferElement { Value = damage });
             }

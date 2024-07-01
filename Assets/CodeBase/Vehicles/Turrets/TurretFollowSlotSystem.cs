@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Unity.Burst;
+using Unity.Entities;
 using Unity.Transforms;
 
 namespace Assets.CodeBase.Vehicles.Turrets
@@ -7,6 +8,7 @@ namespace Assets.CodeBase.Vehicles.Turrets
     [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
     public partial struct TurretSetInSlotSystem : ISystem
     {
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (model, slot, rotationAngle)
                 in SystemAPI.Query<TurretModel, TurretSlot, TurretRotationAngle>()

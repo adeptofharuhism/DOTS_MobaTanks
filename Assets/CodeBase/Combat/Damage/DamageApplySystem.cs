@@ -1,13 +1,16 @@
 ﻿using Assets.CodeBase.Combat.Health;
 using Assets.CodeBase.Infrastructure.Destruction;
+using Unity.Burst;
 using Unity.Entities;
 
 namespace Assets.CodeBase.Combat.Damage
 {
+    
     [UpdateInGroup(typeof(CombatSimulationSystemGroup), OrderLast = true)]
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct DamageApplySystem : ISystem
     {
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 

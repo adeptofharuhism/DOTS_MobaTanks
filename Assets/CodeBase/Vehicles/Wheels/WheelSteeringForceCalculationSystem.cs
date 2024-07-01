@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Unity.Burst;
+using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics.Systems;
 using Unity.Transforms;
@@ -15,6 +16,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
             state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb =
                 SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
@@ -27,19 +29,31 @@ namespace Assets.CodeBase.Vehicles.Wheels
 
                 RefRO<LocalToWorld> forceCastTransform = SystemAPI.GetComponentRO<LocalToWorld>(forceCastPoint.Value);
 
-                float xAxisToHorizontalVelocityRatio =
-                    math.square(axisProjectedVelocity.Value.x)
-                    / (Epsilon + math.square(axisProjectedVelocity.Value.x) + math.square(axisProjectedVelocity.Value.z));
-
-                float tractionCoefficient = 
-                    math.lerp(steeringParameters.MaximalSteering, steeringParameters.MinimalSteering, xAxisToHorizontalVelocityRatio);
-
-                float xForceValue = tractionCoefficient * axisProjectedVelocity.Value.x;
-
-                float3 xForceVector = -forceCastTransform.ValueRO.Right * xForceValue;
-
-                ecb.SetComponent(wheel, new WheelAxisForceSteering { Value = xForceVector });
+                ecb.SetComponent(wheel, new WheelAxisForceSteering {
+                    Value = CalculateXVector(
+                        forceCastTransform.ValueRO.Right,
+                        steeringParameters.MaximalSteering,
+                        steeringParameters.MinimalSteering,
+                        axisProjectedVelocity.Value.x,
+                        axisProjectedVelocity.Value.z)
+                });
             }
         }
+
+        [BurstCompile]
+        private float3 CalculateXVector(float3 forceCastRight, float maxSteering, float minSteering, float velocityX, float velocityZ) =>
+            -forceCastRight * CalculateXForce(maxSteering, minSteering, velocityX, velocityZ);
+
+        [BurstCompile]
+        private float CalculateXForce(float maxSteering, float minSteering, float velocityX, float velocityZ) =>
+            CalculateTractionCoefficient(maxSteering, minSteering, velocityX, velocityZ) * velocityX;
+
+        [BurstCompile]
+        private float CalculateTractionCoefficient(float maxSteering, float minSteering, float velocityX, float velocityZ) =>
+            math.lerp(maxSteering, minSteering, CalculateXVelocityToHorizontalVelocityRatio(velocityX, velocityZ));
+
+        [BurstCompile]
+        private float CalculateXVelocityToHorizontalVelocityRatio(float velocityX, float velocityZ) =>
+            math.square(velocityX) / (Epsilon + math.square(velocityX) + math.square(velocityZ));
     }
 }

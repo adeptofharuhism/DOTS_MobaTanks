@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics.Systems;
@@ -20,6 +20,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
             state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb =
                 SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
@@ -34,25 +35,13 @@ namespace Assets.CodeBase.Vehicles.Wheels
 
                 float3 forceCastForward = forceCastTransform.ValueRO.Forward;
 
-                float zForceValue;
-                if (accelerationInput.Value > Epsilon)
-                    zForceValue = axisProjectedVelocity.Value.z > accelerationParameters.MaxVelocity
-                        ? 0
-                        : CalculateAccelerationForce(
-                            accelerationInput.Value, 
-                            axisProjectedVelocity.Value.z, 
-                            accelerationParameters.MaxVelocity, 
-                            accelerationParameters.HardBrakingForceMultiplier,
-                            accelerationParameters.EngineForceMultiplier);
-                else
-                    zForceValue = axisProjectedVelocity.Value.z < accelerationParameters.MaxVelocityBackwards
-                        ? 0
-                        : CalculateAccelerationForce(
-                            accelerationInput.Value, 
-                            axisProjectedVelocity.Value.z, 
-                            accelerationParameters.MaxVelocityBackwards,
-                            accelerationParameters.HardBrakingForceMultiplier,
-                            accelerationParameters.EngineForceMultiplier);
+                float zForceValue = CalculateZForce(
+                    accelerationInput.Value,
+                    axisProjectedVelocity.Value.z,
+                    accelerationParameters.MaxVelocity,
+                    accelerationParameters.MaxVelocityBackwards,
+                    accelerationParameters.HardBrakingForceMultiplier,
+                    accelerationParameters.EngineForceMultiplier);
 
                 float3 zForceVector = forceCastForward * zForceValue;
 
@@ -60,22 +49,52 @@ namespace Assets.CodeBase.Vehicles.Wheels
             }
         }
 
+        [BurstCompile]
+        private float CalculateZForce(
+            float accelerationInput,
+            float velocityZ,
+            float maxVelocity,
+            float maxVelocityBackwards,
+            float hardBrakingForceMultiplier,
+            float engineForceMultiplier) =>
+
+            (accelerationInput > Epsilon)
+                ? velocityZ > maxVelocity
+                    ? 0
+                    : CalculateAccelerationForce(
+                            accelerationInput,
+                            velocityZ,
+                            maxVelocity,
+                            hardBrakingForceMultiplier,
+                            engineForceMultiplier)
+                : velocityZ < maxVelocityBackwards
+                    ? 0
+                    : CalculateAccelerationForce(
+                            accelerationInput,
+                            velocityZ,
+                            maxVelocityBackwards,
+                            hardBrakingForceMultiplier,
+                            engineForceMultiplier);
+
+        [BurstCompile]
         private float CalculateAccelerationForce(
             float accelerationInput,
             float velocityZ,
-            float maxSpeed,
+            float maxVelocity,
             float hardBrakingForceMultiplier,
             float engineForceMultiplier) =>
 
             (velocityZ * accelerationInput > 0
-                ? CalculateEngineForce(accelerationInput, velocityZ, maxSpeed)
-                : CalculateEngineForce(accelerationInput, HardBrakingVelocityValue, maxSpeed)
+                ? CalculateEngineForce(accelerationInput, velocityZ, maxVelocity)
+                : CalculateEngineForce(accelerationInput, HardBrakingVelocityValue, maxVelocity)
                     * hardBrakingForceMultiplier
             ) * engineForceMultiplier;
 
+        [BurstCompile]
         private float CalculateEngineForce(float accelerationInput, float velocity, float maxSpeed) =>
             accelerationInput * HyperbolicCurve(velocity / maxSpeed);
 
+        [BurstCompile]
         private float HyperbolicCurve(float x) =>
             HyperbolicOffsetY + (HyperbolaAngleMultiplier / (x + HyperbolicOffsetX));
     }

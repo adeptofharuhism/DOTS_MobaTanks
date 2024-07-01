@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Unity.Burst;
+using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Physics.Systems;
@@ -7,7 +8,7 @@ using Unity.Transforms;
 namespace Assets.CodeBase.Vehicles.Wheels
 {
     [UpdateInGroup(typeof(PhysicsSystemGroup))]
-    [UpdateAfter(typeof(WheelCalculateLinearVelocity))]
+    [UpdateAfter(typeof(WheelCalculateLinearVelocitySystem))]
     public partial struct WheelLookForGroundContactSystem : ISystem
     {
         private CollisionFilter _collisionFilter;
@@ -22,6 +23,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
             state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             CollisionWorld collisionWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().CollisionWorld;
             EntityCommandBuffer ecb =
@@ -48,8 +50,14 @@ namespace Assets.CodeBase.Vehicles.Wheels
                     ecb.RemoveComponent<WheelHasGroundContactTag>(wheel);
 
                 float compressionCoefficient = hasHit ? closestHit.Fraction : 1;
-                ecb.SetComponent(wheel, new WheelSpringCompression { Value = springRestDistance.Value * (1 - compressionCoefficient) });
+                ecb.SetComponent(wheel, new WheelSpringCompression { 
+                    Value = CalculateSpringCompression(springRestDistance.Value, compressionCoefficient)
+                });
             }
         }
+
+        [BurstCompile]
+        private float CalculateSpringCompression(float springRestDistance, float compressionCoefficient) =>
+            springRestDistance * (1 - compressionCoefficient);
     }
 }

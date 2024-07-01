@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Unity.Burst;
+using Unity.Entities;
 
 namespace Assets.CodeBase.Vehicles
 {
@@ -9,6 +10,7 @@ namespace Assets.CodeBase.Vehicles
             state.RequireForUpdate<NewVehicleTag>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 

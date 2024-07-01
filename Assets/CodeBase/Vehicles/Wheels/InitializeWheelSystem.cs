@@ -1,5 +1,5 @@
-﻿using Unity.Entities;
-using Unity.NetCode;
+﻿using Unity.Burst;
+using Unity.Entities;
 using Unity.Transforms;
 
 namespace Assets.CodeBase.Vehicles.Wheels
@@ -12,6 +12,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
             state.RequireForUpdate<NewWheelTag>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
@@ -28,6 +29,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
             ecb.Playback(state.EntityManager);
         }
 
+        [BurstCompile]
         private Entity GetHighestParentOfEntity(ref SystemState state, Entity entity) {
             bool hasParent = true;
             Entity parent = entity;

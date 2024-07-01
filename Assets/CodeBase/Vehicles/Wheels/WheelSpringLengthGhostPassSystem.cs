@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Unity.Burst;
+using Unity.Entities;
 using Unity.Physics.Systems;
 
 namespace Assets.CodeBase.Vehicles.Wheels
@@ -7,6 +8,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
     [UpdateAfter(typeof(WheelLookForGroundContactSystem))]
     public partial struct WheelSpringLengthGhostPassSystem : ISystem
     {
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (springCompression, springRestDistance, parent, index)
                 in SystemAPI.Query<WheelSpringCompression, WheelSpringRestDistance, WheelParent, WheelIndex>()

@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Unity.Burst;
+using Unity.Entities;
 using Unity.NetCode;
 
 namespace Assets.CodeBase.Vehicles.Wheels
@@ -6,6 +7,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
     [UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
     public partial struct WheelSetRotationInputSystem : ISystem
     {
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 

@@ -1,7 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 
-namespace Assets.CodeBase.Combat.Health
+namespace Assets.CodeBase.Combat.Health.UI
 {
     public class HealthBarCounter : MonoBehaviour
     {

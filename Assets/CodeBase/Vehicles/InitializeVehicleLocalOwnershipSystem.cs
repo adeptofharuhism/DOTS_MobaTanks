@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Unity.Burst;
+using Unity.Entities;
 using Unity.Mathematics;
 using Unity.NetCode;
 
@@ -7,6 +8,7 @@ namespace Assets.CodeBase.Vehicles
     [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
     public partial struct InitializeVehicleLocalOwnershipSystem : ISystem
     {
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 

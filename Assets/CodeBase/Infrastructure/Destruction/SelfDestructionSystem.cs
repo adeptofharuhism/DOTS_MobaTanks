@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Unity.Burst;
+using Unity.Entities;
 using Unity.NetCode;
 
 namespace Assets.CodeBase.Infrastructure.Destruction
@@ -8,6 +9,7 @@ namespace Assets.CodeBase.Infrastructure.Destruction
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct SelfDestructionSystem : ISystem
     {
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 

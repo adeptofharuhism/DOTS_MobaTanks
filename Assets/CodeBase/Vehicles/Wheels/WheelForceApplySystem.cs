@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Unity.Burst;
+using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Physics.Systems;
@@ -13,6 +14,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
     [UpdateAfter(typeof(WheelAccelerationForceCalculationSystem))]
     public partial struct WheelForceApplySystem : ISystem
     {
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (springForce, steeringForce, accelerationForce, forceCastPoint, parent)
                 in SystemAPI.Query<

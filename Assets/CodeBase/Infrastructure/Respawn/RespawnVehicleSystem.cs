@@ -1,5 +1,6 @@
 ﻿using Assets.CodeBase.Combat.Health;
 using Assets.CodeBase.Combat.Teams;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.NetCode;
 using Unity.Transforms;
@@ -10,6 +11,7 @@ namespace Assets.CodeBase.Infrastructure.Respawn
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct RespawnVehicleSystem : ISystem
     {
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 

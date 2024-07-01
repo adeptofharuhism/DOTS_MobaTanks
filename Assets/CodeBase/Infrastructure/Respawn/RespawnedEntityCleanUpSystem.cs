@@ -1,4 +1,5 @@
 ﻿using Assets.CodeBase.Infrastructure.Destruction;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.NetCode;
 
@@ -9,6 +10,7 @@ namespace Assets.CodeBase.Infrastructure.Respawn
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct RespawnedEntityCleanUpSystem : ISystem
     {
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 

@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Unity.Burst;
+using Unity.Entities;
 using Unity.Transforms;
 
 namespace Assets.CodeBase.Vehicles.Wheels
@@ -7,6 +8,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
     [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
     public partial struct WheelClientModelDisplaySystem : ISystem
     {
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (parent, modelParameters, index)
                 in SystemAPI.Query<WheelParent, WheelModelParameters, WheelIndex>()) {

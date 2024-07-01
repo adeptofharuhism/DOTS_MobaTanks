@@ -1,5 +1,6 @@
 ﻿using Assets.CodeBase.Combat.Teams;
 using Assets.CodeBase.Weapon;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Transforms;
 
@@ -9,6 +10,7 @@ namespace Assets.CodeBase.Vehicles.Turrets
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct TurretInitializeOnServerSystem : ISystem
     {
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 

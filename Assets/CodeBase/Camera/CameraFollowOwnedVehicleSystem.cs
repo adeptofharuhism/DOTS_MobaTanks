@@ -9,13 +9,9 @@ namespace Assets.CodeBase.Camera
     [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
     public partial class CameraFollowOwnedVehicleSystem : SystemBase
     {
-        private const float CameraAdvanceMultiplier = 50f;
-
-        private float3 _previousFramePosition;
+        private const float CameraAdvanceMultiplier = 20f;
 
         protected override void OnCreate() {
-            _previousFramePosition = float3.zero;
-
             RequireForUpdate<OwnerVehicleTag>();
         }
 
@@ -24,15 +20,11 @@ namespace Assets.CodeBase.Camera
 
             RefRO<LocalToWorld> ownedEntityTransform = SystemAPI.GetComponentRO<LocalToWorld>(ownedEntity);
 
-            float3 currentFramePosition = ownedEntityTransform.ValueRO.Position;
+            float3 forward = ownedEntityTransform.ValueRO.Forward;
+            float3 cameraLookOffset = forward * CameraAdvanceMultiplier;
+            cameraLookOffset.y = 0;
 
-            float3 positionDifference = currentFramePosition - _previousFramePosition;
-            positionDifference.y = 0;
-            positionDifference *= CameraAdvanceMultiplier;
-
-            CameraSingleton.Instance.TargetPosition = ownedEntityTransform.ValueRO.Position + positionDifference;
-
-            _previousFramePosition = currentFramePosition;
+            CameraSingleton.Instance.TargetPosition = ownedEntityTransform.ValueRO.Position + cameraLookOffset;
         }
     }
 }

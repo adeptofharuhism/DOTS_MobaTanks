@@ -1,4 +1,5 @@
 ﻿using Assets.CodeBase.Combat.Health;
+using Unity.Burst;
 using Unity.Entities;
 
 namespace Assets.CodeBase.Combat.Damage
@@ -7,6 +8,7 @@ namespace Assets.CodeBase.Combat.Damage
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct DamageCalculateSystem : ISystem
     {
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (damageBuffer, frameDamage)
                 in SystemAPI.Query<DynamicBuffer<DamageBufferElement>, RefRW<DamageThisFrame>>()) {

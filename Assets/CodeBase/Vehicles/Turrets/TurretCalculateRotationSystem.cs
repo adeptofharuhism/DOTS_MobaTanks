@@ -1,5 +1,6 @@
 ﻿using Assets.CodeBase.Targeting;
 using Assets.CodeBase.Weapon;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.NetCode;
@@ -13,6 +14,7 @@ namespace Assets.CodeBase.Vehicles.Turrets
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct TurretCalculateRotationSystem : ISystem
     {
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
@@ -28,49 +30,59 @@ namespace Assets.CodeBase.Vehicles.Turrets
                 RefRO<LocalToWorld> slotTransform = SystemAPI.GetComponentRO<LocalToWorld>(slot.Value);
                 RefRO<LocalToWorld> targetTransform = SystemAPI.GetComponentRO<LocalToWorld>(target.Value);
 
-                float3 slotForward = slotTransform.ValueRO.Forward;
-                float3 slotRight = slotTransform.ValueRO.Right;
-
-                float3 slotPoint0 = slotTransform.ValueRO.Position;
-                float3 slotPoint1 = slotTransform.ValueRO.Position + slotForward;
-                float3 slotPoint2 = slotTransform.ValueRO.Position + slotRight;
-
-                float d21 = slotPoint1.x - slotPoint0.x;
-                float d31 = slotPoint2.x - slotPoint0.x;
-                float d22 = slotPoint1.y - slotPoint0.y;
-                float d32 = slotPoint2.y - slotPoint0.y;
-                float d23 = slotPoint1.z - slotPoint0.z;
-                float d33 = slotPoint2.z - slotPoint0.z;
-
-                float A = d22 * d33 - d23 * d32;
-                float B = d23 * d31 - d21 * d33;
-                float C = d21 * d32 - d22 * d31;
-                float D = -(A * slotPoint0.x + B * slotPoint0.y + C * slotPoint0.z);
-
-                float3 P = targetTransform.ValueRO.Position;
-
-                float T = -(A * P.x + B * P.y + C * P.z + D) / (A * A + B * B + C * C);
-
-                float3 H = new float3(
-                    A * T + P.x,
-                    B * T + P.y,
-                    C * T + P.z);
-
-                float3 lookVector = H - slotPoint0;
-                lookVector = math.normalize(lookVector);
-                float lookAndForwardDot = math.dot(lookVector, slotForward);
-                float lookAngle = math.acos(lookAndForwardDot);
-
-                float rightAndLookDot = math.dot(lookVector, slotRight);
-                float rightAndLookAngle = math.acos(rightAndLookDot);
-                if (rightAndLookAngle > math.PIHALF)
-                    lookAngle *= -1;
-
-                ecb.SetComponent(parent.Value, new TurretRotationAngle { Value = lookAngle });
+                ecb.SetComponent(parent.Value, new TurretRotationAngle { 
+                    Value = CalculateLookAngle(
+                        slotTransform,
+                        targetTransform.ValueRO.Position)
+                });
             }
 
             ecb.Playback(state.EntityManager);
         }
+
+        [BurstCompile]
+        private float CalculateLookAngle(RefRO<LocalToWorld> slotTransform, float3 targetPosition) {
+            float3 slotForward = slotTransform.ValueRO.Forward;
+            float3 slotRight = slotTransform.ValueRO.Right;
+
+            float3 slotPoint0 = slotTransform.ValueRO.Position;
+            float3 slotPoint1 = slotTransform.ValueRO.Position + slotForward;
+            float3 slotPoint2 = slotTransform.ValueRO.Position + slotRight;
+
+            float d21 = slotPoint1.x - slotPoint0.x;
+            float d31 = slotPoint2.x - slotPoint0.x;
+            float d22 = slotPoint1.y - slotPoint0.y;
+            float d32 = slotPoint2.y - slotPoint0.y;
+            float d23 = slotPoint1.z - slotPoint0.z;
+            float d33 = slotPoint2.z - slotPoint0.z;
+
+            float A = d22 * d33 - d23 * d32;
+            float B = d23 * d31 - d21 * d33;
+            float C = d21 * d32 - d22 * d31;
+            float D = -(A * slotPoint0.x + B * slotPoint0.y + C * slotPoint0.z);
+
+            float3 P = targetPosition;
+
+            float T = -(A * P.x + B * P.y + C * P.z + D) / (A * A + B * B + C * C);
+
+            float3 H = new float3(
+                A * T + P.x,
+                B * T + P.y,
+                C * T + P.z);
+
+            float3 lookVector = H - slotPoint0;
+            lookVector = math.normalize(lookVector);
+            float lookAndForwardDot = math.dot(lookVector, slotForward);
+            float lookAngle = math.acos(lookAndForwardDot);
+
+            float rightAndLookDot = math.dot(lookVector, slotRight);
+            float rightAndLookAngle = math.acos(rightAndLookDot);
+            if (rightAndLookAngle > math.PIHALF)
+                lookAngle *= -1;
+
+            return lookAngle;
+        }
+
         /* Quick introduction to symbols
          * _____________________________
          * 1) Searching for a plane equation:

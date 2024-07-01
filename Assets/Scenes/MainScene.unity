@@ -211,7 +211,7 @@ MonoBehaviour:
   _lookOffset:
     x: 0
     y: 40
-    z: -40
+    z: -45
   _smoothTime: 0.35
 --- !u!1 &330836209
 GameObject:

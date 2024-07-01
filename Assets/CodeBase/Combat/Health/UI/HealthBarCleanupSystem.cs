@@ -2,7 +2,7 @@
 using Unity.Transforms;
 using UnityEngine;
 
-namespace Assets.CodeBase.Combat.Health
+namespace Assets.CodeBase.Combat.Health.UI
 {
     [UpdateInGroup(typeof(HealthBarClientSystemGroup), OrderLast = true)]
     [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]

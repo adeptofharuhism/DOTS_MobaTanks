@@ -1,7 +1,7 @@
 ﻿using Unity.Entities;
 using Unity.Transforms;
 
-namespace Assets.CodeBase.Combat.Health
+namespace Assets.CodeBase.Combat.Health.UI
 {
     [UpdateInGroup(typeof(HealthBarClientSystemGroup))]
     [UpdateAfter(typeof(HealthBarInitializationSystem))]

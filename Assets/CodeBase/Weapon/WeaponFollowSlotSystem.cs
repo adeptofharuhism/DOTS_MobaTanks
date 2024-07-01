@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Unity.Burst;
+using Unity.Entities;
 using Unity.Physics.Systems;
 using Unity.Transforms;
 
@@ -8,6 +9,7 @@ namespace Assets.CodeBase.Weapon
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct WeaponFollowSlotSystem : ISystem
     {
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (transform, slot)
                 in SystemAPI.Query<RefRW<LocalTransform>, WeaponSlot>()) {
