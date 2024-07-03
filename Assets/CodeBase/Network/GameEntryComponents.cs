@@ -9,8 +9,11 @@ namespace Assets.CodeBase.Network
         public FixedString64Bytes PlayerName;
     }
 
-    public struct SetNewPlayerDataRequest : IRpcCommand
+    public struct SetNewPlayerDataRpc : IRpcCommand
     {
         public FixedString64Bytes PlayerName;
     }
+
+    public struct ReadyRpc : IRpcCommand { }
+    public struct PlayerReady : IComponentData { }
 }

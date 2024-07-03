@@ -31,5 +31,15 @@
                 public const string HostButton = "HostButton";
             }
         }
+
+        public static class GameUI
+        {
+            public const string ButtonsPart = "ButtonsPart";
+
+            public class GameReadyPanel
+            {
+                public const string ReadyButton = "ReadyButton";
+            }
+        }
     }
 }

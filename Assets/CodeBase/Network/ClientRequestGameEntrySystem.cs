@@ -31,7 +31,7 @@ namespace Assets.CodeBase.Network
 
                 Entity playerDataEntity = ecb.CreateEntity();
 
-                ecb.AddComponent(playerDataEntity, new SetNewPlayerDataRequest { PlayerName = playerName });
+                ecb.AddComponent(playerDataEntity, new SetNewPlayerDataRpc { PlayerName = playerName });
                 ecb.AddComponent(playerDataEntity, new SendRpcCommandRequest { TargetConnection = pendingNetworkId });
             }
 

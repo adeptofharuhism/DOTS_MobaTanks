@@ -18,7 +18,7 @@ namespace Assets.CodeBase.Network
 
         public void OnCreate(ref SystemState state) {
             EntityQueryBuilder newPlayerDataRequestQuery = new EntityQueryBuilder(Allocator.Temp)
-                .WithAll<SetNewPlayerDataRequest, ReceiveRpcCommandRequest>();
+                .WithAll<SetNewPlayerDataRpc, ReceiveRpcCommandRequest>();
             state.RequireForUpdate(state.GetEntityQuery(newPlayerDataRequestQuery));
 
             state.RequireForUpdate<ConnectedPlayerCount>();
@@ -32,7 +32,7 @@ namespace Assets.CodeBase.Network
             RefRW<ConnectedPlayerCount> playerCount = SystemAPI.GetSingletonRW<ConnectedPlayerCount>();
 
             foreach (var (newPlayerData, requestSource, requestEntity)
-                in SystemAPI.Query<SetNewPlayerDataRequest, ReceiveRpcCommandRequest>()
+                in SystemAPI.Query<SetNewPlayerDataRpc, ReceiveRpcCommandRequest>()
                 .WithEntityAccess()) {
 
                 ecb.DestroyEntity(requestEntity);
