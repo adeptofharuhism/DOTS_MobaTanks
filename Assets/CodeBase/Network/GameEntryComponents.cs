@@ -2,7 +2,7 @@
 using Unity.Collections;
 using Unity.NetCode;
 
-namespace Assets.CodeBase.GameEntry
+namespace Assets.CodeBase.Network
 {
     public struct ConnectionRequestData : IComponentData
     {
