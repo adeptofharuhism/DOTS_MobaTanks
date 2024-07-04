@@ -18,5 +18,6 @@ namespace Assets.CodeBase.Network.PlayerCount
     }
 
     public struct CountAsPlayerTag : IComponentData { }
-    public struct DecreaseConnectedPlayerCountOnCleanUpTag : IComponentData { }
+    public struct DecreaseConnectedPlayerCountOnCleanUpTag : ICleanupComponentData { }
+    public struct DecreaseReadyPlayerCountOnCleanUpTag : ICleanupComponentData { }
 }

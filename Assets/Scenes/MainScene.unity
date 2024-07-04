@@ -580,6 +580,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _uiDocument: {fileID: 1253407835}
+  _loadingPanel: {fileID: 9197481963319205126, guid: 4319370448cc42e478376d0cec17c17c,
+    type: 3}
   _gameReadyPanel: {fileID: 9197481963319205126, guid: 09e6dc4e01d5c4a42a6a3b86f244ba46,
     type: 3}
 --- !u!1 &1444963102

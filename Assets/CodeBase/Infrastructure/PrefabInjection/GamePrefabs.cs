@@ -4,6 +4,7 @@ using UnityEngine;
 namespace Assets.CodeBase.Infrastructure.PrefabInjection
 {
     public struct SubScenesLoadPassedTag : IComponentData { }
+    public struct ReadyForUIDeployTag : IComponentData { }
 
     public struct GamePrefabs : IComponentData
     {

@@ -28,6 +28,7 @@ namespace Assets.CodeBase.Infrastructure.PrefabInjection
             Entity prefabsEntity = SystemAPI.GetSingletonEntity<GamePrefabs>();
 
             ecb.AddComponent<SubScenesLoadPassedTag>(prefabsEntity);
+            ecb.AddComponent<ReadyForUIDeployTag>(prefabsEntity);
 
             ecb.Playback(state.EntityManager);
 

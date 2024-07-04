@@ -30,6 +30,7 @@ namespace Assets.CodeBase.Network
                 ecb.DestroyEntity(commandEntity);
 
                 ecb.AddComponent<PlayerReady>(commandSource.SourceConnection);
+                ecb.AddComponent<DecreaseReadyPlayerCountOnCleanUpTag>(commandSource.SourceConnection);
 
                 readyPlayers.ValueRW.Value++;
             }
