@@ -1,6 +1,6 @@
 ﻿using Unity.Entities;
 
-namespace Assets.CodeBase.Network.PlayerCount
+namespace Assets.CodeBase.Network.GameStart
 {
     [UpdateInGroup(typeof(NetworkProcessSystemGroup))]
     [UpdateBefore(typeof(DecreaseConnectedPlayerCountSystem))]

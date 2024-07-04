@@ -4,6 +4,7 @@ using Unity.Entities;
 
 namespace Assets.CodeBase.Network
 {
+    [UpdateInGroup(typeof(NetworkProcessSystemGroup))]
     [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
     public partial class DeployUiOnClientSystem : SystemBase
     {

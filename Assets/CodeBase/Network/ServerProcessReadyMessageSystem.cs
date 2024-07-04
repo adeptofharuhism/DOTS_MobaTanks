@@ -1,4 +1,4 @@
-﻿using Assets.CodeBase.Network.PlayerCount;
+﻿using Assets.CodeBase.Network.GameStart;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.NetCode;
@@ -15,6 +15,7 @@ namespace Assets.CodeBase.Network
             state.RequireForUpdate(state.GetEntityQuery(readyRequestQuery));
 
             state.RequireForUpdate<ReadyPlayersCount>();
+            state.RequireForUpdate<CountingPlayersToStartGameTag>();
         }
 
         public void OnUpdate(ref SystemState state) {

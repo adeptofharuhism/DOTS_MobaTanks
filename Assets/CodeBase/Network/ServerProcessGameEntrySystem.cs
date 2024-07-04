@@ -1,5 +1,5 @@
 ﻿using Assets.CodeBase.Combat.Teams;
-using Assets.CodeBase.Network.PlayerCount;
+using Assets.CodeBase.Network.GameStart;
 using Assets.CodeBase.Infrastructure.PrefabInjection;
 using Assets.CodeBase.Infrastructure.Respawn;
 using Unity.Collections;
@@ -22,6 +22,7 @@ namespace Assets.CodeBase.Network
             state.RequireForUpdate(state.GetEntityQuery(newPlayerDataRequestQuery));
 
             state.RequireForUpdate<ConnectedPlayerCount>();
+            state.RequireForUpdate<CountingPlayersToStartGameTag>();
             state.RequireForUpdate<GamePrefabs>();
         }
 
