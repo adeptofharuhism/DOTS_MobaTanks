@@ -1,5 +1,6 @@
 ﻿using Assets.CodeBase.Combat.Health;
 using Assets.CodeBase.Infrastructure.Destruction;
+using Assets.CodeBase.Network.GameStart;
 using Unity.Burst;
 using Unity.Entities;
 
@@ -10,6 +11,10 @@ namespace Assets.CodeBase.Combat.Damage
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct DamageApplySystem : ISystem
     {
+        public void OnCreate(ref SystemState state) {
+            state.RequireForUpdate<InGame>();
+        }
+
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);

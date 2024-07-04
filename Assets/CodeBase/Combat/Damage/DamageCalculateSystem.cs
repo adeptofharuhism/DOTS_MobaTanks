@@ -1,4 +1,5 @@
 ﻿using Assets.CodeBase.Combat.Health;
+using Assets.CodeBase.Network.GameStart;
 using Unity.Burst;
 using Unity.Entities;
 
@@ -8,6 +9,10 @@ namespace Assets.CodeBase.Combat.Damage
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct DamageCalculateSystem : ISystem
     {
+        public void OnCreate(ref SystemState state) {
+            state.RequireForUpdate<InGame>();
+        }
+
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (damageBuffer, frameDamage)

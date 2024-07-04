@@ -1,4 +1,5 @@
-﻿using Unity.Burst;
+﻿using Assets.CodeBase.Network.GameStart;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.NetCode;
 
@@ -8,6 +9,10 @@ namespace Assets.CodeBase.Weapon
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct WeaponCooldownSystem : ISystem
     {
+        public void OnCreate(ref SystemState state) {
+            state.RequireForUpdate<InGame>();
+        }
+
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);

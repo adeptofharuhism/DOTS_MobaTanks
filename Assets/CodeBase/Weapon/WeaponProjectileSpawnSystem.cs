@@ -1,4 +1,5 @@
 ﻿using Assets.CodeBase.Combat.Teams;
+using Assets.CodeBase.Network.GameStart;
 using Assets.CodeBase.Targeting;
 using Unity.Burst;
 using Unity.Entities;
@@ -14,6 +15,10 @@ namespace Assets.CodeBase.Weapon
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct WeaponProjectileSpawnSystem : ISystem
     {
+        public void OnCreate(ref SystemState state) {
+            state.RequireForUpdate<InGame>();
+        }
+
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
