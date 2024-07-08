@@ -1,6 +1,7 @@
 ﻿using Unity.Entities;
 using Unity.Collections;
 using Unity.NetCode;
+using Assets.CodeBase.Combat.Teams;
 
 namespace Assets.CodeBase.Network
 {
@@ -16,4 +17,9 @@ namespace Assets.CodeBase.Network
 
     public struct ReadyRpc : IRpcCommand { }
     public struct PlayerReady : IComponentData { }
+
+    public struct WinnerTeam : IComponentData
+    {
+        public TeamType Value;
+    }
 }

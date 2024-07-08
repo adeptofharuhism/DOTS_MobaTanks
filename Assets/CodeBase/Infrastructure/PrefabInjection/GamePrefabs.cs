@@ -9,6 +9,7 @@ namespace Assets.CodeBase.Infrastructure.PrefabInjection
     public struct GamePrefabs : IComponentData
     {
         public Entity Vehicle;
+        public Entity Base;
     }
 
     public class UIPrefabs : IComponentData
