@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <ui:VisualElement name="ReadyForGamePanel" class="panel" style="flex-grow: 1; flex-shrink: 0;">
+    <ui:VisualElement name="ReadyForGamePanel" style="flex-grow: 1; flex-shrink: 0;">
         <ui:VisualElement style="flex-grow: 1; flex-shrink: 0;" />
         <ui:Label tabindex="-1" text="Are you ready?" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" class="headerText textHighlightWhite" />
         <ui:Button text="Ready" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ReadyButton" class="connectionChoiceButton" />
