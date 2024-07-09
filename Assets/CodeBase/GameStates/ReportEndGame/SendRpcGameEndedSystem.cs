@@ -1,27 +1,26 @@
-﻿using Unity.Entities;
+﻿using Assets.CodeBase.GameStates.InGame;
+using Unity.Entities;
 using Unity.NetCode;
 
-namespace Assets.CodeBase.Network.GameStart
+namespace Assets.CodeBase.GameStates.ReportEndGame
 {
-    [UpdateInGroup(typeof(NetworkProcessSystemGroup))]
-    [UpdateAfter(typeof(InGameStateSystem))]
+    [UpdateInGroup(typeof(ReportEndGameStateSystemGroup))]
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
-    public partial struct ReportEndGameStateSystem : ISystem
+    public partial struct SendRpcGameEndedSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
-            state.RequireForUpdate<ReportEndGame>();
+            state.RequireForUpdate<ReportEndGameState>();
             state.RequireForUpdate<WinnerTeam>();
         }
 
         public void OnUpdate(ref SystemState state) {
-            Entity stateEntity = SystemAPI.GetSingletonEntity<ReportEndGame>();
-            state.EntityManager.RemoveComponent<ReportEndGame>(stateEntity);
-
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
             Entity endGameRpc = ecb.CreateEntity();
             ecb.AddComponent(endGameRpc, new SendRpcCommandRequest());
-            ecb.AddComponent(endGameRpc, new GoToEndGameStateRpc { Winner = Combat.Teams.TeamType.Blue });
+            ecb.AddComponent(endGameRpc, new GoToEndGameStateRpc {
+                Winner = SystemAPI.GetSingleton<WinnerTeam>().Value
+            });
 
             ecb.Playback(state.EntityManager);
         }

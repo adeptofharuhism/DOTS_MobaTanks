@@ -1,7 +1,7 @@
 ﻿using Unity.Entities;
 using UnityEngine;
 
-namespace Assets.CodeBase.Network.GameStart
+namespace Assets.CodeBase.Infrastructure.PlayerCount
 {
     public class PlayerCounterAuthoring : MonoBehaviour
     {
@@ -14,7 +14,6 @@ namespace Assets.CodeBase.Network.GameStart
             public override void Bake(PlayerCounterAuthoring authoring) {
                 Entity entity = GetEntity(TransformUsageFlags.None);
 
-                AddComponent<CountingPlayersToStartGameTag>(entity);
                 AddComponent(entity, new MinReadyPlayersToStartGame { Value = authoring.MinReadyPlayersToStartGame });
                 AddComponent(entity, new ConnectedPlayerCount { Value = 0 });
                 AddComponent(entity, new ReadyPlayersCount { Value = 0 });

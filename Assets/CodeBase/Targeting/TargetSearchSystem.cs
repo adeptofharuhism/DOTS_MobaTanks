@@ -1,5 +1,5 @@
 ﻿using Assets.CodeBase.Combat.Teams;
-using Assets.CodeBase.Network.GameStart;
+using Assets.CodeBase.GameStates;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -28,7 +28,7 @@ namespace Assets.CodeBase.Targeting
             _random = Random.CreateFromIndex(RandomSeed);
 
             state.RequireForUpdate<PhysicsWorldSingleton>();
-            state.RequireForUpdate<InGame>();
+            state.RequireForUpdate<InGameState>();
         }
 
         [BurstCompile]

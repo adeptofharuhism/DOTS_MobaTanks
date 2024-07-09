@@ -1,13 +1,15 @@
 ﻿using Assets.CodeBase.Combat.Teams;
+using Assets.CodeBase.GameStates.ReportEndGame;
 using System;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.NetCode;
 
-namespace Assets.CodeBase.Network.GameStart
+namespace Assets.CodeBase.GameStates.GameStart
 {
+    [UpdateInGroup(typeof(ReportEndGameStateSystemGroup))]
     [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
-    public partial class EndGameRpcRecieveSystem : SystemBase
+    public partial class ClientEnterEndGameSystem : SystemBase
     {
         public Action<TeamType> OnEndGame;
 
@@ -16,13 +18,13 @@ namespace Assets.CodeBase.Network.GameStart
                 .WithAll<GoToEndGameStateRpc, ReceiveRpcCommandRequest>();
 
             RequireForUpdate(GetEntityQuery(endGameCommandQuery));
-            RequireForUpdate<InGame>();
+            RequireForUpdate<InGameState>();
         }
 
         protected override void OnUpdate() {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            ecb.DestroyEntity(SystemAPI.GetSingletonEntity<InGame>());
+            ecb.DestroyEntity(SystemAPI.GetSingletonEntity<InGameState>());
 
             foreach (var (endGameData, commandSource, commandEntity)
                 in SystemAPI.Query<GoToEndGameStateRpc, ReceiveRpcCommandRequest>()

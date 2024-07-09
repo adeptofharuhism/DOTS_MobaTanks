@@ -3,9 +3,9 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.NetCode;
 
-namespace Assets.CodeBase.Network
+namespace Assets.CodeBase.GameStates.PrepareForGame
 {
-    [UpdateInGroup(typeof(NetworkProcessSystemGroup))]
+    [UpdateInGroup(typeof(PrepareForGameStateSystemGroup))]
     [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
     public partial struct ClientRequestGameEntrySystem : ISystem
     {

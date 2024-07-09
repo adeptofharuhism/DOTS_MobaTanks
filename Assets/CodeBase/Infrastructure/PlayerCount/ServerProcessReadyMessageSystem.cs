@@ -1,11 +1,11 @@
-﻿using Assets.CodeBase.Network.GameStart;
+﻿using Assets.CodeBase.GameStates;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.NetCode;
 
-namespace Assets.CodeBase.Network
+namespace Assets.CodeBase.Infrastructure.PlayerCount
 {
-    [UpdateInGroup(typeof(NetworkProcessSystemGroup), OrderFirst = true)]
+    [UpdateInGroup(typeof(GameStateSystemGroup), OrderFirst = true)]
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct ServerProcessReadyMessageSystem : ISystem
     {
@@ -15,7 +15,7 @@ namespace Assets.CodeBase.Network
             state.RequireForUpdate(state.GetEntityQuery(readyRequestQuery));
 
             state.RequireForUpdate<ReadyPlayersCount>();
-            state.RequireForUpdate<CountingPlayersToStartGameTag>();
+            state.RequireForUpdate<PrepareForGameState>();
         }
 
         public void OnUpdate(ref SystemState state) {

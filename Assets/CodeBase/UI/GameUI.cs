@@ -1,6 +1,6 @@
 ﻿using Assets.CodeBase.Combat.Teams;
-using Assets.CodeBase.Network;
-using Assets.CodeBase.Network.GameStart;
+using Assets.CodeBase.GameStates.GameStart;
+using Assets.CodeBase.Infrastructure.PlayerCount;
 using Unity.Entities;
 using Unity.NetCode;
 using UnityEngine;
@@ -72,8 +72,8 @@ namespace Assets.CodeBase.UI
             if (deployUiSystem != null)
                 deployUiSystem.OnReadyForUiDeploy += ShowGameReadyPanel;
 
-            EndGameRpcRecieveSystem endGameSystem =
-                World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<EndGameRpcRecieveSystem>();
+            ClientEnterEndGameSystem endGameSystem =
+                World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<ClientEnterEndGameSystem>();
             if (endGameSystem != null)
                 endGameSystem.OnEndGame += ShowEndGamePanel;
         }
@@ -87,8 +87,8 @@ namespace Assets.CodeBase.UI
             if (deployUiSystem != null)
                 deployUiSystem.OnReadyForUiDeploy -= ShowGameReadyPanel;
 
-            EndGameRpcRecieveSystem endGameSystem =
-                World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<EndGameRpcRecieveSystem>();
+            ClientEnterEndGameSystem endGameSystem =
+                World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<ClientEnterEndGameSystem>();
             if (endGameSystem != null)
                 endGameSystem.OnEndGame -= ShowEndGamePanel;
         }

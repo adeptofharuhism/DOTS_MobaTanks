@@ -1,4 +1,4 @@
-﻿using Assets.CodeBase.Network.GameStart;
+﻿using Assets.CodeBase.GameStates;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.NetCode;
@@ -10,7 +10,7 @@ namespace Assets.CodeBase.Weapon
     public partial struct WeaponCooldownSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
-            state.RequireForUpdate<InGame>();
+            state.RequireForUpdate<InGameState>();
         }
 
         [BurstCompile]

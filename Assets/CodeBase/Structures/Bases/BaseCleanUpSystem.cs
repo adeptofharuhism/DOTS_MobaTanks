@@ -1,6 +1,6 @@
 ﻿using Assets.CodeBase.Combat.Teams;
-using Assets.CodeBase.Network;
-using Assets.CodeBase.Network.GameStart;
+using Assets.CodeBase.GameStates;
+using Assets.CodeBase.GameStates.InGame;
 using Unity.Burst;
 using Unity.Entities;
 
@@ -10,7 +10,7 @@ namespace Assets.CodeBase.Structures.Bases
     public partial struct BaseCleanUpSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
-            state.RequireForUpdate<InGame>();
+            state.RequireForUpdate<InGameState>();
         }
 
         [BurstCompile]

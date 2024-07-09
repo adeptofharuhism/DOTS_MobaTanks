@@ -1,21 +1,10 @@
-﻿using Assets.CodeBase.Combat.Teams;
-using Unity.Entities;
+﻿using Unity.Entities;
 using Unity.NetCode;
 
-namespace Assets.CodeBase.Network.GameStart
+namespace Assets.CodeBase.Infrastructure.PlayerCount
 {
-    [GhostComponent(PrefabType = GhostPrefabType.Server)]
-    public struct CountingPlayersToStartGameTag : IComponentData { }
-    [GhostComponent(PrefabType = GhostPrefabType.Server)]
-    public struct ReportInGame : IComponentData { }
-    public struct InGame : IComponentData { }
-    public struct ReportEndGame : IComponentData { }
-
-    public struct GoToInGameStateRpc : IRpcCommand { }
-    public struct GoToEndGameStateRpc : IRpcCommand
-    {
-        public TeamType Winner;
-    }
+    public struct ReadyRpc : IRpcCommand { }
+    public struct PlayerReady : IComponentData { }
 
     public struct ConnectedPlayerCount : IComponentData
     {

@@ -1,10 +1,11 @@
-﻿using Assets.CodeBase.Infrastructure.PrefabInjection;
+﻿using Assets.CodeBase.GameStates;
+using Assets.CodeBase.Infrastructure.PrefabInjection;
 using System;
 using Unity.Entities;
 
-namespace Assets.CodeBase.Network
+namespace Assets.CodeBase.UI
 {
-    [UpdateInGroup(typeof(NetworkProcessSystemGroup))]
+    [UpdateInGroup(typeof(GameStateSystemGroup))]
     [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
     public partial class DeployUiOnClientSystem : SystemBase
     {

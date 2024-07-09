@@ -1,7 +1,6 @@
 ﻿using Assets.CodeBase.Combat.Teams;
+using Assets.CodeBase.GameStates;
 using Assets.CodeBase.Infrastructure.PrefabInjection;
-using Assets.CodeBase.Network.GameStart;
-using JetBrains.Annotations;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -13,7 +12,7 @@ namespace Assets.CodeBase.Structures.Bases
     public partial struct BaseSpawnSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
-            state.RequireForUpdate<InGame>();
+            state.RequireForUpdate<InGameState>();
             state.RequireForUpdate<GamePrefabs>();
             state.RequireForUpdate<BaseSpawnPositions>();
         }

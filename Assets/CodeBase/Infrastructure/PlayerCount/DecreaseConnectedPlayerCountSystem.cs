@@ -1,8 +1,12 @@
-﻿using Unity.Entities;
+﻿using Assets.CodeBase.GameStates;
+using Unity.Entities;
+using Unity.NetCode;
 
-namespace Assets.CodeBase.Network.GameStart
+namespace Assets.CodeBase.Infrastructure.PlayerCount
 {
-    [UpdateInGroup(typeof(NetworkProcessSystemGroup))]
+    [UpdateInGroup(typeof(SimulationSystemGroup))]
+    [UpdateAfter(typeof(NetworkReceiveSystemGroup))]
+    [UpdateBefore(typeof(GameStateSystemGroup))]
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct DecreaseConnectedPlayerCountSystem : ISystem
     {

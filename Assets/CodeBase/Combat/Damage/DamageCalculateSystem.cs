@@ -1,5 +1,5 @@
 ﻿using Assets.CodeBase.Combat.Health;
-using Assets.CodeBase.Network.GameStart;
+using Assets.CodeBase.GameStates;
 using Unity.Burst;
 using Unity.Entities;
 
@@ -10,7 +10,7 @@ namespace Assets.CodeBase.Combat.Damage
     public partial struct DamageCalculateSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
-            state.RequireForUpdate<InGame>();
+            state.RequireForUpdate<InGameState>();
         }
 
         [BurstCompile]

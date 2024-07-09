@@ -2,10 +2,11 @@
 using Unity.Entities;
 using Unity.NetCode;
 
-namespace Assets.CodeBase.Network.GameStart
+namespace Assets.CodeBase.GameStates.ReportInGame
 {
+    [UpdateInGroup(typeof(ReportInGameStateSystemGroup))]
     [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
-    public partial struct InGameRpcRecieveSystem : ISystem
+    public partial struct ClientEnterInGameSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
             EntityQueryBuilder inGameCommandQuery = new EntityQueryBuilder(Allocator.Temp)
@@ -23,7 +24,7 @@ namespace Assets.CodeBase.Network.GameStart
 
                 ecb.DestroyEntity(commandEntity);
 
-                ecb.AddComponent<InGame>(ecb.CreateEntity());
+                ecb.AddComponent<InGameState>(ecb.CreateEntity());
             }
 
             ecb.Playback(state.EntityManager);

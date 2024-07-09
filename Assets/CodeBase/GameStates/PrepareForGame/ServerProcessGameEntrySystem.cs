@@ -1,5 +1,5 @@
 ﻿using Assets.CodeBase.Combat.Teams;
-using Assets.CodeBase.Network.GameStart;
+using Assets.CodeBase.Infrastructure.PlayerCount;
 using Assets.CodeBase.Infrastructure.PrefabInjection;
 using Assets.CodeBase.Infrastructure.Respawn;
 using Unity.Collections;
@@ -8,9 +8,9 @@ using Unity.Mathematics;
 using Unity.NetCode;
 using UnityEngine;
 
-namespace Assets.CodeBase.Network
+namespace Assets.CodeBase.GameStates.PrepareForGame
 {
-    [UpdateInGroup(typeof(NetworkProcessSystemGroup), OrderLast = true)]
+    [UpdateInGroup(typeof(PrepareForGameStateSystemGroup))]
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct ServerProcessGameEntrySystem : ISystem
     {
@@ -22,7 +22,7 @@ namespace Assets.CodeBase.Network
             state.RequireForUpdate(state.GetEntityQuery(newPlayerDataRequestQuery));
 
             state.RequireForUpdate<ConnectedPlayerCount>();
-            state.RequireForUpdate<CountingPlayersToStartGameTag>();
+            state.RequireForUpdate<PrepareForGameState>();
             state.RequireForUpdate<GamePrefabs>();
         }
 
@@ -87,12 +87,12 @@ namespace Assets.CodeBase.Network
         }
 
         private TeamType GetNewPlayerTeam(int playerCount) =>
-            (playerCount % 2 == 0) ? TeamType.Blue : TeamType.Orange;
+            playerCount % 2 == 0 ? TeamType.Blue : TeamType.Orange;
 
         private float3 GetSpawnPosition(TeamType team, int playerCount) =>
             new float3((260 + 5 * (playerCount / 2)) * GetTeamSideMultiplier(team), 5, 50);
 
         private int GetTeamSideMultiplier(TeamType team) =>
-            (team == TeamType.Blue) ? -1 : 1;
+            team == TeamType.Blue ? -1 : 1;
     }
 }

@@ -1,4 +1,4 @@
-﻿using Assets.CodeBase.Network.GameStart;
+﻿using Assets.CodeBase.GameStates;
 using Unity.Burst;
 using Unity.Entities;
 
@@ -8,7 +8,7 @@ namespace Assets.CodeBase.Infrastructure.Respawn
     public partial struct RespawnVehicleStartCooldownSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
-            state.RequireForUpdate<InGame>();
+            state.RequireForUpdate<InGameState>();
         }
 
         [BurstCompile]
