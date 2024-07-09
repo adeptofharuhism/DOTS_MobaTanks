@@ -9,7 +9,7 @@ namespace Assets.CodeBase.Network.GameStart
     {
         public void OnCreate(ref SystemState state) {
             EntityQueryBuilder inGameCommandQuery = new EntityQueryBuilder(Allocator.Temp)
-                .WithAll<GoInGameStateRpc, ReceiveRpcCommandRequest>();
+                .WithAll<GoToInGameStateRpc, ReceiveRpcCommandRequest>();
             state.RequireForUpdate(state.GetEntityQuery(inGameCommandQuery));
         }
 
@@ -18,7 +18,7 @@ namespace Assets.CodeBase.Network.GameStart
 
             foreach (var (commandSource, commandEntity)
                 in SystemAPI.Query<ReceiveRpcCommandRequest>()
-                .WithAll<GoInGameStateRpc>()
+                .WithAll<GoToInGameStateRpc>()
                 .WithEntityAccess()) {
 
                 ecb.DestroyEntity(commandEntity);

@@ -1,8 +1,10 @@
-﻿using Assets.CodeBase.Network;
-using System;
+﻿using Assets.CodeBase.Combat.Teams;
+using Assets.CodeBase.Network;
+using Assets.CodeBase.Network.GameStart;
 using Unity.Entities;
 using Unity.NetCode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 namespace Assets.CodeBase.UI
@@ -12,30 +14,35 @@ namespace Assets.CodeBase.UI
         [SerializeField] private UIDocument _uiDocument;
         [SerializeField] private VisualTreeAsset _loadingPanel;
         [SerializeField] private VisualTreeAsset _gameReadyPanel;
+        [SerializeField] private VisualTreeAsset _blueWonPanel;
+        [SerializeField] private VisualTreeAsset _orangeWonPanel;
 
         private VisualElement _buttonsPart;
 
         private VisualElement _loadingPanelInstantiated;
         private VisualElement _gameReadyPanelInstantiated;
+        private VisualElement _blueWonPanelInstantiated;
+        private VisualElement _orangeWonPanelInstantiated;
 
         private void OnEnable() {
             InstantiatePanels();
             SetupButtonsPart();
             SetupGameReadyPanel();
+            SetupEndGamePanel(_blueWonPanelInstantiated);
+            SetupEndGamePanel(_orangeWonPanelInstantiated);
 
-            ConnectReadySystem();
+            ConnectSystems();
         }
 
         private void OnDisable() {
-            DisconnectReadySystem();
+            DisconnectSystems();
         }
 
         private void InstantiatePanels() {
-            _loadingPanelInstantiated = _loadingPanel.Instantiate();
-            _loadingPanelInstantiated.style.flexGrow = 1;
-
-            _gameReadyPanelInstantiated = _gameReadyPanel.Instantiate();
-            _gameReadyPanelInstantiated.style.flexGrow = 1;
+            _loadingPanelInstantiated = InstantiatePanel(_loadingPanel);
+            _gameReadyPanelInstantiated = InstantiatePanel(_gameReadyPanel);
+            _blueWonPanelInstantiated = InstantiatePanel(_blueWonPanel);
+            _orangeWonPanelInstantiated = InstantiatePanel(_orangeWonPanel);
         }
 
         private void SetupButtonsPart() {
@@ -50,7 +57,13 @@ namespace Assets.CodeBase.UI
                 .RegisterCallback<ClickEvent>(OnClickReadyButton);
         }
 
-        private void ConnectReadySystem() {
+        private void SetupEndGamePanel(VisualElement panel) {
+            panel
+                .Q<Button>(Constants.VisualElementNames.GameUI.EndGamePanel.EndGameButton)
+                .RegisterCallback<ClickEvent>(OnClickEndGameButton);
+        }
+
+        private void ConnectSystems() {
             if (World.DefaultGameObjectInjectionWorld == null)
                 return;
 
@@ -58,9 +71,14 @@ namespace Assets.CodeBase.UI
                 World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<DeployUiOnClientSystem>();
             if (deployUiSystem != null)
                 deployUiSystem.OnReadyForUiDeploy += ShowGameReadyPanel;
+
+            EndGameRpcRecieveSystem endGameSystem =
+                World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<EndGameRpcRecieveSystem>();
+            if (endGameSystem != null)
+                endGameSystem.OnEndGame += ShowEndGamePanel;
         }
 
-        private void DisconnectReadySystem() {
+        private void DisconnectSystems() {
             if (World.DefaultGameObjectInjectionWorld == null)
                 return;
 
@@ -68,11 +86,36 @@ namespace Assets.CodeBase.UI
                 World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<DeployUiOnClientSystem>();
             if (deployUiSystem != null)
                 deployUiSystem.OnReadyForUiDeploy -= ShowGameReadyPanel;
+
+            EndGameRpcRecieveSystem endGameSystem =
+                World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<EndGameRpcRecieveSystem>();
+            if (endGameSystem != null)
+                endGameSystem.OnEndGame -= ShowEndGamePanel;
+        }
+
+        private VisualElement InstantiatePanel(VisualTreeAsset panel) {
+            VisualElement instantiatedPanel = panel.Instantiate();
+            instantiatedPanel.style.flexGrow = 1;
+
+            return instantiatedPanel;
         }
 
         private void OnClickReadyButton(ClickEvent evt) {
             ClearButtonsPartPanel();
             SendReadyRpc();
+        }
+
+        private void OnClickEndGameButton(ClickEvent evt) {
+            using (EntityQuery networkStreamQuery =
+                World.DefaultGameObjectInjectionWorld.EntityManager.CreateEntityQuery(typeof(NetworkStreamConnection))) {
+
+                if (networkStreamQuery.TryGetSingletonEntity<NetworkStreamConnection>(out var networkStream))
+                    World.DefaultGameObjectInjectionWorld.EntityManager.AddComponent<NetworkStreamRequestDisconnect>(networkStream);
+            }
+
+            World.DisposeAllWorlds();
+
+            SceneManager.LoadScene(0);
         }
 
         private void ClearButtonsPartPanel() {
@@ -87,6 +130,15 @@ namespace Assets.CodeBase.UI
             ClearButtonsPartPanel();
 
             _buttonsPart.Add(_gameReadyPanelInstantiated);
+        }
+
+        private void ShowEndGamePanel(TeamType team) {
+            ClearButtonsPartPanel();
+
+            if (team == TeamType.Blue)
+                _buttonsPart.Add(_blueWonPanelInstantiated);
+            else
+                _buttonsPart.Add(_orangeWonPanelInstantiated);
         }
     }
 }

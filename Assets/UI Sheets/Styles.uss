@@ -32,3 +32,18 @@
     font-size: 56px;
     width: 80%;
 }
+
+.textHighlightWhite {
+    -unity-text-outline-color: rgb(255, 255, 255);
+    -unity-text-outline-width: 2px;
+}
+
+.textHighlightBlue {
+    -unity-text-outline-color: rgb(54, 186, 255);
+    -unity-text-outline-width: 2px;
+}
+
+.textHighlightOrange {
+    -unity-text-outline-color: rgb(255, 154, 25);
+    -unity-text-outline-width: 2px;
+}

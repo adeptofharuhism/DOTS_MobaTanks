@@ -40,6 +40,11 @@
             {
                 public const string ReadyButton = "ReadyButton";
             }
+
+            public class EndGamePanel
+            {
+                public const string EndGameButton = "EndGameButton";
+            }
         }
     }
 }

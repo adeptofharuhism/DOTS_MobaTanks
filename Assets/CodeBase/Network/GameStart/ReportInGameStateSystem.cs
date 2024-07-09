@@ -15,7 +15,7 @@ namespace Assets.CodeBase.Network.GameStart
         public void OnUpdate(ref SystemState state) {
             Entity stateEntity = SystemAPI.GetSingletonEntity<ReportInGame>();
 
-            state.EntityManager.CreateEntity(typeof(GoInGameStateRpc), typeof(SendRpcCommandRequest));
+            state.EntityManager.CreateEntity(typeof(GoToInGameStateRpc), typeof(SendRpcCommandRequest));
 
             state.EntityManager.RemoveComponent<ReportInGame>(stateEntity);
             state.EntityManager.AddComponent<InGame>(stateEntity);
