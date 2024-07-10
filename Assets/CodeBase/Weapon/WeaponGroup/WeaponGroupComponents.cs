@@ -4,7 +4,7 @@ namespace Assets.CodeBase.Weapon.WeaponGroup
 {
     public struct ShouldInitializeWeaponGroup : IComponentData { }
 
-    public struct WeaponContainer : IComponentData
+    public struct WeaponGroupSlot : IComponentData
     {
         public Entity Value;
     }

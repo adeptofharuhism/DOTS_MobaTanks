@@ -42,7 +42,7 @@ namespace Assets.CodeBase.Vehicles.Turrets
 
     public partial struct WeaponHasTurret : IComponentData { }
 
-    public partial struct WeaponParent : IComponentData
+    public partial struct WeaponsVehicleParentEntity : IComponentData
     {
         public Entity Value;
     }

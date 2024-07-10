@@ -2,6 +2,7 @@
 using Assets.CodeBase.Weapon;
 using Unity.Burst;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Transforms;
 
 namespace Assets.CodeBase.Vehicles.Turrets
@@ -23,15 +24,13 @@ namespace Assets.CodeBase.Vehicles.Turrets
 
                 Entity newWeapon = ecb.Instantiate(weaponPrefab.Value);
 
-                RefRO<LocalTransform> slotTransform = SystemAPI.GetComponentRO<LocalTransform>(slot.Value);
-                LocalTransform weaponTransform = LocalTransform.FromPosition(slotTransform.ValueRO.Position);
-                ecb.SetComponent(newWeapon, weaponTransform);
+                ecb.SetComponent(newWeapon, LocalTransform.FromPosition(float3.zero));
 
                 ecb.SetComponent(newWeapon, new UnitTeam { Value = team.Value });
 
-                ecb.AddComponent(newWeapon, new WeaponSlot { Value = slot.Value });
-                ecb.AddComponent(newWeapon, new WeaponParent { Value = entity });
                 ecb.AddComponent<WeaponHasTurret>(newWeapon);
+                ecb.AddComponent(newWeapon, new Parent { Value = slot.Value });
+                ecb.AddComponent(newWeapon, new WeaponsVehicleParentEntity { Value = entity });
 
                 ecb.AppendToBuffer(entity, new LinkedEntityGroup { Value = newWeapon });
 

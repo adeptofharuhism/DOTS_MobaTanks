@@ -16,7 +16,7 @@ PrefabInstance:
     - target: {fileID: 867912590647823101, guid: 71a18ea9edd18eb4388627c6e5ff4453,
         type: 3}
       propertyPath: m_Name
-      value: TestTargetWithTurret
+      value: TestTargetWithWeapon
       objectReference: {fileID: 0}
     - target: {fileID: 935192956007676924, guid: 71a18ea9edd18eb4388627c6e5ff4453,
         type: 3}
@@ -75,11 +75,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 867912590647823101, guid: 71a18ea9edd18eb4388627c6e5ff4453,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7602105960967720936}
-    - targetCorrespondingSourceObject: {fileID: 867912590647823101, guid: 71a18ea9edd18eb4388627c6e5ff4453,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1360496562981928781}
+      addedObject: {fileID: 5284850626693428083}
   m_SourcePrefab: {fileID: 100100000, guid: 71a18ea9edd18eb4388627c6e5ff4453, type: 3}
 --- !u!1 &8465567775875645798 stripped
 GameObject:
@@ -87,7 +83,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 8750719395244329883}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7602105960967720936
+--- !u!114 &5284850626693428083
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -96,23 +92,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 8465567775875645798}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6309f434d0c808148ada518ba91b76f3, type: 3}
+  m_Script: {fileID: 11500000, guid: cf2ead96fe12bd549930b397b6079e46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetSearchRange: 75
---- !u!114 &1360496562981928781
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8465567775875645798}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e22692060a2942499ce6bba2740fb1d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _projectileSpawnPoint: {fileID: 8465567775875645798}
-  _projectilePrefab: {fileID: 7753857312031998921, guid: a0a20acee63892649a363a278a484e7f,
-    type: 3}
-  _shotCooldown: 0.1
+  _weaponContainer: {fileID: 8465567775875645798}
+  _weapons:
+  - WeaponPrefab: {fileID: 452018900916158139, guid: ddcb62a0bf6a58447b42c90773945c29,
+      type: 3}
+    Amount: 3

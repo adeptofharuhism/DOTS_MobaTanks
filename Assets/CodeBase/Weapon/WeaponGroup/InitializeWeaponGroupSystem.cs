@@ -1,11 +1,11 @@
 ﻿using Assets.CodeBase.Combat.Teams;
 using Assets.CodeBase.GameStates;
-using Assets.CodeBase.Structures.Bases;
 using Unity.Entities;
+using Unity.Mathematics;
+using Unity.Transforms;
 
 namespace Assets.CodeBase.Weapon.WeaponGroup
 {
-    [UpdateAfter(typeof(BaseSpawnSystem))]
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct InitializeWeaponGroupSystem : ISystem
     {
@@ -17,19 +17,22 @@ namespace Assets.CodeBase.Weapon.WeaponGroup
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
             foreach (var (weaponBuffer, container, team, entity)
-                in SystemAPI.Query<DynamicBuffer<WeaponBufferElement>, WeaponContainer, UnitTeam>()
+                in SystemAPI.Query<DynamicBuffer<WeaponBufferElement>, WeaponGroupSlot, UnitTeam>()
                 .WithAll<ShouldInitializeWeaponGroup>()
                 .WithEntityAccess()) {
 
                 foreach (WeaponBufferElement weapon in weaponBuffer) {
                     Entity newWeapon = ecb.Instantiate(weapon.WeaponPrefab);
 
-                    ecb.AddComponent(newWeapon, new WeaponSlot { Value = container.Value });
+                    ecb.SetComponent(newWeapon, LocalTransform.FromPosition(float3.zero));
+                    ecb.AddComponent(newWeapon, new Parent { Value = container.Value });
                     ecb.SetComponent(newWeapon, new UnitTeam { Value = team.Value });
+
+                    ecb.AppendToBuffer(entity, new LinkedEntityGroup { Value = newWeapon });
                 }
 
                 ecb.RemoveComponent<ShouldInitializeWeaponGroup>(entity);
-                ecb.RemoveComponent<WeaponContainer>(entity);
+                ecb.RemoveComponent<WeaponGroupSlot>(entity);
                 weaponBuffer.Clear();
             }
 

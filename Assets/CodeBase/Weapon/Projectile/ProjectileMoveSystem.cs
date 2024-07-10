@@ -20,6 +20,3 @@ namespace Assets.CodeBase.Weapon.Projectile
         }
     }
 }
-/*
- * 
- */

@@ -21,7 +21,7 @@ namespace Assets.CodeBase.Weapon.WeaponGroup
                 Entity entity = GetEntity(TransformUsageFlags.Dynamic);
 
                 AddComponent<ShouldInitializeWeaponGroup>(entity);
-                AddComponent(entity, new WeaponContainer {
+                AddComponent(entity, new WeaponGroupSlot {
                     Value = GetEntity(authoring.WeaponContainer, TransformUsageFlags.Dynamic)
                 });
 

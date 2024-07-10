@@ -24,9 +24,4 @@ namespace Assets.CodeBase.Weapon
     {
         public float Value;
     }
-
-    public partial struct WeaponSlot : IComponentData
-    {
-        public Entity Value;
-    }
 }

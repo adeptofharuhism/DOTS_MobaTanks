@@ -18,8 +18,8 @@ namespace Assets.CodeBase.Vehicles.Turrets
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
-            foreach (var (slot, target, parent)
-                in SystemAPI.Query<WeaponSlot, CurrentTarget, WeaponParent>()
+            foreach (var (weaponTransform, target, parent)
+                in SystemAPI.Query<RefRO<LocalToWorld>, CurrentTarget, WeaponsVehicleParentEntity>()
                 .WithAll<WeaponHasTurret, WeaponReadyToFireTag>()) {
 
                 if (target.Value == Entity.Null) {
@@ -27,12 +27,11 @@ namespace Assets.CodeBase.Vehicles.Turrets
                     continue;
                 }
 
-                RefRO<LocalToWorld> slotTransform = SystemAPI.GetComponentRO<LocalToWorld>(slot.Value);
                 RefRO<LocalToWorld> targetTransform = SystemAPI.GetComponentRO<LocalToWorld>(target.Value);
 
                 ecb.SetComponent(parent.Value, new TurretRotationAngle { 
                     Value = CalculateLookAngle(
-                        slotTransform,
+                        weaponTransform,
                         targetTransform.ValueRO.Position)
                 });
             }
@@ -41,13 +40,13 @@ namespace Assets.CodeBase.Vehicles.Turrets
         }
 
         [BurstCompile]
-        private float CalculateLookAngle(RefRO<LocalToWorld> slotTransform, float3 targetPosition) {
-            float3 slotForward = slotTransform.ValueRO.Forward;
-            float3 slotRight = slotTransform.ValueRO.Right;
+        private float CalculateLookAngle(RefRO<LocalToWorld> weaponTransform, float3 targetPosition) {
+            float3 slotForward = weaponTransform.ValueRO.Forward;
+            float3 slotRight = weaponTransform.ValueRO.Right;
 
-            float3 slotPoint0 = slotTransform.ValueRO.Position;
-            float3 slotPoint1 = slotTransform.ValueRO.Position + slotForward;
-            float3 slotPoint2 = slotTransform.ValueRO.Position + slotRight;
+            float3 slotPoint0 = weaponTransform.ValueRO.Position;
+            float3 slotPoint1 = weaponTransform.ValueRO.Position + slotForward;
+            float3 slotPoint2 = weaponTransform.ValueRO.Position + slotRight;
 
             float d21 = slotPoint1.x - slotPoint0.x;
             float d31 = slotPoint2.x - slotPoint0.x;

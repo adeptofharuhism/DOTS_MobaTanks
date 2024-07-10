@@ -31,7 +31,7 @@ namespace Assets.CodeBase.Weapon
                 ecb.AddComponent<WeaponOnCooldownTag>(weapon);
                 ecb.RemoveComponent<WeaponReadyToFireTag>(weapon);
 
-                if (currentTarget.Value == Entity.Null)
+                if (!state.EntityManager.Exists(currentTarget.Value))
                     continue;
 
                 RefRO<LocalToWorld> spawnPointTransform = SystemAPI.GetComponentRO<LocalToWorld>(projectileSpawnPoint.Value);

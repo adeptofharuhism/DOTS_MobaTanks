@@ -73,6 +73,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _projectileSpawnPoint: {fileID: 452018900916158139}
-  _projectilePrefab: {fileID: 2673211315607540250, guid: 82b0acf0e505a444d8d6e19f3235dba7,
+  _projectilePrefab: {fileID: 2673211315607540250, guid: 2dd8d648c8914b947a32d9aa8bf829a6,
     type: 3}
-  _shotCooldown: 0.2
+  _shotCooldown: 0.5
