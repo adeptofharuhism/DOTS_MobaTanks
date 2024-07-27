@@ -13,15 +13,9 @@ namespace Assets.CodeBase.Mobs.Spawn
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
             foreach (var (waypointReference, entity)
-                in SystemAPI.Query<WaypointSetReference>()
+                in SystemAPI.Query<WaypointSettingsReference>()
                 .WithAll<InitializeMobSpawnerTag>()
                 .WithEntityAccess()) {
-
-                ref WaypointSet waypoints = ref waypointReference.Blob.Value;
-
-                for (int i = 0; i < waypoints.Waypoints.Length; i++) {
-                    UnityEngine.Debug.Log(waypoints.Waypoints[i]);
-                }
 
                 ecb.RemoveComponent<InitializeMobSpawnerTag>(entity);
             }
