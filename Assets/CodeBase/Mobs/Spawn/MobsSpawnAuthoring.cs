@@ -39,70 +39,100 @@ namespace Assets.CodeBase.Mobs.Spawn
             private BlobAssetReference<WaypointSettings> CreateWaypointSettingsBlob(List<TeamPoolSettings> teamPoolSettings) {
                 BlobAssetReference<WaypointSettings> blobReference;
 
-                using (BlobBuilder builder = new BlobBuilder(Allocator.Temp)) {
-                    ref WaypointSettings waypointSettings = ref builder.ConstructRoot<WaypointSettings>();
+                BlobBuilder builder = new BlobBuilder(Allocator.Temp);
 
-                    waypointSettings.TeamAmount = (ushort)teamPoolSettings.Count;
+                ref WaypointSettings waypointSettings = ref builder.ConstructRoot<WaypointSettings>();
 
-                    BlobBuilderArray<ushort> routeAmountBuilder = builder.Allocate(
+                waypointSettings.TeamAmount = (ushort)teamPoolSettings.Count;
+
+                SetWaypoints(ref builder, ref waypointSettings, teamPoolSettings);
+
+                blobReference =
+                    builder.CreateBlobAssetReference<WaypointSettings>(Allocator.Persistent);
+
+                AddBlobAsset(ref blobReference, out Unity.Entities.Hash128 hash);
+
+                builder.Dispose();
+
+                return blobReference;
+            }
+
+            private void SetWaypoints(
+                ref BlobBuilder builder,
+                ref WaypointSettings waypointSettings,
+                List<TeamPoolSettings> teamPoolSettings) {
+
+                ushort waypointCount = SetWaypointOffsets(ref builder, ref waypointSettings, teamPoolSettings);
+
+                BlobBuilderArray<float3> waypointBuilder = builder.Allocate(
+                    ref waypointSettings.Waypoints,
+                    waypointCount);
+
+                ushort currentWaypointIndex = 0;
+                for (int i = 0; i < teamPoolSettings.Count; i++)
+                    for (int j = 0; j < teamPoolSettings[i].RouteSettings.Count; j++)
+                        for (int k = 0; k < teamPoolSettings[i].RouteSettings[j].Waypoints.Count; k++, currentWaypointIndex++)
+                            waypointBuilder[currentWaypointIndex] = teamPoolSettings[i].RouteSettings[j].Waypoints[k].position;
+            }
+
+            private ushort SetWaypointOffsets(
+                ref BlobBuilder builder,
+                ref WaypointSettings waypointSettings,
+                List<TeamPoolSettings> teamPoolSettings) {
+
+                ushort routeCount = SetRouteOffsets(ref builder, ref waypointSettings, teamPoolSettings);
+
+                BlobBuilderArray<ushort> waypointAmountBuilder = builder.Allocate(
+                    ref waypointSettings.WaypointAmount,
+                    routeCount);
+
+                BlobBuilderArray<ushort> waypointOffsetBuilder = builder.Allocate(
+                    ref waypointSettings.WaypointOffsets,
+                    routeCount);
+
+                ushort
+                    currentBuilderIndex = 0,
+                    currentRouteWaypointAmount,
+                    waypointCount = 0;
+                for (int i = 0; i < teamPoolSettings.Count; i++) {
+                    for (int j = 0; j < teamPoolSettings[i].RouteSettings.Count; j++, currentBuilderIndex++) {
+
+                        waypointOffsetBuilder[currentBuilderIndex] = waypointCount;
+
+                        currentRouteWaypointAmount = (ushort)teamPoolSettings[i].RouteSettings[j].Waypoints.Count;
+                        waypointCount += currentRouteWaypointAmount;
+                        waypointAmountBuilder[currentBuilderIndex] = currentRouteWaypointAmount;
+                    }
+                }
+
+                return waypointCount;
+            }
+
+            private ushort SetRouteOffsets(
+                ref BlobBuilder builder,
+                ref WaypointSettings waypointSettings,
+                List<TeamPoolSettings> teamPoolSettings) {
+
+                BlobBuilderArray<ushort> routeAmountBuilder = builder.Allocate(
                         ref waypointSettings.RouteAmount,
                         teamPoolSettings.Count);
 
-                    BlobBuilderArray<ushort> routeOffsetsBuilder = builder.Allocate(
-                        ref waypointSettings.RouteOffsets,
-                        teamPoolSettings.Count);
+                BlobBuilderArray<ushort> routeOffsetsBuilder = builder.Allocate(
+                    ref waypointSettings.RouteOffsets,
+                    teamPoolSettings.Count);
 
-                    ushort
-                        currentTeamRouteAmount,
-                        routeCount = 0;
-                    for (int i = 0; i < teamPoolSettings.Count; i++) {
-                        routeOffsetsBuilder[i] = routeCount;
+                ushort
+                    currentTeamRouteAmount,
+                    routeCount = 0;
+                for (int i = 0; i < teamPoolSettings.Count; i++) {
+                    routeOffsetsBuilder[i] = routeCount;
 
-                        currentTeamRouteAmount = (ushort)teamPoolSettings[i].RouteSettings.Count;
-                        routeCount += currentTeamRouteAmount;
-                        routeAmountBuilder[i] = currentTeamRouteAmount;
-                    }
-
-                    BlobBuilderArray<ushort> waypointAmountBuilder = builder.Allocate(
-                        ref waypointSettings.WaypointAmount,
-                        routeCount);
-
-                    BlobBuilderArray<ushort> waypointOffsetBuilder = builder.Allocate(
-                        ref waypointSettings.WaypointOffsets,
-                        routeCount);
-
-                    ushort
-                        currentBuilderIndex = 0,
-                        currentRouteWaypointAmount,
-                        waypointCount = 0;
-                    for (int i = 0; i < teamPoolSettings.Count; i++) {
-                        for (int j = 0; j < teamPoolSettings[i].RouteSettings.Count; j++, currentBuilderIndex++) {
-
-                            waypointOffsetBuilder[currentBuilderIndex] = waypointCount;
-
-                            currentRouteWaypointAmount = (ushort)teamPoolSettings[i].RouteSettings[j].Waypoints.Count;
-                            waypointCount += currentRouteWaypointAmount;
-                            waypointAmountBuilder[currentBuilderIndex] = currentRouteWaypointAmount;
-                        }
-                    }
-
-                    BlobBuilderArray<float3> waypointBuilder = builder.Allocate(
-                        ref waypointSettings.Waypoints,
-                        waypointCount);
-
-                    ushort currentWaypointIndex = 0;
-                    for (int i = 0; i < teamPoolSettings.Count; i++)
-                        for (int j = 0; j < teamPoolSettings[i].RouteSettings.Count; j++)
-                            for (int k = 0; k < teamPoolSettings[i].RouteSettings[j].Waypoints.Count; k++, currentWaypointIndex++)
-                                waypointBuilder[currentWaypointIndex] = teamPoolSettings[i].RouteSettings[j].Waypoints[k].position;
-
-                    blobReference =
-                        builder.CreateBlobAssetReference<WaypointSettings>(Allocator.Persistent);
-
-                    AddBlobAsset(ref blobReference, out Unity.Entities.Hash128 hash);
+                    currentTeamRouteAmount = (ushort)teamPoolSettings[i].RouteSettings.Count;
+                    routeCount += currentTeamRouteAmount;
+                    routeAmountBuilder[i] = currentTeamRouteAmount;
                 }
 
-                return blobReference;
+                return routeCount;
             }
         }
     }

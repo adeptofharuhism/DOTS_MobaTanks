@@ -17,6 +17,25 @@ namespace Assets.CodeBase.Mobs.Spawn
                 .WithAll<InitializeMobSpawnerTag>()
                 .WithEntityAccess()) {
 
+                ref WaypointSettings waypointSettings = ref waypointReference.Blob.Value;
+
+                UnityEngine.Debug.Log($"Team amount is {waypointSettings.TeamAmount}");
+
+                for (int i = 0; i < 2; i++)
+                    UnityEngine.Debug.Log($"Offset R {i} is {waypointSettings.RouteOffsets[i]}");
+
+                for (int i = 0; i < 2; i++)
+                    UnityEngine.Debug.Log($"Amount R {i} is {waypointSettings.RouteAmount[i]}");
+
+                for (int i = 0; i < 4; i++)
+                    UnityEngine.Debug.Log($"Offset W {i} is {waypointSettings.WaypointOffsets[i]}");
+
+                for (int i = 0; i < 4; i++)
+                    UnityEngine.Debug.Log($"Amount W {i} is {waypointSettings.WaypointAmount[i]}");
+
+                for (int i = 0; i < 20; i++)
+                    UnityEngine.Debug.Log($"Waypoint {i} is {waypointSettings.Waypoints[i]}");
+
                 ecb.RemoveComponent<InitializeMobSpawnerTag>(entity);
             }
 
