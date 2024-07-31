@@ -19,17 +19,35 @@ namespace Assets.CodeBase.Mobs.Spawn
         public List<Transform> Waypoints;
     }
 
+    [Serializable]
+    public class InitialMobWaveSettings
+    {
+        public GameObject MobPrefab;
+        public int Amount;
+        public int WaveCooldown;
+    }
+
     public class MobsSpawnAuthoring : MonoBehaviour
     {
+        [SerializeField] private GameObject _mobSpawnerPrefab;
+        [SerializeField] private List<InitialMobWaveSettings> _initialMobWaves;
         [SerializeField] private List<TeamPoolSettings> _teamPoolSettings;
 
+        public GameObject MobSpawnerPrefab => _mobSpawnerPrefab;
+        public List<InitialMobWaveSettings> InitialMobWaves => _initialMobWaves;
         public List<TeamPoolSettings> TeamPoolSettings => _teamPoolSettings;
 
         public class MobsSpawnBaker : Baker<MobsSpawnAuthoring>
         {
             public override void Bake(MobsSpawnAuthoring authoring) {
                 Entity entity = GetEntity(TransformUsageFlags.None);
-                AddComponent<InitializeMobSpawnerTag>(entity);
+                AddComponent<InitializeSpawnRequestProcessTag>(entity);
+
+                AddBuffer<NewSpawnerInstantiationParametersElement>(entity);
+                AddComponent(entity, new SpawnerPrefab {
+                    Value = GetEntity(authoring.MobSpawnerPrefab, TransformUsageFlags.None)
+                });
+                CreateInitialMobSpawnRequests(entity, authoring.TeamPoolSettings, authoring.InitialMobWaves);
 
                 AddComponent(entity, new WaypointSettingsReference {
                     Blob = CreateWaypointSettingsBlob(authoring.TeamPoolSettings)
@@ -55,6 +73,23 @@ namespace Assets.CodeBase.Mobs.Spawn
                 builder.Dispose();
 
                 return blobReference;
+            }
+
+            private void CreateInitialMobSpawnRequests(
+                Entity entity,
+                List<TeamPoolSettings> teamPoolSettings,
+                List<InitialMobWaveSettings> initialMobWaves) {
+
+                DynamicBuffer<NewSpawnRequestElement> mobSpawnBuffer = AddBuffer<NewSpawnRequestElement>(entity);
+
+                for (ushort i = 0; i < teamPoolSettings.Count; i++)
+                    foreach (InitialMobWaveSettings mobWave in initialMobWaves)
+                        for (int j = 0; j < mobWave.Amount; j++)
+                            mobSpawnBuffer.Add(new NewSpawnRequestElement {
+                                MobPrefab = GetEntity(mobWave.MobPrefab, TransformUsageFlags.Dynamic),
+                                WaveCooldown = (ushort)mobWave.WaveCooldown,
+                                Team = i
+                            });
             }
 
             private void SetWaypoints(

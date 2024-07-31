@@ -34621,6 +34621,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ca7f51f096665941897e76194102315, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _mobSpawnerPrefab: {fileID: 1871763759706829652, guid: 1cd581f0d87e53a4188808901eb7b526,
+    type: 3}
+  _initialMobWaves:
+  - MobPrefab: {fileID: 4934725233422185294, guid: e8be080880e326f4b9501a6541910e93,
+      type: 3}
+    Amount: 3
+    WaveCooldown: 30
   _teamPoolSettings:
   - RouteSettings:
     - Waypoints:
