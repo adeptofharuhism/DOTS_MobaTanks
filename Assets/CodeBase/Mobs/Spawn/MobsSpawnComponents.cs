@@ -1,6 +1,7 @@
 ﻿using Unity.Entities;
 using Unity.Mathematics;
 using Unity.NetCode;
+using UnityEditor;
 
 namespace Assets.CodeBase.Mobs.Spawn
 {
@@ -38,6 +39,7 @@ namespace Assets.CodeBase.Mobs.Spawn
         public ushort WaveCooldown;
         public ushort CurrentRoute;
         public ushort RouteAmount;
+        public ushort RouteOffset;
         public ushort Team;
     }
 
@@ -48,22 +50,47 @@ namespace Assets.CodeBase.Mobs.Spawn
     }
 
     [GhostComponent(PrefabType = GhostPrefabType.Server)]
+    public struct ShouldSpawnMobTag : IComponentData { }
+
+    [GhostComponent(PrefabType = GhostPrefabType.Server)]
     public struct MobPrefab : IComponentData
     {
         public Entity Value;
     }
 
     [GhostComponent(PrefabType = GhostPrefabType.Server)]
-    public struct RouteInformation : IComponentData
+    public struct CurrentRoute : IComponentData
     {
-        public ushort RouteAmount;
-        public ushort CurrentRoute;
+        public ushort Value;
+    }
+
+    [GhostComponent(PrefabType = GhostPrefabType.Server)]
+    public struct RouteAmount : IComponentData
+    {
+        public ushort Value;
+    }
+
+    [GhostComponent(PrefabType = GhostPrefabType.Server)]
+    public struct RouteOffset : IComponentData
+    {
+        public ushort Value;
     }
 
     [GhostComponent(PrefabType = GhostPrefabType.Server)]
     public struct MobSpawnCooldown : IComponentData
     {
-        public float Cooldown;
-        public float CurrentTimeLeft;
+        public float Value;
+    }
+
+    [GhostComponent(PrefabType = GhostPrefabType.Server)]
+    public struct MobSpawnCooldownTimeLeft : IComponentData
+    {
+        public float Value;
+    }
+
+    [GhostComponent(PrefabType = GhostPrefabType.Server)]
+    public struct MobSpawnPosition : IComponentData
+    {
+        public float3 Value;
     }
 }

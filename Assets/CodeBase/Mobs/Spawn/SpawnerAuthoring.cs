@@ -12,8 +12,16 @@ namespace Assets.CodeBase.Mobs.Spawn
                 Entity entity = GetEntity(TransformUsageFlags.None);
 
                 AddComponent<MobPrefab>(entity);
-                AddComponent<RouteInformation>(entity);
+
+                AddComponent<CurrentRoute>(entity);
+                AddComponent<RouteAmount>(entity);
+                AddComponent<RouteOffset>(entity);
+
+                AddComponent<MobSpawnPosition>(entity);
+
                 AddComponent<MobSpawnCooldown>(entity);
+                AddComponent<MobSpawnCooldownTimeLeft>(entity);
+
                 AddComponent<UnitTeam>(entity);
                 AddComponent<WaypointSettingsReference>(entity);
             }
