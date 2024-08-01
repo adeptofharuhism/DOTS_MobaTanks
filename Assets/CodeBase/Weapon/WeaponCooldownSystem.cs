@@ -1,12 +1,13 @@
 ﻿using Assets.CodeBase.GameStates;
+using Assets.CodeBase.Targeting;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.NetCode;
 
 namespace Assets.CodeBase.Weapon
 {
-    [UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
+    [UpdateInGroup(typeof(PredictedSimulationSystemGroup), OrderFirst = true)]
     public partial struct WeaponCooldownSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
@@ -19,17 +20,17 @@ namespace Assets.CodeBase.Weapon
 
             foreach (var (cooldown, timeOnCooldown, weapon)
                 in SystemAPI.Query<WeaponCooldown, RefRW<WeaponTimeOnCooldown>>()
-                .WithAll<WeaponOnCooldownTag>()
                 .WithEntityAccess()) {
 
-                timeOnCooldown.ValueRW.Value += SystemAPI.Time.DeltaTime;
+                timeOnCooldown.ValueRW.Value -= SystemAPI.Time.DeltaTime;
 
-                if (timeOnCooldown.ValueRW.Value > cooldown.Value) {
-                    timeOnCooldown.ValueRW.Value = 0;
+                if (timeOnCooldown.ValueRW.Value > 0)
+                    continue;
 
-                    ecb.AddComponent<WeaponReadyToFireTag>(weapon);
-                    ecb.RemoveComponent<WeaponOnCooldownTag>(weapon);
-                }
+                timeOnCooldown.ValueRW.Value = cooldown.Value;
+
+                ecb.AddComponent<Targeter>(weapon);
+                ecb.AddComponent<WeaponReadyToFireTag>(weapon);
             }
 
             ecb.Playback(state.EntityManager);

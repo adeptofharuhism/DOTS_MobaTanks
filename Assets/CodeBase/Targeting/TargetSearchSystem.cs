@@ -35,9 +35,10 @@ namespace Assets.CodeBase.Targeting
         public void OnUpdate(ref SystemState state) {
             CollisionWorld collisionWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().CollisionWorld;
 
-            foreach (var (range, targeterTransform, currentTarget, team)
+            foreach (var (range, targeterTransform, currentTarget, team, entity)
                 in SystemAPI.Query<TargeterRange, RefRO<LocalToWorld>, RefRW<CurrentTarget>, UnitTeam>()
-                .WithAll<Targeter>()) {
+                .WithAll<Targeter>()
+                .WithEntityAccess()) {
 
                 NativeList<DistanceHit> distanceHits = new NativeList<DistanceHit>(Allocator.Temp);
 

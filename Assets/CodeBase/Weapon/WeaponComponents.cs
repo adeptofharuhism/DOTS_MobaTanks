@@ -13,7 +13,6 @@ namespace Assets.CodeBase.Weapon
     }
 
     public partial struct WeaponReadyToFireTag : IComponentData { }
-    public partial struct WeaponOnCooldownTag : IComponentData { }
 
     public partial struct WeaponCooldown : IComponentData
     {

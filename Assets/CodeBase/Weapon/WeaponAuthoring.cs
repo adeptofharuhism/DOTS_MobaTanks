@@ -24,7 +24,6 @@ namespace Assets.CodeBase.Weapon
             public override void Bake(WeaponAuthoring authoring) {
                 Entity weapon = GetEntity(TransformUsageFlags.Dynamic);
 
-                AddComponent<WeaponOnCooldownTag>(weapon);
                 AddComponent(weapon, new WeaponCooldown { Value = authoring.ShotCooldown });
                 AddComponent(weapon, new WeaponTimeOnCooldown { Value = 0 });
 
