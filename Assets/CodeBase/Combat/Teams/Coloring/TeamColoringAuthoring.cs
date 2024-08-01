@@ -13,10 +13,10 @@ namespace Assets.CodeBase.Combat.Teams.Coloring
 
                 AddComponent<InitialTeamColoringTag>(entity);
 
-                DynamicBuffer<EntitiesWithRendererElement> entitiesWithRendererBuffer = 
-                    AddBuffer<EntitiesWithRendererElement>(entity);
+                DynamicBuffer<EntiенWithRendererElement> entitiesWithRendererBuffer = 
+                    AddBuffer<EntiенWithRendererElement>(entity);
                 foreach (MeshRenderer renderer in authoring.GetComponentsInChildren<MeshRenderer>())
-                    entitiesWithRendererBuffer.Add(new EntitiesWithRendererElement {
+                    entitiesWithRendererBuffer.Add(new EntiенWithRendererElement {
                         Value = GetEntity(renderer.gameObject, TransformUsageFlags.Dynamic)
                     });
             }

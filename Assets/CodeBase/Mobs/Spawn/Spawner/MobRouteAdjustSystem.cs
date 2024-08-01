@@ -1,10 +1,12 @@
 ﻿using Assets.CodeBase.GameStates;
 using Unity.Entities;
 
-namespace Assets.CodeBase.Mobs.Spawn
+namespace Assets.CodeBase.Mobs.Spawn.Spawner
 {
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
+    [UpdateInGroup(typeof(SpawnSystemGroup))]
     [UpdateAfter(typeof(MobSpawnSystem))]
+    [UpdateBefore(typeof(MobSpawnTagRemoveSystem))]
     public partial struct MobRouteAdjustSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {

@@ -1,10 +1,12 @@
 ﻿using Assets.CodeBase.GameStates;
 using Unity.Entities;
 
-namespace Assets.CodeBase.Mobs.Spawn
+namespace Assets.CodeBase.Mobs.Spawn.Spawner
 {
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
+    [UpdateInGroup(typeof(SpawnSystemGroup))]
     [UpdateAfter(typeof(UpdateMobSpawnCooldownSystem))]
+    [UpdateBefore(typeof(MobSpawnSystem))]
     public partial struct SelectMobSpawnPositionSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {

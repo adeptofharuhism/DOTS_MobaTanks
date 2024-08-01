@@ -1,7 +1,6 @@
 ﻿using Unity.Entities;
 using Unity.Mathematics;
 using Unity.NetCode;
-using UnityEditor;
 
 namespace Assets.CodeBase.Mobs.Spawn
 {

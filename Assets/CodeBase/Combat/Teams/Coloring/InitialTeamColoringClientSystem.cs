@@ -13,12 +13,12 @@ namespace Assets.CodeBase.Combat.Teams.Coloring
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
             foreach (var (team, entitiesWithRenderer, entity)
-                in SystemAPI.Query<UnitTeam, DynamicBuffer<EntitiesWithRendererElement>>()
+                in SystemAPI.Query<UnitTeam, DynamicBuffer<EntiенWithRendererElement>>()
                 .WithAll<InitialTeamColoringTag>()
                 .WithEntityAccess()) {
 
                 float4 teamColor = TeamColorsForModels.GetColorByTeam(team.Value);
-                foreach (EntitiesWithRendererElement entityWithRenderer in entitiesWithRenderer)
+                foreach (EntiенWithRendererElement entityWithRenderer in entitiesWithRenderer)
                     ecb.AddComponent(entityWithRenderer.Value, new URPMaterialPropertyBaseColor { Value = teamColor });
 
                 ecb.RemoveComponent<InitialTeamColoringTag>(entity);

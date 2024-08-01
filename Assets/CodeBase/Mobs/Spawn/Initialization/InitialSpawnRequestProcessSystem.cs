@@ -1,24 +1,26 @@
 ﻿using Assets.CodeBase.GameStates;
 using Unity.Entities;
 
-namespace Assets.CodeBase.Mobs.Spawn
+namespace Assets.CodeBase.Mobs.Spawn.Initialization
 {
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
-    [UpdateAfter(typeof(InitialSpawnRequestProcessSystem))]
-    public partial struct SpawnRequestProcessSystem : ISystem
+    [UpdateInGroup(typeof(SpawnInitializationSystemGroup))]
+    [UpdateBefore(typeof(SpawnRequestProcessSystem))]
+    public partial struct InitialSpawnRequestProcessSystem : ISystem
     {
-        private const int InitialRoute = 0;
-
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<InGameState>();
+            state.RequireForUpdate<InitializeSpawnRequestProcessTag>();
         }
 
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
-            foreach (var (waypointSettingsReference, mobSpawnerPrefab, newSpawnRequests, newSpawnerParametersBuffer)
+            foreach (var (waypointSettingsReference, mobSpawnerPrefab, newSpawnRequests, newSpawnerParametersBuffer, entity)
                 in SystemAPI.Query<WaypointSettingsReference, SpawnerPrefab,
-                DynamicBuffer<NewSpawnRequestElement>, DynamicBuffer<NewSpawnerInstantiationParametersElement>>()) {
+                DynamicBuffer<NewSpawnRequestElement>, DynamicBuffer<NewSpawnerInstantiationParametersElement>>()
+                .WithAll<InitializeSpawnRequestProcessTag>()
+                .WithEntityAccess()) {
 
                 ref WaypointSettings waypointSettings = ref waypointSettingsReference.Blob.Value;
 
@@ -30,7 +32,7 @@ namespace Assets.CodeBase.Mobs.Spawn
                             SpawnerPrefab = mobSpawnerPrefab.Value,
                             MobPrefab = newSpawnRequest.MobPrefab,
                             WaveCooldown = newSpawnRequest.WaveCooldown,
-                            CurrentRoute = InitialRoute,
+                            CurrentRoute = (ushort)i,
                             RouteAmount = routeAmount,
                             RouteOffset = waypointSettings.RouteOffsets[newSpawnRequest.Team],
                             Team = newSpawnRequest.Team
@@ -38,6 +40,8 @@ namespace Assets.CodeBase.Mobs.Spawn
                 }
 
                 newSpawnRequests.Clear();
+
+                ecb.RemoveComponent<InitializeSpawnRequestProcessTag>(entity);
             }
 
             ecb.Playback(state.EntityManager);

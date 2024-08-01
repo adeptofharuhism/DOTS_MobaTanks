@@ -2,7 +2,10 @@
 
 namespace Assets.CodeBase.Mobs.Logic
 {
+    public struct EnterMoveToPointState: IComponentData { }
     public struct MoveToPointState : IComponentData { }
+
     public struct MoveToTargetState : IComponentData { }
+
     public struct AttackState : IComponentData { }
 }

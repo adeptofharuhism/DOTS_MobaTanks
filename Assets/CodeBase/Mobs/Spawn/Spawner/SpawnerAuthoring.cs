@@ -2,7 +2,7 @@
 using Unity.Entities;
 using UnityEngine;
 
-namespace Assets.CodeBase.Mobs.Spawn
+namespace Assets.CodeBase.Mobs.Spawn.Spawner
 {
     public class SpawnerAuthoring : MonoBehaviour
     {

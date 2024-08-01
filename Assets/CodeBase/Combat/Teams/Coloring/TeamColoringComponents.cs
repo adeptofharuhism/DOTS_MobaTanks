@@ -21,7 +21,7 @@ namespace Assets.CodeBase.Combat.Teams.Coloring
     public struct InitialTeamColoringTag : IComponentData { }
 
     [GhostComponent(PrefabType = GhostPrefabType.Client)]
-    public struct EntitiesWithRendererElement : IBufferElementData
+    public struct EntiенWithRendererElement : IBufferElementData
     {
         public Entity Value;
     }

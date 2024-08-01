@@ -2,9 +2,10 @@
 using Assets.CodeBase.GameStates;
 using Unity.Entities;
 
-namespace Assets.CodeBase.Mobs.Spawn
+namespace Assets.CodeBase.Mobs.Spawn.Initialization
 {
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
+    [UpdateInGroup(typeof(SpawnInitializationSystemGroup))]
     [UpdateAfter(typeof(SpawnRequestProcessSystem))]
     public partial struct SpawnerInstantiationSystem : ISystem
     {
