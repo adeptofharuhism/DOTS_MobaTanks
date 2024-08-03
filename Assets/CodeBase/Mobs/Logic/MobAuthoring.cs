@@ -1,20 +1,26 @@
 ﻿using Assets.CodeBase.Combat.Teams;
 using Assets.CodeBase.Mobs.Logic.MoveToPoint;
 using Assets.CodeBase.Mobs.Logic.MoveToTarget;
+using Assets.CodeBase.Mobs.Logic.TargetSearch;
 using Assets.CodeBase.Mobs.Spawn;
+using Assets.CodeBase.Targeting;
 using Unity.Entities;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Assets.CodeBase.Mobs.Logic
 {
     [RequireComponent(typeof(TeamAuthoring))]
+    [RequireComponent(typeof(TargeterAuthoring))]
     public class MobAuthoring : MonoBehaviour
     {
+        [SerializeField] private float _targetSearchInterval = 1f;
         [SerializeField] private float _requiredDistanceToWaypoint = 1f;
-        [SerializeField] private float _targetChaseDistance = 60f;
+        [SerializeField] private float _targetChaseTime = 3f;
 
+        public float TargetSearchInterval => _targetSearchInterval;
         public float RequiredDistanceToWaypoint => _requiredDistanceToWaypoint;
-        public float TargetChaseDistance => _targetChaseDistance;
+        public float TargetChaseTime => _targetChaseTime;
 
         public class MobBaker : Baker<MobAuthoring>
         {
@@ -32,14 +38,20 @@ namespace Assets.CodeBase.Mobs.Logic
 
                 AddComponent<SquaredDistanceToWaypoint>(mob);
                 AddComponent(mob, new SquaredRequiredDistanceToWaypoint {
-                    Value = authoring.RequiredDistanceToWaypoint * authoring.RequiredDistanceToWaypoint
+                    Value = math.square(authoring.RequiredDistanceToWaypoint)
+                });
+                AddComponent(mob, new SquaredTargetSearchRange {
+                    Value = math.square(authoring.GetComponent<TargeterAuthoring>().TargetSearchRange)
                 });
 
                 AddComponent<ChasedTarget>(mob);
                 AddComponent<ChasedTargetPosition>(mob);
-                AddComponent(mob, new SquaredChasedTargetDistance {
-                    Value = authoring.TargetChaseDistance * authoring.TargetChaseDistance
-                });
+                AddComponent<SquaredChasedTargetDistance>(mob);
+                AddComponent<ChaseTimeLeft>(mob);
+                AddComponent(mob, new ChaseDuration { Value = authoring.TargetChaseTime });
+
+                AddComponent(mob, new TargetSearchCooldown { Value = authoring._targetSearchInterval });
+                AddComponent(mob, new TargetSearchCooldownTimeLeft { Value = authoring._targetSearchInterval });
             }
         }
     }

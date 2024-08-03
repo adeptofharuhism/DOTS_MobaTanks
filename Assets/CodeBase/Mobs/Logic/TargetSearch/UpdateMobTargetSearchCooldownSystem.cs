@@ -1,0 +1,37 @@
+﻿using Assets.CodeBase.GameStates;
+using Assets.CodeBase.Targeting;
+using Unity.Entities;
+using Unity.NetCode;
+
+namespace Assets.CodeBase.Mobs.Logic.TargetSearch
+{
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
+    [UpdateInGroup(typeof(PredictedSimulationSystemGroup), OrderFirst = true)]
+    public partial struct UpdateMobTargetSearchCooldownSystem : ISystem
+    {
+        public void OnCreate(ref SystemState state) {
+            state.RequireForUpdate<InGameState>();
+        }
+
+        public void OnUpdate(ref SystemState state) {
+            EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
+
+            foreach(var (cooldown, timePassed, entity)
+                in SystemAPI.Query<TargetSearchCooldown, RefRW<TargetSearchCooldownTimeLeft>>()
+                .WithEntityAccess()) {
+
+                timePassed.ValueRW.Value -= SystemAPI.Time.DeltaTime;
+
+                if (timePassed.ValueRO.Value > 0)
+                    continue;
+
+                timePassed.ValueRW.Value = cooldown.Value;
+
+                ecb.AddComponent<Targeter>(entity);
+                ecb.AddComponent<MobReadyToSearchTargetTag>(entity);
+            }
+
+            ecb.Playback(state.EntityManager);
+        }
+    }
+}

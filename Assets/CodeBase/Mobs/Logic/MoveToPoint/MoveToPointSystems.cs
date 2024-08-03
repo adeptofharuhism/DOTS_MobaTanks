@@ -1,5 +1,6 @@
 ﻿using Assets.CodeBase.GameStates;
 using Assets.CodeBase.Mobs.Spawn;
+using Assets.CodeBase.Targeting;
 using ProjectDawn.Navigation;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -9,7 +10,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
 {
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(MoveToPointStateSystemGroup))]
-    [UpdateBefore(typeof(EnterMoveToPointStateSystem))]
+    [UpdateBefore(typeof(MoveToPointStateInitializationSystem))]
     public partial struct SetDestinationOnStateEnteranceSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
@@ -30,7 +31,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
     [UpdateInGroup(typeof(MoveToPointStateSystemGroup))]
     [UpdateAfter(typeof(SetDestinationOnStateEnteranceSystem))]
     [UpdateBefore(typeof(CalculateSquaredDistanceToWaypoint))]
-    public partial struct EnterMoveToPointStateSystem : ISystem
+    public partial struct MoveToPointStateInitializationSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<InGameState>();
@@ -53,7 +54,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
 
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(MoveToPointStateSystemGroup))]
-    [UpdateAfter(typeof(EnterMoveToPointStateSystem))]
+    [UpdateAfter(typeof(MoveToPointStateInitializationSystem))]
     [UpdateBefore(typeof(CheckCurrentDistanceToPointSystem))]
     public partial struct CalculateSquaredDistanceToWaypoint : ISystem
     {
@@ -165,6 +166,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(MoveToPointStateSystemGroup))]
     [UpdateAfter(typeof(SetDestinationSystem))]
+    [UpdateBefore(typeof(FoundTargetEnterMoveToTargetSystem))]
     public partial struct RemoveAdjustWaypointTagSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
@@ -179,6 +181,33 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
                 .WithAll<MoveToPointState>()
                 .WithEntityAccess())
                 ecb.RemoveComponent<ShouldAdjustWaypointTag>(entity);
+
+            ecb.Playback(state.EntityManager);
+        }
+    }
+
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
+    [UpdateInGroup(typeof(MoveToPointStateSystemGroup))]
+    [UpdateAfter(typeof(RemoveAdjustWaypointTagSystem))]
+    public partial struct FoundTargetEnterMoveToTargetSystem : ISystem {
+        public void OnCreate(ref SystemState state) {
+            state.RequireForUpdate<InGameState>();
+        }
+
+        public void OnUpdate(ref SystemState state) {
+            EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
+
+            foreach (var (currentTarget, entity)
+                in SystemAPI.Query<CurrentTarget>()
+                .WithAll<MoveToPointState>()
+                .WithEntityAccess()) {
+
+                if (!state.EntityManager.Exists(currentTarget.Value))
+                    continue;
+
+                ecb.RemoveComponent<MoveToPointState>(entity);
+                ecb.AddComponent<EnterMoveToTargetState>(entity);
+            }
 
             ecb.Playback(state.EntityManager);
         }
