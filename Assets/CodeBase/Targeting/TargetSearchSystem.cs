@@ -52,7 +52,8 @@ namespace Assets.CodeBase.Targeting
                 RemoveAlliedUnits(ref state, ref distanceHits, team);
 
                 Entity targetEntity = SelectRandomTarget(ref distanceHits);
-                currentTarget.ValueRW.Value = SelectTargetingPoint(ref state, targetEntity);
+                //currentTarget.ValueRW.Value = SelectTargetingPoint(ref state, targetEntity);
+                currentTarget.ValueRW.Value = targetEntity;
             }
         }
 

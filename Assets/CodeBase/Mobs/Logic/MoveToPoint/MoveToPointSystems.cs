@@ -2,6 +2,7 @@
 using Assets.CodeBase.Mobs.Spawn;
 using Assets.CodeBase.Targeting;
 using ProjectDawn.Navigation;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -40,7 +41,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
-            foreach(var (tag, entity)
+            foreach (var (tag, entity)
                 in SystemAPI.Query<EnterMoveToPointState>()
                 .WithEntityAccess()) {
 
@@ -166,7 +167,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(MoveToPointStateSystemGroup))]
     [UpdateAfter(typeof(SetDestinationSystem))]
-    [UpdateBefore(typeof(FoundTargetEnterMoveToTargetSystem))]
+    [UpdateBefore(typeof(EnterMoveToTargetWhenFoundTargetSystem))]
     public partial struct RemoveAdjustWaypointTagSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
@@ -189,7 +190,8 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(MoveToPointStateSystemGroup))]
     [UpdateAfter(typeof(RemoveAdjustWaypointTagSystem))]
-    public partial struct FoundTargetEnterMoveToTargetSystem : ISystem {
+    public partial struct EnterMoveToTargetWhenFoundTargetSystem : ISystem
+    {
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<InGameState>();
         }
@@ -206,6 +208,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
                     continue;
 
                 ecb.RemoveComponent<MoveToPointState>(entity);
+
                 ecb.AddComponent<EnterMoveToTargetState>(entity);
             }
 

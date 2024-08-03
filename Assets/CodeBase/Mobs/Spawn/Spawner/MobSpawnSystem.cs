@@ -1,6 +1,7 @@
 ﻿using Assets.CodeBase.Combat.Teams;
 using Assets.CodeBase.GameStates;
 using Assets.CodeBase.Mobs.Logic.MoveToPoint;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Transforms;
 
@@ -17,6 +18,7 @@ namespace Assets.CodeBase.Mobs.Spawn.Spawner
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 

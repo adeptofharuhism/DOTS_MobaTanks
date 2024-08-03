@@ -1,5 +1,6 @@
 ﻿using Assets.CodeBase.Combat.Teams;
 using Assets.CodeBase.GameStates;
+using Unity.Burst;
 using Unity.Entities;
 
 namespace Assets.CodeBase.Mobs.Spawn.Initialization
@@ -13,6 +14,7 @@ namespace Assets.CodeBase.Mobs.Spawn.Initialization
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
@@ -25,7 +27,7 @@ namespace Assets.CodeBase.Mobs.Spawn.Initialization
                     ecb.SetComponent(newSpawner, new MobPrefab { Value = newSpawnerParameters.MobPrefab });
 
                     ecb.SetComponent(newSpawner, new MobSpawnCooldown { Value = newSpawnerParameters.WaveCooldown });
-                    ecb.SetComponent(newSpawner, new MobSpawnCooldownTimeLeft { Value = newSpawnerParameters.WaveCooldown });
+                    ecb.SetComponent(newSpawner, new MobSpawnCooldownTimeLeft { Value = 0 });
 
                     ecb.SetComponent(newSpawner, new CurrentRoute { Value = newSpawnerParameters.CurrentRoute });
                     ecb.SetComponent(newSpawner, new RouteAmount { Value = newSpawnerParameters.RouteAmount });

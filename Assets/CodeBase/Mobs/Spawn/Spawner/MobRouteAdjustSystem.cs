@@ -1,4 +1,5 @@
 ﻿using Assets.CodeBase.GameStates;
+using Unity.Burst;
 using Unity.Entities;
 
 namespace Assets.CodeBase.Mobs.Spawn.Spawner
@@ -13,6 +14,7 @@ namespace Assets.CodeBase.Mobs.Spawn.Spawner
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (currentRoute, routeAmount)
                 in SystemAPI.Query<RefRW<CurrentRoute>, RouteAmount>()

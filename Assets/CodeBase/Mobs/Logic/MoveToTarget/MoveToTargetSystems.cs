@@ -1,6 +1,8 @@
 ﻿using Assets.CodeBase.GameStates;
+using Assets.CodeBase.Mobs.Logic.Attack;
 using Assets.CodeBase.Targeting;
 using ProjectDawn.Navigation;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -9,7 +11,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
 {
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(MoveToTargetStateSystemGroup))]
-    [UpdateBefore(typeof(NoTargetEnterMoveToPointSystem))]
+    [UpdateBefore(typeof(EnterMoveToPointWhenNoTargetSystem))]
     public partial struct MoveToTargetStateInitializationSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
@@ -37,7 +39,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
     [UpdateInGroup(typeof(MoveToTargetStateSystemGroup))]
     [UpdateAfter(typeof(MoveToTargetStateInitializationSystem))]
     [UpdateBefore(typeof(UpdateChasedTargetSystem))]
-    public partial struct NoTargetEnterMoveToPointSystem : ISystem
+    public partial struct EnterMoveToPointWhenNoTargetSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<InGameState>();
@@ -48,6 +50,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
 
             foreach (var (currentTarget, chasedTarget, entity)
                 in SystemAPI.Query<CurrentTarget, ChasedTarget>()
+                .WithAll<MoveToTargetState>()
                 .WithEntityAccess()) {
 
                 if (state.EntityManager.Exists(currentTarget.Value) || state.EntityManager.Exists(chasedTarget.Value))
@@ -66,7 +69,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
 
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(MoveToTargetStateSystemGroup))]
-    [UpdateAfter(typeof(NoTargetEnterMoveToPointSystem))]
+    [UpdateAfter(typeof(EnterMoveToPointWhenNoTargetSystem))]
     [UpdateBefore(typeof(UpdateChasedTargetPositionSystem))]
     public partial struct UpdateChasedTargetSystem : ISystem
     {
@@ -110,9 +113,11 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
                 in SystemAPI.Query<ChasedTarget, RefRW<ChasedTargetPosition>>()
                 .WithAll<MoveToTargetState>()) {
 
-                RefRO<LocalToWorld> targetTransform = SystemAPI.GetComponentRO<LocalToWorld>(chasedTarget.Value);
+                if (!SystemAPI.GetComponentLookup<LocalTransform>(true)
+                    .TryGetComponent(chasedTarget.Value, out LocalTransform targetTransform))
+                    continue;
 
-                chasedTargetPosition.ValueRW.Value = targetTransform.ValueRO.Position;
+                chasedTargetPosition.ValueRW.Value = targetTransform.Position;
             }
         }
     }
@@ -140,7 +145,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(MoveToTargetStateSystemGroup))]
     [UpdateAfter(typeof(FollowChasedTargetSystem))]
-    [UpdateBefore(typeof(CheckIfTargetInRangeSystem))]
+    [UpdateBefore(typeof(EnterAttackWhenTargetInRangeSystem))]
     public partial struct CalculateSquaredDistanceToChasedTargetSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
@@ -160,6 +165,38 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(MoveToTargetStateSystemGroup))]
     [UpdateAfter(typeof(CalculateSquaredDistanceToChasedTargetSystem))]
+    [UpdateBefore(typeof(CheckIfTargetInRangeSystem))]
+    public partial struct EnterAttackWhenTargetInRangeSystem : ISystem
+    {
+        public void OnCreate(ref SystemState state) {
+            state.RequireForUpdate<InGameState>();
+        }
+
+        public void OnUpdate(ref SystemState state) {
+            EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
+
+            foreach (var (attackDistance, targetDistance, entity)
+                in SystemAPI.Query<SquaredAttackDistance, SquaredChasedTargetDistance>()
+                .WithAll<MoveToTargetState, HasTargetInRangeTag>()
+                .WithEntityAccess()) {
+
+                if (targetDistance.Value > attackDistance.Value)
+                    continue;
+
+                ecb.RemoveComponent<HasTargetInRangeTag>(entity);
+                ecb.RemoveComponent<SearchForNewTargetTag>(entity);
+                ecb.RemoveComponent<MoveToTargetState>(entity);
+
+                ecb.AddComponent<EnterAttackState>(entity);
+            }
+
+            ecb.Playback(state.EntityManager);
+        }
+    }
+
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
+    [UpdateInGroup(typeof(MoveToTargetStateSystemGroup))]
+    [UpdateAfter(typeof(EnterAttackWhenTargetInRangeSystem))]
     [UpdateBefore(typeof(UpdateChaseTimeLeftSystem))]
     public partial struct CheckIfTargetInRangeSystem : ISystem
     {
@@ -191,7 +228,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(MoveToTargetStateSystemGroup))]
     [UpdateAfter(typeof(CheckIfTargetInRangeSystem))]
-    [UpdateBefore(typeof(TargetChaseOverEnterMoveToPointStateSystem))]
+    [UpdateBefore(typeof(EnterMoveToPointWhenTargetChaseOverSystem))]
     public partial struct UpdateChaseTimeLeftSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
@@ -199,8 +236,8 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
         }
 
         public void OnUpdate(ref SystemState state) {
-            foreach (var (duration, timeLeft)
-                in SystemAPI.Query<ChaseDuration, RefRW<ChaseTimeLeft>>()
+            foreach (var timeLeft
+                in SystemAPI.Query<RefRW<ChaseTimeLeft>>()
                 .WithAll<MoveToTargetState, SearchForNewTargetTag>()) {
 
                 timeLeft.ValueRW.Value -= SystemAPI.Time.DeltaTime;
@@ -211,7 +248,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(MoveToTargetStateSystemGroup))]
     [UpdateAfter(typeof(UpdateChaseTimeLeftSystem))]
-    public partial struct TargetChaseOverEnterMoveToPointStateSystem : ISystem
+    public partial struct EnterMoveToPointWhenTargetChaseOverSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<InGameState>();

@@ -1,4 +1,5 @@
 ﻿using Assets.CodeBase.GameStates;
+using Unity.Burst;
 using Unity.Entities;
 
 namespace Assets.CodeBase.Mobs.Spawn.Initialization
@@ -13,6 +14,7 @@ namespace Assets.CodeBase.Mobs.Spawn.Initialization
             state.RequireForUpdate<InitializeSpawnRequestProcessTag>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 

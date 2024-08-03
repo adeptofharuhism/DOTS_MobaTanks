@@ -1,4 +1,5 @@
 ﻿using Assets.CodeBase.Combat.Teams;
+using Assets.CodeBase.Mobs.Logic.Attack;
 using Assets.CodeBase.Mobs.Logic.MoveToPoint;
 using Assets.CodeBase.Mobs.Logic.MoveToTarget;
 using Assets.CodeBase.Mobs.Logic.TargetSearch;
@@ -17,10 +18,16 @@ namespace Assets.CodeBase.Mobs.Logic
         [SerializeField] private float _targetSearchInterval = 1f;
         [SerializeField] private float _requiredDistanceToWaypoint = 1f;
         [SerializeField] private float _targetChaseTime = 3f;
+        [SerializeField] private float _attackCooldown = 1f;
+        [SerializeField] private float _attackDistance = 5f;
+        [SerializeField] private float _attackDamage = 22f;
 
         public float TargetSearchInterval => _targetSearchInterval;
         public float RequiredDistanceToWaypoint => _requiredDistanceToWaypoint;
         public float TargetChaseTime => _targetChaseTime;
+        public float AttackCooldown => _attackCooldown;
+        public float AttackDistance => _attackDistance;
+        public float AttackDamage => _attackDamage;
 
         public class MobBaker : Baker<MobAuthoring>
         {
@@ -52,6 +59,14 @@ namespace Assets.CodeBase.Mobs.Logic
 
                 AddComponent(mob, new TargetSearchCooldown { Value = authoring._targetSearchInterval });
                 AddComponent(mob, new TargetSearchCooldownTimeLeft { Value = authoring._targetSearchInterval });
+
+                AddComponent<AttackIsOnCooldownTag>(mob);
+                AddComponent(mob, new AttackDamage { Value = authoring.AttackDamage });
+                AddComponent(mob, new AttackCooldown { Value = authoring.AttackCooldown });
+                AddComponent(mob, new AttackCooldownTimeLeft { Value = authoring.AttackCooldown });
+                AddComponent(mob, new SquaredAttackDistance {
+                    Value = math.square(authoring.AttackDistance)
+                });
             }
         }
     }

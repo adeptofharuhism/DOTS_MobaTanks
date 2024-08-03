@@ -54,6 +54,7 @@ GameObject:
   - component: {fileID: -731451850883412318}
   - component: {fileID: 6219936313869522044}
   - component: {fileID: 6227164063881018575}
+  - component: {fileID: -7611695749143292936}
   m_Layer: 0
   m_Name: MeleeMob
   m_TagString: Untagged
@@ -91,7 +92,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MotionType: 3
-  Speed: 12
+  Speed: 40
   Acceleration: 12
   AngularSpeed: 120
   StoppingDistance: 0.1
@@ -216,9 +217,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b9a2bce0d5bb724b87fae4694f4821b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetSearchInterval: 1
+  _targetSearchInterval: 0.2
   _requiredDistanceToWaypoint: 5
   _targetChaseTime: 3
+  _attackCooldown: 1
+  _attackDistance: 7
+  _attackDamage: 22
 --- !u!114 &-4960904238046535007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -414,6 +418,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetSearchRange: 30
+--- !u!114 &-7611695749143292936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4934725233422185294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0344116cd75eaaf488b894904a1649d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Radius: 5
+  Angle: 230
+  MaxAngle: 300
+  Mode: 3
+  BlockedStop: 0
+  UseWalls: 0
+  m_Layers: -1
 --- !u!1001 &1459740887856416068
 PrefabInstance:
   m_ObjectHideFlags: 0

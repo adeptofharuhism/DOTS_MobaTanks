@@ -1,5 +1,6 @@
 ﻿using Assets.CodeBase.GameStates;
 using Assets.CodeBase.Targeting;
+using Unity.Burst;
 using Unity.Entities;
 
 namespace Assets.CodeBase.Mobs.Logic.TargetSearch
@@ -12,6 +13,7 @@ namespace Assets.CodeBase.Mobs.Logic.TargetSearch
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
