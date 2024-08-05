@@ -27,7 +27,7 @@ namespace Assets.CodeBase.Mobs.Spawn.Initialization
                     ecb.SetComponent(newSpawner, new MobPrefab { Value = newSpawnerParameters.MobPrefab });
 
                     ecb.SetComponent(newSpawner, new MobSpawnCooldown { Value = newSpawnerParameters.WaveCooldown });
-                    ecb.SetComponent(newSpawner, new MobSpawnCooldownTimeLeft { Value = 0 });
+                    ecb.SetComponent(newSpawner, new MobSpawnCooldownTimeLeft { Value = newSpawnerParameters.WaveCooldown });
 
                     ecb.SetComponent(newSpawner, new CurrentRoute { Value = newSpawnerParameters.CurrentRoute });
                     ecb.SetComponent(newSpawner, new RouteAmount { Value = newSpawnerParameters.RouteAmount });

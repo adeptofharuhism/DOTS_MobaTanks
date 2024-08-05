@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetSearchRange: 40
+  _targetingOnCertainPoint: 1
 --- !u!114 &-2091439077384923709
 MonoBehaviour:
   m_ObjectHideFlags: 0

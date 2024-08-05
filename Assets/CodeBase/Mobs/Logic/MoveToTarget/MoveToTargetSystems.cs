@@ -18,6 +18,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
@@ -45,6 +46,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
@@ -77,6 +79,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
@@ -108,6 +111,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (chasedTarget, chasedTargetPosition)
                 in SystemAPI.Query<ChasedTarget, RefRW<ChasedTargetPosition>>()
@@ -132,6 +136,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (targetPosition, agent)
                 in SystemAPI.Query<ChasedTargetPosition, RefRW<AgentBody>>()
@@ -152,6 +157,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (targetPosition, squaredDistance, transform)
                 in SystemAPI.Query<ChasedTargetPosition, RefRW<SquaredChasedTargetDistance>, LocalToWorld>()
@@ -172,6 +178,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
@@ -204,6 +211,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
@@ -235,6 +243,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var timeLeft
                 in SystemAPI.Query<RefRW<ChaseTimeLeft>>()
@@ -254,6 +263,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 

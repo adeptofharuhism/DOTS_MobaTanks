@@ -1,16 +1,14 @@
 ﻿using Assets.CodeBase.Combat.Teams;
 using Assets.CodeBase.GameStates;
-using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
-using Unity.Physics.Systems;
 using Unity.Transforms;
 
 namespace Assets.CodeBase.Targeting
 {
-    [UpdateInGroup(typeof(PhysicsSystemGroup), OrderLast = true)]
+    [UpdateInGroup(typeof(TargetingSystemGroup))]
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct TargetSearchSystem : ISystem
     {
@@ -31,7 +29,6 @@ namespace Assets.CodeBase.Targeting
             state.RequireForUpdate<InGameState>();
         }
 
-        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             CollisionWorld collisionWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().CollisionWorld;
 
@@ -51,13 +48,10 @@ namespace Assets.CodeBase.Targeting
 
                 RemoveAlliedUnits(ref state, ref distanceHits, team);
 
-                Entity targetEntity = SelectRandomTarget(ref distanceHits);
-                //currentTarget.ValueRW.Value = SelectTargetingPoint(ref state, targetEntity);
-                currentTarget.ValueRW.Value = targetEntity;
+                currentTarget.ValueRW.Value = SelectRandomTarget(ref distanceHits);
             }
         }
 
-        [BurstCompile]
         private void RemoveAlliedUnits(ref SystemState state, ref NativeList<DistanceHit> distanceHits, UnitTeam team) {
             for (int i = 0; i < distanceHits.Length;) {
                 UnitTeam targetTeam = SystemAPI.GetComponent<UnitTeam>(distanceHits[i].Entity);
@@ -68,7 +62,6 @@ namespace Assets.CodeBase.Targeting
             }
         }
 
-        [BurstCompile]
         private Entity SelectRandomTarget(ref NativeList<DistanceHit> distanceHits) {
             if (distanceHits.Length == 0)
                 return Entity.Null;
@@ -76,13 +69,29 @@ namespace Assets.CodeBase.Targeting
             int targetIndex = _random.NextInt(distanceHits.Length - 1);
             return distanceHits[targetIndex].Entity;
         }
+    }
 
-        [BurstCompile]
-        private Entity SelectTargetingPoint(ref SystemState state, Entity entity) {
-            if (SystemAPI.HasComponent<TargetPosition>(entity))
-                return SystemAPI.GetComponent<TargetPosition>(entity).Value;
+    [UpdateInGroup(typeof(TargetingSystemGroup))]
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
+    [UpdateAfter(typeof(TargetSearchSystem))]
+    public partial struct TargetingPointSelectionSystem : ISystem
+    {
+        public void OnCreate(ref SystemState state) {
+            state.RequireForUpdate<PhysicsWorldSingleton>();
+            state.RequireForUpdate<InGameState>();
+        }
 
-            return entity;
+        public void OnUpdate(ref SystemState state) {
+            foreach (RefRW<CurrentTarget> target
+                in SystemAPI.Query<RefRW<CurrentTarget>>()
+                .WithAll<TargetOnCertainPointTag>()) {
+
+                if (!SystemAPI.GetComponentLookup<TargetPoint>(true)
+                    .TryGetComponent(target.ValueRO.Value, out TargetPoint targetPoint))
+                    continue;
+
+                target.ValueRW.Value = targetPoint.Value;
+            }
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Assets.CodeBase.Targeting
             public override void Bake(TargetPositionAuthoring authoring) {
                 Entity targetable = GetEntity(TransformUsageFlags.Dynamic);
 
-                AddComponent(targetable, new TargetPosition {
+                AddComponent(targetable, new TargetPoint {
                     Value = GetEntity(authoring.SpecialTargetingPoint, TransformUsageFlags.Dynamic)
                 });
             }

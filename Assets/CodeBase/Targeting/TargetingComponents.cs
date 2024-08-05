@@ -4,12 +4,20 @@ namespace Assets.CodeBase.Targeting
 {
     public partial struct Targetable : IComponentData { }
 
-    public partial struct TargetPosition : IComponentData
+    public partial struct TargetPoint : IComponentData
     {
         public Entity Value;
     }
 
     public partial struct Targeter : IComponentData { }
+
+    public partial struct TargetOnCertainPointTag : IComponentData { }
+
+    public enum TargetingType
+    {
+        Closest,
+        Random
+    }
 
     public partial struct TargeterRange : IComponentData
     {

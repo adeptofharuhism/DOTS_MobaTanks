@@ -8,8 +8,10 @@ namespace Assets.CodeBase.Targeting
     public class TargeterAuthoring : MonoBehaviour
     {
         [SerializeField] private float _targetSearchRange = 20;
+        [SerializeField] private bool _targetingOnCertainPoint;
 
         public float TargetSearchRange => _targetSearchRange;
+        public bool TargetingOnCertainPoint => _targetingOnCertainPoint;
 
         public class TargeterBaker : Baker<TargeterAuthoring>
         {
@@ -18,6 +20,9 @@ namespace Assets.CodeBase.Targeting
 
                 AddComponent(targeter, new TargeterRange { Value = authoring.TargetSearchRange });
                 AddComponent(targeter, new CurrentTarget { Value = Entity.Null });
+
+                if (authoring.TargetingOnCertainPoint)
+                    AddComponent<TargetOnCertainPointTag>(targeter);
             }
         }
     }

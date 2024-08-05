@@ -18,6 +18,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (waypoint, agent)
                 in SystemAPI.Query<CurrentWaypoint, RefRW<AgentBody>>()
@@ -38,6 +39,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
@@ -63,6 +65,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (squaredDistance, currentWaypoint, transform)
                 in SystemAPI.Query<RefRW<SquaredDistanceToWaypoint>, CurrentWaypoint, LocalToWorld>()
@@ -81,6 +84,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
@@ -107,6 +111,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (currentIndex, amount)
                 in SystemAPI.Query<RefRW<CurrentWaypointIndex>, WaypointAmount>()
@@ -132,6 +137,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (current, currentIndex, offset, settingsReference)
                 in SystemAPI.Query<RefRW<CurrentWaypoint>, CurrentWaypointIndex, WaypointOffset, WaypointSettingsReference>()
@@ -154,6 +160,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (waypoint, agent)
                 in SystemAPI.Query<CurrentWaypoint, RefRW<AgentBody>>()
@@ -174,6 +181,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
@@ -196,6 +204,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 

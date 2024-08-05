@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MotionType: 3
-  Speed: 40
+  Speed: 12
   Acceleration: 12
   AngularSpeed: 120
   StoppingDistance: 0.1
@@ -217,7 +217,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b9a2bce0d5bb724b87fae4694f4821b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetSearchInterval: 0.2
+  _targetSearchInterval: 1
   _requiredDistanceToWaypoint: 5
   _targetChaseTime: 3
   _attackCooldown: 1
@@ -418,6 +418,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetSearchRange: 30
+  _targetingOnCertainPoint: 0
 --- !u!114 &-7611695749143292936
 MonoBehaviour:
   m_ObjectHideFlags: 0
