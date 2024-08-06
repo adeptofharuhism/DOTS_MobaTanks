@@ -29,8 +29,8 @@ namespace Assets.CodeBase.Weapon
 
                 timeOnCooldown.ValueRW.Value = cooldown.Value;
 
-                ecb.AddComponent<Targeter>(weapon);
-                ecb.AddComponent<WeaponReadyToFireTag>(weapon);
+                ecb.SetComponentEnabled<Targeter>(weapon, true);
+                ecb.SetComponentEnabled<WeaponReadyToFireTag>(weapon, true);
             }
 
             ecb.Playback(state.EntityManager);

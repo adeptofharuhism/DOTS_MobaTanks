@@ -24,8 +24,11 @@ namespace Assets.CodeBase.Weapon
             public override void Bake(WeaponAuthoring authoring) {
                 Entity weapon = GetEntity(TransformUsageFlags.Dynamic);
 
+                AddComponent<WeaponReadyToFireTag>(weapon);
+                SetComponentEnabled<WeaponReadyToFireTag>(weapon, false);
+
                 AddComponent(weapon, new WeaponCooldown { Value = authoring.ShotCooldown });
-                AddComponent(weapon, new WeaponTimeOnCooldown { Value = 0 });
+                AddComponent(weapon, new WeaponTimeOnCooldown { Value = authoring.ShotCooldown });
 
                 AddComponent(weapon, new WeaponProjectilePrefab {
                     Value = GetEntity(authoring.ProjectilePrefab, TransformUsageFlags.Dynamic)

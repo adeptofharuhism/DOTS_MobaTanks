@@ -34626,8 +34626,8 @@ MonoBehaviour:
   _initialMobWaves:
   - MobPrefab: {fileID: 4934725233422185294, guid: e8be080880e326f4b9501a6541910e93,
       type: 3}
-    Amount: 4
-    WaveCooldown: 30
+    Amount: 1
+    WaveCooldown: 5
   _teamPoolSettings:
   - RouteSettings:
     - Waypoints:

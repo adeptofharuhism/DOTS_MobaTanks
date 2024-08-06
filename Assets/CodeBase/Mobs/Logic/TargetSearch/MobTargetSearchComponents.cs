@@ -12,5 +12,5 @@ namespace Assets.CodeBase.Mobs.Logic.TargetSearch
         public float Value;
     }
 
-    public struct MobReadyToSearchTargetTag : IComponentData { }
+    public struct MobReadyToSearchTargetTag : IComponentData, IEnableableComponent { }
 }

@@ -9,7 +9,7 @@ namespace Assets.CodeBase.Targeting
         public Entity Value;
     }
 
-    public partial struct Targeter : IComponentData { }
+    public partial struct Targeter : IComponentData, IEnableableComponent { }
 
     public partial struct TargetOnCertainPointTag : IComponentData { }
 

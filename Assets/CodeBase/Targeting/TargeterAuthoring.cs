@@ -18,6 +18,9 @@ namespace Assets.CodeBase.Targeting
             public override void Bake(TargeterAuthoring authoring) {
                 Entity targeter = GetEntity(TransformUsageFlags.Dynamic);
 
+                AddComponent<Targeter>(targeter);
+                SetComponentEnabled<Targeter>(targeter, false);
+
                 AddComponent(targeter, new TargeterRange { Value = authoring.TargetSearchRange });
                 AddComponent(targeter, new CurrentTarget { Value = Entity.Null });
 

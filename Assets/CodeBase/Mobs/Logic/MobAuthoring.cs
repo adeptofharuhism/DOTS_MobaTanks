@@ -57,6 +57,8 @@ namespace Assets.CodeBase.Mobs.Logic
                 AddComponent<ChaseTimeLeft>(mob);
                 AddComponent(mob, new ChaseDuration { Value = authoring.TargetChaseTime });
 
+                AddComponent<MobReadyToSearchTargetTag>(mob);
+                SetComponentEnabled<MobReadyToSearchTargetTag>(mob, false);
                 AddComponent(mob, new TargetSearchCooldown { Value = authoring._targetSearchInterval });
                 AddComponent(mob, new TargetSearchCooldownTimeLeft { Value = authoring._targetSearchInterval });
 

@@ -29,8 +29,8 @@ namespace Assets.CodeBase.Mobs.Logic.TargetSearch
 
                 timePassed.ValueRW.Value = cooldown.Value;
 
-                ecb.AddComponent<Targeter>(entity);
-                ecb.AddComponent<MobReadyToSearchTargetTag>(entity);
+                ecb.SetComponentEnabled<Targeter>(entity, true);
+                ecb.SetComponentEnabled<MobReadyToSearchTargetTag>(entity, true);
             }
 
             ecb.Playback(state.EntityManager);

@@ -28,8 +28,8 @@ namespace Assets.CodeBase.Weapon
                 .WithAll<WeaponReadyToFireTag>()
                 .WithEntityAccess()) {
 
-                ecb.RemoveComponent<WeaponReadyToFireTag>(weapon);
-                ecb.RemoveComponent<Targeter>(weapon);
+                ecb.SetComponentEnabled<Targeter>(weapon, false);
+                ecb.SetComponentEnabled<WeaponReadyToFireTag>(weapon, false);
 
                 if (!state.EntityManager.Exists(currentTarget.Value))
                     continue;

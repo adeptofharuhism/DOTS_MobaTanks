@@ -21,8 +21,8 @@ namespace Assets.CodeBase.Mobs.Logic.TargetSearch
                 in SystemAPI.Query<MobReadyToSearchTargetTag>()
                 .WithEntityAccess()) {
 
-                ecb.RemoveComponent<Targeter>(entity);
-                ecb.RemoveComponent<MobReadyToSearchTargetTag>(entity);
+                ecb.SetComponentEnabled<Targeter>(entity, false);
+                ecb.SetComponentEnabled<MobReadyToSearchTargetTag>(entity, false);
             }
 
             ecb.Playback(state.EntityManager);
