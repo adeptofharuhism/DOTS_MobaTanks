@@ -47,8 +47,8 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
                 in SystemAPI.Query<EnterMoveToPointState>()
                 .WithEntityAccess()) {
 
-                ecb.RemoveComponent<EnterMoveToPointState>(entity);
-                ecb.AddComponent<MoveToPointState>(entity);
+                ecb.SetComponentEnabled<EnterMoveToPointState>(entity, false);
+                ecb.SetComponentEnabled<MoveToPointState>(entity,true);
             }
 
             ecb.Playback(state.EntityManager);
@@ -94,7 +94,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
                 .WithEntityAccess()) {
 
                 if (squaredDistance.Value < requiredSquaredDistance.Value)
-                    ecb.AddComponent<ShouldAdjustWaypointTag>(entity);
+                    ecb.SetComponentEnabled<ShouldAdjustWaypointTag>(entity, true);
             }
 
             ecb.Playback(state.EntityManager);
@@ -189,7 +189,7 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
                 in SystemAPI.Query<ShouldAdjustWaypointTag>()
                 .WithAll<MoveToPointState>()
                 .WithEntityAccess())
-                ecb.RemoveComponent<ShouldAdjustWaypointTag>(entity);
+                ecb.SetComponentEnabled<ShouldAdjustWaypointTag>(entity, false);
 
             ecb.Playback(state.EntityManager);
         }
@@ -216,9 +216,9 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
                 if (!state.EntityManager.Exists(currentTarget.Value))
                     continue;
 
-                ecb.RemoveComponent<MoveToPointState>(entity);
+                ecb.SetComponentEnabled<MoveToPointState>(entity, false);
 
-                ecb.AddComponent<EnterMoveToTargetState>(entity);
+                ecb.SetComponentEnabled<EnterMoveToTargetState>(entity, true);
             }
 
             ecb.Playback(state.EntityManager);

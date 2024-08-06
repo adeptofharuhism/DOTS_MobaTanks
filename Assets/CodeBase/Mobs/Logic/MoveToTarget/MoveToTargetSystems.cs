@@ -26,10 +26,10 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
                 in SystemAPI.Query<EnterMoveToTargetState>()
                 .WithEntityAccess()) {
 
-                ecb.RemoveComponent<EnterMoveToTargetState>(entity);
+                ecb.SetComponentEnabled<EnterMoveToTargetState>(entity,false);
 
-                ecb.AddComponent<MoveToTargetState>(entity);
-                ecb.AddComponent<SearchForNewTargetTag>(entity);
+                ecb.SetComponentEnabled<MoveToTargetState>(entity, true);
+                ecb.SetComponentEnabled<SearchForNewTargetTag>(entity, true );
             }
 
             ecb.Playback(state.EntityManager);
@@ -58,11 +58,11 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
                 if (state.EntityManager.Exists(currentTarget.Value) || state.EntityManager.Exists(chasedTarget.Value))
                     continue;
 
-                ecb.RemoveComponent<HasTargetInRangeTag>(entity);
-                ecb.RemoveComponent<SearchForNewTargetTag>(entity);
-                ecb.RemoveComponent<MoveToTargetState>(entity);
+                ecb.SetComponentEnabled<HasTargetInRangeTag>(entity,false);
+                ecb.SetComponentEnabled<SearchForNewTargetTag>(entity, false);
+                ecb.SetComponentEnabled<MoveToTargetState>(entity, false);
 
-                ecb.AddComponent<EnterMoveToPointState>(entity);
+                ecb.SetComponentEnabled<EnterMoveToPointState>(entity,true);
             }
 
             ecb.Playback(state.EntityManager);
@@ -93,8 +93,8 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
 
                 chasedTarget.ValueRW.Value = currentTarget.Value;
 
-                ecb.RemoveComponent<SearchForNewTargetTag>(entity);
-                ecb.AddComponent<HasTargetInRangeTag>(entity);
+                ecb.SetComponentEnabled<SearchForNewTargetTag>(entity, false);
+                ecb.SetComponentEnabled<HasTargetInRangeTag>(entity, true);
             }
 
             ecb.Playback(state.EntityManager);
@@ -190,11 +190,11 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
                 if (targetDistance.Value > attackDistance.Value)
                     continue;
 
-                ecb.RemoveComponent<HasTargetInRangeTag>(entity);
-                ecb.RemoveComponent<SearchForNewTargetTag>(entity);
-                ecb.RemoveComponent<MoveToTargetState>(entity);
+                ecb.SetComponentEnabled<HasTargetInRangeTag>(entity, false);
+                ecb.SetComponentEnabled<SearchForNewTargetTag>(entity, false);
+                ecb.SetComponentEnabled<MoveToTargetState>(entity, false);
 
-                ecb.AddComponent<EnterAttackState>(entity);
+                ecb.SetComponentEnabled<EnterAttackState>(entity, true);
             }
 
             ecb.Playback(state.EntityManager);
@@ -223,8 +223,8 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
                 if (targetDistance.Value < searchRange.Value)
                     continue;
 
-                ecb.AddComponent<SearchForNewTargetTag>(entity);
-                ecb.RemoveComponent<HasTargetInRangeTag>(entity);
+                ecb.SetComponentEnabled<SearchForNewTargetTag>(entity, true);
+                ecb.SetComponentEnabled<HasTargetInRangeTag>(entity, false);
 
                 ecb.SetComponent(entity, new ChaseTimeLeft { Value = chaseDuration.Value });
             }
@@ -275,11 +275,11 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
                 if (timeLeft.Value > 0)
                     continue;
 
-                ecb.RemoveComponent<HasTargetInRangeTag>(entity);
-                ecb.RemoveComponent<SearchForNewTargetTag>(entity);
-                ecb.RemoveComponent<MoveToTargetState>(entity);
+                ecb.SetComponentEnabled<HasTargetInRangeTag>(entity, false);
+                ecb.SetComponentEnabled<SearchForNewTargetTag>(entity, false);
+                ecb.SetComponentEnabled<MoveToTargetState>(entity, false);
 
-                ecb.AddComponent<EnterMoveToPointState>(entity);
+                ecb.SetComponentEnabled<EnterMoveToPointState>(entity, true);
             }
 
             ecb.Playback(state.EntityManager);

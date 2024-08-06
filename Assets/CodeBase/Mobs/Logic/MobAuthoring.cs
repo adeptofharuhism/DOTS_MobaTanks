@@ -34,7 +34,10 @@ namespace Assets.CodeBase.Mobs.Logic
             public override void Bake(MobAuthoring authoring) {
                 Entity mob = GetEntity(TransformUsageFlags.Dynamic);
 
-                AddComponent<EnterMoveToPointState>(mob);
+                SetupStateTags(mob);
+                SetupMoveToPointTags(mob);
+                SetupMoveToTargetTags(mob);
+                SetupAttackTags(mob);
 
                 AddComponent<WaypointSettingsReference>(mob);
 
@@ -62,13 +65,50 @@ namespace Assets.CodeBase.Mobs.Logic
                 AddComponent(mob, new TargetSearchCooldown { Value = authoring._targetSearchInterval });
                 AddComponent(mob, new TargetSearchCooldownTimeLeft { Value = authoring._targetSearchInterval });
 
-                AddComponent<AttackIsOnCooldownTag>(mob);
                 AddComponent(mob, new AttackDamage { Value = authoring.AttackDamage });
                 AddComponent(mob, new AttackCooldown { Value = authoring.AttackCooldown });
                 AddComponent(mob, new AttackCooldownTimeLeft { Value = authoring.AttackCooldown });
                 AddComponent(mob, new SquaredAttackDistance {
                     Value = math.square(authoring.AttackDistance)
                 });
+            }
+
+            private void SetupStateTags(Entity entity) {
+                AddComponent<EnterMoveToPointState>(entity);
+                AddComponent<MoveToPointState>(entity);
+                AddComponent<EnterMoveToTargetState>(entity);
+                AddComponent<MoveToTargetState>(entity);
+                AddComponent<EnterAttackState>(entity);
+                AddComponent<AttackState>(entity);
+
+                SetComponentEnabled<EnterMoveToPointState>(entity, true);
+                SetComponentEnabled<MoveToPointState>(entity, false);
+                SetComponentEnabled<EnterMoveToTargetState>(entity, false);
+                SetComponentEnabled<MoveToTargetState>(entity, false);
+                SetComponentEnabled<EnterAttackState>(entity, false);
+                SetComponentEnabled<AttackState>(entity, false);
+            }
+
+            private void SetupMoveToPointTags(Entity entity) {
+                AddComponent<ShouldAdjustWaypointTag>(entity);
+
+                SetComponentEnabled<ShouldAdjustWaypointTag>(entity, false);
+            }
+
+            private void SetupMoveToTargetTags(Entity entity) {
+                AddComponent<SearchForNewTargetTag>(entity);
+                AddComponent<HasTargetInRangeTag>(entity);
+
+                SetComponentEnabled<SearchForNewTargetTag>(entity, false);
+                SetComponentEnabled<HasTargetInRangeTag>(entity, false);
+            }
+
+            private void SetupAttackTags(Entity entity) {
+                AddComponent<AttackIsOnCooldownTag>(entity);
+                AddComponent<AttackIsReadyTag>(entity);
+
+                SetComponentEnabled<AttackIsOnCooldownTag>(entity, true);
+                SetComponentEnabled<AttackIsReadyTag>(entity, false);
             }
         }
     }

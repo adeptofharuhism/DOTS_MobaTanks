@@ -29,9 +29,9 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
 
                 agent.ValueRW.Stop();
 
-                ecb.RemoveComponent<EnterAttackState>(entity);
+                ecb.SetComponentEnabled<EnterAttackState>(entity, false);
 
-                ecb.AddComponent<AttackState>(entity);
+                ecb.SetComponentEnabled<AttackState>(entity, true);
             }
 
             ecb.Playback(state.EntityManager);
@@ -60,9 +60,9 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
                 if (state.EntityManager.Exists(target.Value))
                     continue;
 
-                ecb.RemoveComponent<AttackState>(entity);
+                ecb.SetComponentEnabled<AttackState>(entity, false);
 
-                ecb.AddComponent<EnterMoveToPointState>(entity);
+                ecb.SetComponentEnabled<EnterMoveToPointState>(entity, true);
             }
 
             ecb.Playback(state.EntityManager);
@@ -137,9 +137,9 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
                 if (attackDistance.Value > targetDistance.Value)
                     continue;
 
-                ecb.RemoveComponent<AttackState>(entity);
+                ecb.SetComponentEnabled<AttackState>(entity, false);
 
-                ecb.AddComponent<EnterMoveToTargetState>(entity);
+                ecb.SetComponentEnabled<EnterMoveToTargetState>(entity, true);
             }
 
             ecb.Playback(state.EntityManager);
@@ -167,10 +167,10 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
 
                 if (SystemAPI.HasBuffer<DamageBufferElement>(target.Value))
                     SystemAPI.GetBuffer<DamageBufferElement>(target.Value)
-                        .Add(new DamageBufferElement { Value = damage.Value });                    
+                        .Add(new DamageBufferElement { Value = damage.Value });
 
-                ecb.AddComponent<AttackIsOnCooldownTag>(entity);
-                ecb.RemoveComponent<AttackIsReadyTag>(entity);
+                ecb.SetComponentEnabled<AttackIsOnCooldownTag>(entity, true);
+                ecb.SetComponentEnabled<AttackIsReadyTag>(entity, false);
             }
 
             ecb.Playback(state.EntityManager);
@@ -202,8 +202,8 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
 
                 cooldownTimeLeft.ValueRW.Value = cooldown.Value;
 
-                ecb.AddComponent<AttackIsReadyTag>(entity);
-                ecb.RemoveComponent<AttackIsOnCooldownTag>(entity);
+                ecb.SetComponentEnabled<AttackIsReadyTag>(entity, true);
+                ecb.SetComponentEnabled<AttackIsOnCooldownTag>(entity, false);
             }
 
             ecb.Playback(state.EntityManager);

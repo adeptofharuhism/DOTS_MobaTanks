@@ -3,8 +3,8 @@ using Unity.Mathematics;
 
 namespace Assets.CodeBase.Mobs.Logic.MoveToTarget
 {
-    public struct SearchForNewTargetTag : IComponentData { }
-    public struct HasTargetInRangeTag : IComponentData { }
+    public struct SearchForNewTargetTag : IComponentData, IEnableableComponent { }
+    public struct HasTargetInRangeTag : IComponentData, IEnableableComponent { }
 
     public struct ChasedTarget : IComponentData
     {

@@ -7,8 +7,8 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
         public float Value;
     }
 
-    public struct AttackIsReadyTag : IComponentData { }
-    public struct AttackIsOnCooldownTag : IComponentData { }
+    public struct AttackIsReadyTag : IComponentData, IEnableableComponent { }
+    public struct AttackIsOnCooldownTag : IComponentData, IEnableableComponent { }
 
     public struct AttackCooldown : IComponentData
     {

@@ -40,5 +40,5 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
         public float Value;
     }
 
-    public struct ShouldAdjustWaypointTag : IComponentData { }
+    public struct ShouldAdjustWaypointTag : IComponentData, IEnableableComponent { }
 }
