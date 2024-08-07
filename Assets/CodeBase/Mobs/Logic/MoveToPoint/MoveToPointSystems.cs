@@ -1,4 +1,5 @@
-﻿using Assets.CodeBase.GameStates;
+﻿using AnimCooker;
+using Assets.CodeBase.GameStates;
 using Assets.CodeBase.Mobs.Spawn;
 using Assets.CodeBase.Targeting;
 using ProjectDawn.Navigation;
@@ -9,6 +10,8 @@ using Unity.Transforms;
 
 namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
 {
+    
+
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(MoveToPointStateSystemGroup))]
     [UpdateBefore(typeof(MoveToPointStateInitializationSystem))]

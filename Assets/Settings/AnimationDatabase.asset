@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5db671430d248e499a2437884636ff0, type: 3}
+  m_Name: AnimationDatabase
+  m_EditorClassIdentifier: 
+  Models:
+  - ModelName: MeleeMobAnimated
+    Skins:
+    - SkinClips:
+      - BeginFrame: 0
+        EndFrame: 22
+      - BeginFrame: 23
+        EndFrame: 45
+      - BeginFrame: 46
+        EndFrame: 68
+      - BeginFrame: 69
+        EndFrame: 116
+      Width: 512
+      Height: 256
+      Interval: 0.041666668
+      Pow2: 9
+      FrameRate: 24
+      VertCount: 654
+    Clips:
+    - ClipName: MeleeMob_Idle
+      Length: 0.9583334
+    - ClipName: MeleeMob_Attack
+      Length: 0.9583334
+    - ClipName: MeleeMob_Run
+      Length: 0.9583334
+    - ClipName: MeleeMob_Death
+      Length: 2
