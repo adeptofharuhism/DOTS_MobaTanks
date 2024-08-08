@@ -244,6 +244,7 @@ MonoBehaviour:
   _attackCooldown: 1
   _attackDistance: 7
   _attackDamage: 22
+  _mobAnimationSet: {fileID: 11400000, guid: d5c85be00a6c3be42b67f4f257d4fa48, type: 2}
 --- !u!114 &-4960904238046535007
 MonoBehaviour:
   m_ObjectHideFlags: 0

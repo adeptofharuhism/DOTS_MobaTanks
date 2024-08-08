@@ -1,10 +1,12 @@
-﻿using Assets.CodeBase.Combat.Teams;
+﻿using Assets.CodeBase.Animation;
+using Assets.CodeBase.Combat.Teams;
 using Assets.CodeBase.Mobs.Logic.Attack;
 using Assets.CodeBase.Mobs.Logic.MoveToPoint;
 using Assets.CodeBase.Mobs.Logic.MoveToTarget;
 using Assets.CodeBase.Mobs.Logic.TargetSearch;
 using Assets.CodeBase.Mobs.Spawn;
 using Assets.CodeBase.Targeting;
+using System;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -15,19 +17,28 @@ namespace Assets.CodeBase.Mobs.Logic
     [RequireComponent(typeof(TargeterAuthoring))]
     public class MobAuthoring : MonoBehaviour
     {
-        [SerializeField] private float _targetSearchInterval = 1f;
+        [Header("Waypoint follow")]
         [SerializeField] private float _requiredDistanceToWaypoint = 1f;
+        [Header("Chasing")]
+        [SerializeField] private float _targetSearchInterval = 1f;
         [SerializeField] private float _targetChaseTime = 3f;
+        [Header("Attack")]
         [SerializeField] private float _attackCooldown = 1f;
         [SerializeField] private float _attackDistance = 5f;
         [SerializeField] private float _attackDamage = 22f;
+        [Header("Animation")]
+        [SerializeField] private MobAnimationSet _mobAnimationSet = null;
+
+        public float RequiredDistanceToWaypoint => _requiredDistanceToWaypoint;
 
         public float TargetSearchInterval => _targetSearchInterval;
-        public float RequiredDistanceToWaypoint => _requiredDistanceToWaypoint;
         public float TargetChaseTime => _targetChaseTime;
+
         public float AttackCooldown => _attackCooldown;
         public float AttackDistance => _attackDistance;
         public float AttackDamage => _attackDamage;
+
+        public MobAnimationSet MobAnimationSet => _mobAnimationSet;
 
         public class MobBaker : Baker<MobAuthoring>
         {
@@ -38,6 +49,8 @@ namespace Assets.CodeBase.Mobs.Logic
                 SetupMoveToPointTags(mob);
                 SetupMoveToTargetTags(mob);
                 SetupAttackTags(mob);
+
+                SetupAnimations(mob);
 
                 AddComponent<WaypointSettingsReference>(mob);
 
@@ -109,6 +122,10 @@ namespace Assets.CodeBase.Mobs.Logic
 
                 SetComponentEnabled<AttackIsOnCooldownTag>(entity, true);
                 SetComponentEnabled<AttackIsReadyTag>(entity, false);
+            }
+
+            private void SetupAnimations(Entity mob) {
+
             }
         }
     }
