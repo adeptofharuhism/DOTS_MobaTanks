@@ -1,12 +1,12 @@
 ﻿using Assets.CodeBase.Animation;
 using Assets.CodeBase.Combat.Teams;
+using Assets.CodeBase.Mobs.Logic.Animation;
 using Assets.CodeBase.Mobs.Logic.Attack;
 using Assets.CodeBase.Mobs.Logic.MoveToPoint;
 using Assets.CodeBase.Mobs.Logic.MoveToTarget;
 using Assets.CodeBase.Mobs.Logic.TargetSearch;
 using Assets.CodeBase.Mobs.Spawn;
 using Assets.CodeBase.Targeting;
-using System;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -27,7 +27,8 @@ namespace Assets.CodeBase.Mobs.Logic
         [SerializeField] private float _attackDistance = 5f;
         [SerializeField] private float _attackDamage = 22f;
         [Header("Animation")]
-        [SerializeField] private MobAnimationSet _mobAnimationSet = null;
+        [SerializeField] private bool _enableAnimations = false;
+        [SerializeField] private MobAnimationSet _mobAnimationSet;
 
         public float RequiredDistanceToWaypoint => _requiredDistanceToWaypoint;
 
@@ -38,6 +39,7 @@ namespace Assets.CodeBase.Mobs.Logic
         public float AttackDistance => _attackDistance;
         public float AttackDamage => _attackDamage;
 
+        public bool AnimationsEnabled => _enableAnimations;
         public MobAnimationSet MobAnimationSet => _mobAnimationSet;
 
         public class MobBaker : Baker<MobAuthoring>
@@ -50,7 +52,8 @@ namespace Assets.CodeBase.Mobs.Logic
                 SetupMoveToTargetTags(mob);
                 SetupAttackTags(mob);
 
-                SetupAnimations(mob);
+                if (authoring.AnimationsEnabled)
+                    SetupAnimations(mob, authoring.MobAnimationSet);
 
                 AddComponent<WaypointSettingsReference>(mob);
 
@@ -124,8 +127,19 @@ namespace Assets.CodeBase.Mobs.Logic
                 SetComponentEnabled<AttackIsReadyTag>(entity, false);
             }
 
-            private void SetupAnimations(Entity mob) {
+            private void SetupAnimations(Entity mob, MobAnimationSet animationSet) {
+                bool isMoving = true;
+                bool isAttacking = false;
 
+                AddComponent(mob, new IsMoving { Value = isMoving });
+                AddComponent(mob, new IsAttacking { Value = isAttacking });
+
+                AddComponent(mob, new PreviousIsMoving { Value = isMoving });
+                AddComponent(mob, new PreviousIsAttacking { Value = isAttacking });
+
+                AddComponent(mob, new IdleClipIndex { Value = animationSet.Idle });
+                AddComponent(mob, new RunClipIndex { Value = animationSet.Run });
+                AddComponent(mob, new AttackClipIndex { Value = animationSet.Attack });
             }
         }
     }

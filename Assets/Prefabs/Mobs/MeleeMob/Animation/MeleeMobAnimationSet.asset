@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: MeleeMobAnimationSet
   m_EditorClassIdentifier: Assembly-CSharp:Assets.CodeBase.Animation:MeleeMobAnimationSet
   _idle: 0
-  _attack: 0
-  _run: 0
-  _death: 0
+  _attack: 1
+  _run: 2
+  _death: 3

@@ -40,5 +40,6 @@ namespace Assets.CodeBase.Mobs.Logic.MoveToPoint
         public float Value;
     }
 
+    [GhostComponent(PrefabType = GhostPrefabType.Server)]
     public struct ShouldAdjustWaypointTag : IComponentData, IEnableableComponent { }
 }

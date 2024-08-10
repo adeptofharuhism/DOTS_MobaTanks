@@ -29,10 +29,20 @@ namespace Assets.CodeBase.Mobs
 
             [UpdateInGroup(typeof(LogicSystemGroup))]
             [UpdateAfter(typeof(MoveToPointStateSystemGroup))]
-            [UpdateBefore(typeof(AttackStateSystemGroup))]
+            [UpdateBefore(typeof(PreAttackStateSystemGroup))]
             public partial class MoveToTargetStateSystemGroup : ComponentSystemGroup { }
 
             [UpdateInGroup(typeof(LogicSystemGroup))]
             [UpdateAfter(typeof(MoveToTargetStateSystemGroup))]
+            [UpdateBefore(typeof(AttackStateSystemGroup))]
+            public partial class PreAttackStateSystemGroup : ComponentSystemGroup { }
+
+            [UpdateInGroup(typeof(LogicSystemGroup))]
+            [UpdateAfter(typeof(PreAttackStateSystemGroup))]
+            [UpdateBefore(typeof(PostAttackStateSystemGroup))]
             public partial class AttackStateSystemGroup : ComponentSystemGroup { }
+
+            [UpdateInGroup(typeof(LogicSystemGroup))]
+            [UpdateAfter(typeof(AttackStateSystemGroup))]
+            public partial class PostAttackStateSystemGroup : ComponentSystemGroup { }
 }
