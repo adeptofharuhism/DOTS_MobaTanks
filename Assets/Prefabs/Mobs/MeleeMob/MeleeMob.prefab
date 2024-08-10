@@ -75,8 +75,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.3, y: 1.3, z: 1.3}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5594675545510096610}
   m_Father: {fileID: 0}
@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MotionType: 3
-  Speed: 12
+  Speed: 16
   Acceleration: 12
   AngularSpeed: 120
   StoppingDistance: 0.1
@@ -244,8 +244,6 @@ MonoBehaviour:
   _attackCooldown: 1
   _attackDistance: 7
   _attackDamage: 22
-  _enableAnimations: 1
-  _mobAnimationSet: {fileID: 11400000, guid: d5c85be00a6c3be42b67f4f257d4fa48, type: 2}
 --- !u!114 &-4960904238046535007
 MonoBehaviour:
   m_ObjectHideFlags: 0

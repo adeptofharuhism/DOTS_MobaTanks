@@ -13,6 +13,8 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
     public struct AttackIsReadyTag : IComponentData, IEnableableComponent { }
     [GhostComponent(PrefabType = GhostPrefabType.Server)]
     public struct AttackIsOnCooldownTag : IComponentData, IEnableableComponent { }
+    [GhostComponent(PrefabType = GhostPrefabType.Server)]
+    public struct AttackHappenedThisFrameTag : IComponentData, IEnableableComponent { }
 
     [GhostComponent(PrefabType = GhostPrefabType.Server)]
     public struct AttackCooldown : IComponentData

@@ -3,6 +3,7 @@ using Assets.CodeBase.GameStates;
 using Assets.CodeBase.Mobs.Logic.MoveToTarget;
 using ProjectDawn.Navigation;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -11,6 +12,25 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
 {
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(AttackStateSystemGroup))]
+    [UpdateBefore(typeof(AttackStateInitializationSystem))]
+    public partial struct DisableAttackHappenedTagSystem : ISystem
+    {
+        public void OnCreate(ref SystemState state) {
+            state.RequireForUpdate<InGameState>();
+        }
+
+        public void OnUpdate(ref SystemState state) {
+            foreach (Entity entity
+                in SystemAPI.QueryBuilder()
+                .WithAll<AttackHappenedThisFrameTag>()
+                .Build().ToEntityArray(Allocator.Temp))
+                state.EntityManager.SetComponentEnabled<AttackHappenedThisFrameTag>(entity, false);
+        }
+    }
+
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
+    [UpdateInGroup(typeof(AttackStateSystemGroup))]
+    [UpdateAfter(typeof(DisableAttackHappenedTagSystem))]
     [UpdateBefore(typeof(EnterMoveToPointWhenNoTargetSystem))]
     public partial struct AttackStateInitializationSystem : ISystem
     {
@@ -20,7 +40,7 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
+            EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
             foreach (var (agent, entity)
                  in SystemAPI.Query<RefRW<AgentBody>>()
@@ -50,7 +70,7 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
+            EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
             foreach (var (target, entity)
                 in SystemAPI.Query<ChasedTarget>()
@@ -118,7 +138,7 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(AttackStateSystemGroup))]
     [UpdateAfter(typeof(CalculateSquaredDistanceToChasedTargetSystem))]
-    [UpdateBefore(typeof(AttackSystem))]
+    [UpdateBefore(typeof(RotateOnTargetSystem))]
     public partial struct EnterMoveToTargetWhenTargetIsFar : ISystem
     {
         public void OnCreate(ref SystemState state) {
@@ -127,7 +147,7 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
+            EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
             foreach (var (attackDistance, targetDistance, entity)
                 in SystemAPI.Query<SquaredAttackDistance, SquaredChasedTargetDistance>()
@@ -149,6 +169,34 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(AttackStateSystemGroup))]
     [UpdateAfter(typeof(EnterMoveToTargetWhenTargetIsFar))]
+    [UpdateBefore(typeof(AttackSystem))]
+    public partial struct RotateOnTargetSystem : ISystem
+    {
+        public void OnCreate(ref SystemState state) {
+            state.RequireForUpdate<InGameState>();
+        }
+
+        public void OnUpdate(ref SystemState state) {
+            foreach (var (transform, targetPosition)
+                in SystemAPI.Query<RefRW<LocalTransform>, ChasedTargetPosition>()
+                .WithAll<AttackState>()) {
+
+                float3 targetPositionOnPlane = targetPosition.Value;
+                targetPositionOnPlane.y = transform.ValueRO.Position.y;
+
+                float3 targetDirection = targetPositionOnPlane - transform.ValueRO.Position;
+                targetDirection = math.normalize(targetDirection);
+
+                float rotationAngle = math.atan2(targetDirection.x, targetDirection.z);
+
+                transform.ValueRW.Rotation = quaternion.Euler(0, rotationAngle, 0);
+            }
+        }
+    }
+
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
+    [UpdateInGroup(typeof(AttackStateSystemGroup))]
+    [UpdateAfter(typeof(RotateOnTargetSystem))]
     [UpdateBefore(typeof(UpdateAttackCooldownSystem))]
     public partial struct AttackSystem : ISystem
     {
@@ -158,7 +206,7 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
+            EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
             foreach (var (target, damage, entity)
                 in SystemAPI.Query<ChasedTarget, AttackDamage>()
@@ -169,8 +217,10 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
                     SystemAPI.GetBuffer<DamageBufferElement>(target.Value)
                         .Add(new DamageBufferElement { Value = damage.Value });
 
-                ecb.SetComponentEnabled<AttackIsOnCooldownTag>(entity, true);
                 ecb.SetComponentEnabled<AttackIsReadyTag>(entity, false);
+
+                ecb.SetComponentEnabled<AttackIsOnCooldownTag>(entity, true);
+                ecb.SetComponentEnabled<AttackHappenedThisFrameTag>(entity, true);
             }
 
             ecb.Playback(state.EntityManager);
@@ -188,7 +238,7 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
+            EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
             foreach (var (cooldownTimeLeft, cooldown, entity)
                 in SystemAPI.Query<RefRW<AttackCooldownTimeLeft>, AttackCooldown>()

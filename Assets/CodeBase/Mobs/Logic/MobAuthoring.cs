@@ -1,5 +1,4 @@
-﻿using Assets.CodeBase.Animation;
-using Assets.CodeBase.Combat.Teams;
+﻿using Assets.CodeBase.Combat.Teams;
 using Assets.CodeBase.Mobs.Logic.Animation;
 using Assets.CodeBase.Mobs.Logic.Attack;
 using Assets.CodeBase.Mobs.Logic.MoveToPoint;
@@ -26,9 +25,6 @@ namespace Assets.CodeBase.Mobs.Logic
         [SerializeField] private float _attackCooldown = 1f;
         [SerializeField] private float _attackDistance = 5f;
         [SerializeField] private float _attackDamage = 22f;
-        [Header("Animation")]
-        [SerializeField] private bool _enableAnimations = false;
-        [SerializeField] private MobAnimationSet _mobAnimationSet;
 
         public float RequiredDistanceToWaypoint => _requiredDistanceToWaypoint;
 
@@ -38,9 +34,6 @@ namespace Assets.CodeBase.Mobs.Logic
         public float AttackCooldown => _attackCooldown;
         public float AttackDistance => _attackDistance;
         public float AttackDamage => _attackDamage;
-
-        public bool AnimationsEnabled => _enableAnimations;
-        public MobAnimationSet MobAnimationSet => _mobAnimationSet;
 
         public class MobBaker : Baker<MobAuthoring>
         {
@@ -52,8 +45,7 @@ namespace Assets.CodeBase.Mobs.Logic
                 SetupMoveToTargetTags(mob);
                 SetupAttackTags(mob);
 
-                if (authoring.AnimationsEnabled)
-                    SetupAnimations(mob, authoring.MobAnimationSet);
+                SetupAnimations(mob);
 
                 AddComponent<WaypointSettingsReference>(mob);
 
@@ -122,24 +114,26 @@ namespace Assets.CodeBase.Mobs.Logic
             private void SetupAttackTags(Entity entity) {
                 AddComponent<AttackIsOnCooldownTag>(entity);
                 AddComponent<AttackIsReadyTag>(entity);
+                AddComponent<AttackHappenedThisFrameTag>(entity);
 
                 SetComponentEnabled<AttackIsOnCooldownTag>(entity, true);
                 SetComponentEnabled<AttackIsReadyTag>(entity, false);
+                SetComponentEnabled<AttackHappenedThisFrameTag>(entity, false);
             }
 
-            private void SetupAnimations(Entity mob, MobAnimationSet animationSet) {
+            private void SetupAnimations(Entity mob) {
                 bool isMoving = true;
-                bool isAttacking = false;
+                bool attackFlag = false;
 
                 AddComponent(mob, new IsMoving { Value = isMoving });
-                AddComponent(mob, new IsAttacking { Value = isAttacking });
+                AddComponent(mob, new AttackFlag { Value = attackFlag });
 
                 AddComponent(mob, new PreviousIsMoving { Value = isMoving });
-                AddComponent(mob, new PreviousIsAttacking { Value = isAttacking });
+                AddComponent(mob, new PreviousIsAttacking { Value = attackFlag });
 
-                AddComponent(mob, new IdleClipIndex { Value = animationSet.Idle });
-                AddComponent(mob, new RunClipIndex { Value = animationSet.Run });
-                AddComponent(mob, new AttackClipIndex { Value = animationSet.Attack });
+                AddComponent(mob, new IdleClipIndex { Value = (byte)MeleeMobAnimated.MeleeMob_Idle});
+                AddComponent(mob, new RunClipIndex { Value = (byte)MeleeMobAnimated.MeleeMob_Run });
+                AddComponent(mob, new AttackClipIndex { Value = (byte)MeleeMobAnimated.MeleeMob_Attack });
             }
         }
     }

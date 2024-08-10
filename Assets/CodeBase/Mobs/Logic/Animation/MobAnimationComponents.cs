@@ -8,7 +8,7 @@ namespace Assets.CodeBase.Mobs.Logic.Animation
         [GhostField] public bool Value;
     }
 
-    public struct IsAttacking : IComponentData
+    public struct AttackFlag : IComponentData
     {
         [GhostField] public bool Value;
     }

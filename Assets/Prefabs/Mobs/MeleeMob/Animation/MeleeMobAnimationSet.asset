@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: MeleeMobAnimationSet
   m_EditorClassIdentifier: Assembly-CSharp:Assets.CodeBase.Animation:MeleeMobAnimationSet
-  _idle: 0
+  _idle: 1
   _attack: 1
-  _run: 2
-  _death: 3
+  _run: 1
+  _death: 1
