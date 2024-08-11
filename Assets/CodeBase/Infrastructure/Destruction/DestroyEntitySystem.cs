@@ -5,8 +5,8 @@ using Unity.Transforms;
 
 namespace Assets.CodeBase.Infrastructure.Destruction
 {
-    [UpdateInGroup(typeof(PredictedSimulationSystemGroup), OrderLast = true)]
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
+    [UpdateInGroup(typeof(PredictedSimulationSystemGroup), OrderLast = true)]
     public partial struct DestroyEntitySystem : ISystem
     {
         public void OnCreate(ref SystemState state) {

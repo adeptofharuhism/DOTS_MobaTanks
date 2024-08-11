@@ -4,23 +4,48 @@ using Unity.NetCode;
 
 namespace Assets.CodeBase.Infrastructure.Destruction
 {
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
     [UpdateBefore(typeof(DestroyEntitySystem))]
-    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct SelfDestructionSystem : ISystem
     {
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
-            foreach (var (destructTime, currentTime, entity)
-                in SystemAPI.Query<SelfDestructLifetime, RefRW<SelfDestructCurrentTime>>()
+            foreach (var (timeLeft, entity)
+                in SystemAPI.Query<RefRW<SelfDestructTimeLeft>>()
                 .WithEntityAccess()) {
 
-                currentTime.ValueRW.Value += SystemAPI.Time.DeltaTime;
+                timeLeft.ValueRW.Value -= SystemAPI.Time.DeltaTime;
 
-                if (currentTime.ValueRW.Value > destructTime.Value)
-                    ecb.AddComponent<DestroyEntityTag>(entity);
+                if (timeLeft.ValueRW.Value > 0)
+                    continue;
+
+                ecb.AddComponent<DestroyEntityTag>(entity);
+            }
+
+            ecb.Playback(state.EntityManager);
+        }
+    }
+
+    [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
+    [UpdateInGroup(typeof(SimulationSystemGroup), OrderLast = true)]
+    public partial struct ClientSelfDestructionSystem : ISystem
+    {
+        public void OnUpdate(ref SystemState state) {
+            EntityCommandBuffer ecb = new(Unity.Collections.Allocator.Temp);
+
+            foreach(var(timeLeft, entity)
+                in SystemAPI.Query<RefRW<ClientSelfDestructTimeLeft>>()
+                .WithEntityAccess()) {
+
+                timeLeft.ValueRW.Value -= SystemAPI.Time.DeltaTime;
+
+                if (timeLeft.ValueRW.Value > 0)
+                    continue;
+
+                ecb.DestroyEntity(entity);
             }
 
             ecb.Playback(state.EntityManager);

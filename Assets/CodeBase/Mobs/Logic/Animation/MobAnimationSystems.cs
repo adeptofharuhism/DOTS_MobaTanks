@@ -1,7 +1,9 @@
 ﻿using AnimCooker;
 using Assets.CodeBase.GameStates;
+using Assets.CodeBase.Infrastructure.Destruction;
 using Assets.CodeBase.Mobs.Logic.Attack;
 using Unity.Entities;
+using Unity.Transforms;
 
 namespace Assets.CodeBase.Mobs.Logic.Animation
 {
@@ -52,7 +54,7 @@ namespace Assets.CodeBase.Mobs.Logic.Animation
         public void OnUpdate(ref SystemState state) {
             foreach (var attackFlag
                 in SystemAPI.Query<RefRW<AttackFlag>>()
-                .WithAll<AttackHappenedThisFrameTag>()) 
+                .WithAll<AttackHappenedThisFrameTag>())
 
                 attackFlag.ValueRW.Value = !attackFlag.ValueRO.Value;
         }

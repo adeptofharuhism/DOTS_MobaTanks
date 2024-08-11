@@ -58,6 +58,7 @@ GameObject:
   - component: {fileID: 5553050897210755601}
   - component: {fileID: 2842428752891390391}
   - component: {fileID: 1897783363010914100}
+  - component: {fileID: 72754812162030510}
   m_Layer: 0
   m_Name: MeleeMob
   m_TagString: Untagged
@@ -75,8 +76,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.3, y: 1.3, z: 1.3}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5594675545510096610}
   m_Father: {fileID: 0}
@@ -94,7 +95,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MotionType: 3
-  Speed: 16
+  Speed: 15
   Acceleration: 12
   AngularSpeed: 120
   StoppingDistance: 0.1
@@ -506,3 +507,17 @@ MonoBehaviour:
   DefaultClipName: MeleeMob_Run
   DefaultPlaySpeed: 1
   AnimationDb: {fileID: 11400000, guid: 88603df6599271840bd9229b52a3f86f, type: 2}
+--- !u!114 &72754812162030510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4934725233422185294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7ca04895abeea943a954eaff1516d91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _postDeathEffect: {fileID: 4934725233422185294, guid: 50bebbfda35438040adf0bbe15fed9ca,
+    type: 3}

@@ -11,6 +11,9 @@ scopes = {
 	"last_search.C87CA1ED" = ""
 	"OpenInspectorPreview.C87CA1ED" = "0"
 	"currentGroup.C87CA1ED" = "all"
+	"last_search.FD7A1EDD" = "ref=\"Packages/com.unity.ai.navigation/Runtime/NavMeshModifier.cs\""
+	"OpenInspectorPreview.FD7A1EDD" = "0"
+	"currentGroup.FD7A1EDD" = "all"
 }
 providers = {
 	archetype = {

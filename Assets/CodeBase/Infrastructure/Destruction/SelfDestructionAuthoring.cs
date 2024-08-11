@@ -5,8 +5,10 @@ namespace Assets.CodeBase.Infrastructure.Destruction
 {
     public class SelfDestructionAuthoring : MonoBehaviour
     {
+        [SerializeField] private bool _clientOnly = false;
         [SerializeField] private float _lifetime = 1f;
 
+        public bool ClientOnly => _clientOnly;
         public float Lifetime => _lifetime;
 
         public class SelfDestructionBaker : Baker<SelfDestructionAuthoring>
@@ -14,8 +16,10 @@ namespace Assets.CodeBase.Infrastructure.Destruction
             public override void Bake(SelfDestructionAuthoring authoring) {
                 Entity entity = GetEntity(TransformUsageFlags.Dynamic);
 
-                AddComponent(entity, new SelfDestructCurrentTime { Value = 0 });
-                AddComponent(entity, new SelfDestructLifetime { Value = authoring.Lifetime });
+                if (authoring.ClientOnly)
+                    AddComponent(entity, new ClientSelfDestructTimeLeft { Value = authoring.Lifetime });
+                else
+                    AddComponent(entity, new SelfDestructTimeLeft { Value = authoring.Lifetime });
             }
         }
     }
