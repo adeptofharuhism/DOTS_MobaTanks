@@ -39,3 +39,29 @@ MonoBehaviour:
       Length: 0.9583334
     - ClipName: MeleeMob_Death
       Length: 2
+  - ModelName: RangedMobAnimated
+    Skins:
+    - SkinClips:
+      - BeginFrame: 0
+        EndFrame: 8
+      - BeginFrame: 9
+        EndFrame: 17
+      - BeginFrame: 18
+        EndFrame: 26
+      - BeginFrame: 27
+        EndFrame: 41
+      Width: 256
+      Height: 128
+      Interval: 0.1
+      Pow2: 8
+      FrameRate: 10
+      VertCount: 672
+    Clips:
+    - ClipName: RangedMob_Idle
+      Length: 0.9583334
+    - ClipName: RangedMob_Attack
+      Length: 0.9583334
+    - ClipName: RangedMob_Run
+      Length: 0.9583334
+    - ClipName: RangedMob_Death
+      Length: 1.5833334
