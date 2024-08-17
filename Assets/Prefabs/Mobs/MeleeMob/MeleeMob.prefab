@@ -161,9 +161,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0344116cd75eaaf488b894904a1649d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Radius: 5
-  Angle: 230
-  MaxAngle: 300
+  Radius: 6
+  Angle: 289
+  MaxAngle: 319
   Mode: 3
   BlockedStop: 0
   UseWalls: 0

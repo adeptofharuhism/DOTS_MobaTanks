@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4934725233422185294
+--- !u!1 &5630496284588017842
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,25 +8,24 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3360448422429003203}
-  - component: {fileID: 5553050897210755601}
-  - component: {fileID: 2842428752891390391}
-  - component: {fileID: 1897783363010914100}
-  - component: {fileID: 1662291175393330064}
+  - component: {fileID: 5058434371731577782}
+  - component: {fileID: 8397632429740074760}
+  - component: {fileID: 1712331508660397898}
+  - component: {fileID: 7517932120400574475}
   m_Layer: 0
-  m_Name: MeleeMobDead
+  m_Name: RangedMobAnimated
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3360448422429003203
+--- !u!4 &5058434371731577782
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4934725233422185294}
+  m_GameObject: {fileID: 5630496284588017842}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -35,35 +34,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &5553050897210755601
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4934725233422185294}
-  m_Mesh: {fileID: 4300000, guid: a615b94498531e54d8ba7fe1a44285e9, type: 2}
---- !u!23 &2842428752891390391
+--- !u!23 &8397632429740074760
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4934725233422185294}
+  m_GameObject: {fileID: 5630496284588017842}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
-  m_LightProbeUsage: 0
+  m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b6be65b1cc555364991fedb9ff3b9154, type: 2}
+  - {fileID: 2100000, guid: eca4d578ae3cf2d40b65e3383d31cd1b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -85,33 +76,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &1897783363010914100
+--- !u!33 &1712331508660397898
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5630496284588017842}
+  m_Mesh: {fileID: 4300000, guid: 4dc0eb35524af8440a7d2963962006d1, type: 2}
+--- !u!114 &7517932120400574475
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4934725233422185294}
+  m_GameObject: {fileID: 5630496284588017842}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31ad6fab447edd745985a8123b81e8cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AnimationModelName: MeleeMobAnimated
-  DefaultClipName: MeleeMob_Death
+  AnimationModelName: RangedMobAnimated
+  DefaultClipName: RangedMob_Idle
   DefaultPlaySpeed: 1
   AnimationDb: {fileID: 11400000, guid: 88603df6599271840bd9229b52a3f86f, type: 2}
---- !u!114 &1662291175393330064
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4934725233422185294}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ca08ff35f94cd940bcbca837bf3c660, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _clientOnly: 1
-  _lifetime: 1.95

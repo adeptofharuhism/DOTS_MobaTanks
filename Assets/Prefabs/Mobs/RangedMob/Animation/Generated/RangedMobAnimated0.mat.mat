@@ -3,11 +3,11 @@
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
-  m_ObjectHideFlags: 32
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MeleeMobAnimated0.mat
+  m_Name: RangedMobAnimated0.mat
   m_Shader: {fileID: 4800000, guid: 2fabf25f7bcf68e41bbc72153cc0c078, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -26,7 +26,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: e9a50a6df3777884dbe29536a39c6783, type: 3}
+        m_Texture: {fileID: 2800000, guid: 81b8e8b3227f0564abbbec8d99d5e929, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -70,7 +70,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _PosMap:
-        m_Texture: {fileID: 2800000, guid: 4a639f09dc094eb4cbec6dc84a5e2167, type: 3}
+        m_Texture: {fileID: 2800000, guid: e01355cecf17ce94c9b8c333576bbcc2, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -135,12 +135,12 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.9063317, g: 0.9063317, b: 0.9063317, a: 1}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
     - _Shift: {r: 0, g: 0, b: 22, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _Stat1: {r: 9, g: -5.1638803, b: 3.921202, a: 24}
+    - _Stat1: {r: 9, g: -4.4598227, b: 3.9197466, a: 24}
     - _Stat2: {r: 3.4028235e+38, g: -3.4028235e+38, b: 3.4028235e+38, a: -3.4028235e+38}
-    - _Stat3: {r: 654, g: 0, b: 0, a: 0}
+    - _Stat3: {r: 672, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []

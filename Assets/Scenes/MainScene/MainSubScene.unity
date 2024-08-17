@@ -34628,6 +34628,10 @@ MonoBehaviour:
       type: 3}
     Amount: 4
     WaveCooldown: 30
+  - MobPrefab: {fileID: 4934725233422185294, guid: eb8e624687e59b446977c4dc3a786d4e,
+      type: 3}
+    Amount: 1
+    WaveCooldown: 30
   _teamPoolSettings:
   - RouteSettings:
     - Waypoints:

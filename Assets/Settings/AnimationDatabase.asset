@@ -43,18 +43,18 @@ MonoBehaviour:
     Skins:
     - SkinClips:
       - BeginFrame: 0
-        EndFrame: 8
-      - BeginFrame: 9
-        EndFrame: 17
-      - BeginFrame: 18
-        EndFrame: 26
-      - BeginFrame: 27
-        EndFrame: 41
-      Width: 256
-      Height: 128
-      Interval: 0.1
-      Pow2: 8
-      FrameRate: 10
+        EndFrame: 22
+      - BeginFrame: 23
+        EndFrame: 45
+      - BeginFrame: 46
+        EndFrame: 68
+      - BeginFrame: 69
+        EndFrame: 106
+      Width: 512
+      Height: 256
+      Interval: 0.041666668
+      Pow2: 9
+      FrameRate: 24
       VertCount: 672
     Clips:
     - ClipName: RangedMob_Idle
