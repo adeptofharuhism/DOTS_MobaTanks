@@ -25,18 +25,17 @@ namespace Assets.CodeBase.Weapon.Projectile
             state.RequireForUpdate<PhysicsWorldSingleton>();
         }
 
-        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             CollisionWorld collisionWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().CollisionWorld;
             EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
             foreach (var (speed, damage, transform, team, projectile)
-                in SystemAPI.Query<ProjectileSpeed, ProjectileDamage, RefRO<LocalToWorld>, UnitTeam>()
+                in SystemAPI.Query<ProjectileSpeed, ProjectileDamage, RefRO<LocalTransform>, UnitTeam>()
                 .WithEntityAccess()) {
 
                 RaycastInput raycastInput = new RaycastInput {
                     Start = transform.ValueRO.Position,
-                    End = transform.ValueRO.Position + transform.ValueRO.Forward * speed.Value * SystemAPI.Time.DeltaTime,
+                    End = transform.ValueRO.Position + transform.ValueRO.Forward() * speed.Value * SystemAPI.Time.DeltaTime,
                     Filter = _collisionFilter
                 };
 
@@ -61,7 +60,6 @@ namespace Assets.CodeBase.Weapon.Projectile
             ecb.Playback(state.EntityManager);
         }
 
-        [BurstCompile]
         private UnitTeam GetUnitTeam(ref SystemState state, Entity entity) {
             UnitTeam team;
 
@@ -73,7 +71,6 @@ namespace Assets.CodeBase.Weapon.Projectile
             return team;
         }
 
-        [BurstCompile]
         private void TryDoDamage(ref SystemState state, Entity entity, float damage) {
             if (SystemAPI.HasBuffer<DamageBufferElement>(entity)) {
                 DynamicBuffer<DamageBufferElement> damageBuffer = SystemAPI.GetBuffer<DamageBufferElement>(entity);

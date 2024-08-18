@@ -161,10 +161,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0344116cd75eaaf488b894904a1649d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Radius: 6
-  Angle: 289
-  MaxAngle: 319
-  Mode: 3
+  Radius: 4
+  Angle: 230
+  MaxAngle: 300
+  Mode: 0
   BlockedStop: 0
   UseWalls: 0
   m_Layers: -1
@@ -242,9 +242,12 @@ MonoBehaviour:
   _requiredDistanceToWaypoint: 5
   _targetSearchInterval: 0.5
   _targetChaseTime: 3
+  _attackType: 0
   _attackCooldown: 1
   _attackDistance: 7
-  _attackDamage: 22
+  _attackDamage: 17
+  _projectilePrefab: {fileID: 0}
+  _projectileSpawnPoint: {fileID: 0}
 --- !u!114 &-4960904238046535007
 MonoBehaviour:
   m_ObjectHideFlags: 0

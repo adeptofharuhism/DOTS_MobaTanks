@@ -22,18 +22,28 @@ namespace Assets.CodeBase.Mobs.Logic
         [SerializeField] private float _targetSearchInterval = 1f;
         [SerializeField] private float _targetChaseTime = 3f;
         [Header("Attack")]
+        [SerializeField] private AttackType _attackType;
         [SerializeField] private float _attackCooldown = 1f;
         [SerializeField] private float _attackDistance = 5f;
+        [Header("Melee parameters")]
         [SerializeField] private float _attackDamage = 22f;
+        [Header("Projectile parameters")]
+        [SerializeField] private GameObject _projectilePrefab;
+        [SerializeField] private GameObject _projectileSpawnPoint;
 
         public float RequiredDistanceToWaypoint => _requiredDistanceToWaypoint;
 
         public float TargetSearchInterval => _targetSearchInterval;
         public float TargetChaseTime => _targetChaseTime;
 
+        public AttackType AttackType => _attackType;
         public float AttackCooldown => _attackCooldown;
         public float AttackDistance => _attackDistance;
+
         public float AttackDamage => _attackDamage;
+
+        public GameObject ProjectilePrefab => _projectilePrefab;
+        public GameObject ProjectileSpawnPoint => _projectileSpawnPoint;
 
         public class MobBaker : Baker<MobAuthoring>
         {
@@ -72,6 +82,23 @@ namespace Assets.CodeBase.Mobs.Logic
                 SetComponentEnabled<MobReadyToSearchTargetTag>(mob, false);
                 AddComponent(mob, new TargetSearchCooldown { Value = authoring._targetSearchInterval });
                 AddComponent(mob, new TargetSearchCooldownTimeLeft { Value = authoring._targetSearchInterval });
+
+                switch (authoring.AttackType) {
+                    case AttackType.Projectile:
+                        AddComponent<ProjectileAttackerTag>(mob);
+                        AddComponent<ProjectileAimPosition>(mob);
+                        AddComponent(mob, new ProjectilePrefab {
+                            Value = GetEntity(authoring.ProjectilePrefab, TransformUsageFlags.Dynamic)
+                        });
+                        AddComponent(mob, new ProjectileSpawnPoint{
+                            Value = GetEntity(authoring.ProjectileSpawnPoint, TransformUsageFlags.Dynamic)
+                        });
+                        break;
+                    case AttackType.Melee:
+                    default:
+                        AddComponent<MeleeAttackerTag>(mob);
+                        break;
+                }
 
                 AddComponent(mob, new AttackDamage { Value = authoring.AttackDamage });
                 AddComponent(mob, new AttackCooldown { Value = authoring.AttackCooldown });
