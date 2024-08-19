@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Unity.Burst;
+using Unity.Entities;
 
 namespace Assets.CodeBase.GameStates.InGame
 {
@@ -11,6 +12,7 @@ namespace Assets.CodeBase.GameStates.InGame
             state.RequireForUpdate<WinnerTeam>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             Entity stateEntity = SystemAPI.GetSingletonEntity<InGameState>();
             state.EntityManager.RemoveComponent<InGameState>(stateEntity);

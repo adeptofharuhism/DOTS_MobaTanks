@@ -1,4 +1,5 @@
 ﻿using Assets.CodeBase.GameStates;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
@@ -14,6 +15,7 @@ namespace Assets.CodeBase.Effects.PostDeath
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
@@ -42,6 +44,7 @@ namespace Assets.CodeBase.Effects.PostDeath
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (transform, effectPosition)
                 in SystemAPI.Query<LocalTransform, RefRW<PostDeathEffectPosition>>())
@@ -60,6 +63,7 @@ namespace Assets.CodeBase.Effects.PostDeath
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (transform, effectRotation)
                 in SystemAPI.Query<LocalTransform, RefRW<PostDeathEffectRotation>>())
@@ -78,6 +82,7 @@ namespace Assets.CodeBase.Effects.PostDeath
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new(Allocator.Temp);
 
@@ -103,6 +108,7 @@ namespace Assets.CodeBase.Effects.PostDeath
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new(Allocator.Temp);
 

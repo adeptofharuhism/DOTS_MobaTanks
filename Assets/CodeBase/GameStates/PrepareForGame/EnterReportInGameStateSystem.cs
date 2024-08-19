@@ -1,4 +1,5 @@
 ﻿using Assets.CodeBase.Infrastructure.PlayerCount;
+using Unity.Burst;
 using Unity.Entities;
 
 namespace Assets.CodeBase.GameStates.PrepareForGame
@@ -11,10 +12,10 @@ namespace Assets.CodeBase.GameStates.PrepareForGame
             state.RequireForUpdate<PrepareForGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            foreach (var (readyPlayers, connectedPlayers, minReadyPlayers, entity)
-                in SystemAPI.Query<ReadyPlayersCount, ConnectedPlayerCount, MinReadyPlayersToStartGame>()
-                .WithEntityAccess()) {
+            foreach (var (readyPlayers, connectedPlayers, minReadyPlayers)
+                in SystemAPI.Query<ReadyPlayersCount, ConnectedPlayerCount, MinReadyPlayersToStartGame>()) {
 
                 if (minReadyPlayers.Value > readyPlayers.Value)
                     return;

@@ -33,10 +33,11 @@ namespace Assets.CodeBase.Infrastructure.Destruction
     [UpdateInGroup(typeof(SimulationSystemGroup), OrderLast = true)]
     public partial struct ClientSelfDestructionSystem : ISystem
     {
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new(Unity.Collections.Allocator.Temp);
 
-            foreach(var(timeLeft, entity)
+            foreach (var (timeLeft, entity)
                 in SystemAPI.Query<RefRW<ClientSelfDestructTimeLeft>>()
                 .WithEntityAccess()) {
 

@@ -41,7 +41,6 @@ namespace Assets.CodeBase.Vehicles.Wheels
             }
         }
 
-        [BurstCompile]
         private float CalculateYForce(
             ref SystemState state,
             float springStrength,

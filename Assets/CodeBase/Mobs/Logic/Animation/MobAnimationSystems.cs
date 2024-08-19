@@ -1,9 +1,8 @@
 ﻿using AnimCooker;
 using Assets.CodeBase.GameStates;
-using Assets.CodeBase.Infrastructure.Destruction;
 using Assets.CodeBase.Mobs.Logic.Attack;
+using Unity.Burst;
 using Unity.Entities;
-using Unity.Transforms;
 
 namespace Assets.CodeBase.Mobs.Logic.Animation
 {
@@ -15,6 +14,7 @@ namespace Assets.CodeBase.Mobs.Logic.Animation
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var isMoving
                 in SystemAPI.Query<RefRW<IsMoving>>()
@@ -33,6 +33,7 @@ namespace Assets.CodeBase.Mobs.Logic.Animation
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var isMoving
                 in SystemAPI.Query<RefRW<IsMoving>>()
@@ -51,6 +52,7 @@ namespace Assets.CodeBase.Mobs.Logic.Animation
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var attackFlag
                 in SystemAPI.Query<RefRW<AttackFlag>>()
@@ -69,6 +71,7 @@ namespace Assets.CodeBase.Mobs.Logic.Animation
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (idleClipIndex, runClipIndex, isMoving, prevIsMoving, entity)
                 in SystemAPI.Query<IdleClipIndex, RunClipIndex, IsMoving, RefRW<PreviousIsMoving>>()
@@ -96,6 +99,7 @@ namespace Assets.CodeBase.Mobs.Logic.Animation
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (clipIndex, isAttacking, prevIsAttacking, entity)
                 in SystemAPI.Query<AttackClipIndex, AttackFlag, RefRW<PreviousIsAttacking>>()

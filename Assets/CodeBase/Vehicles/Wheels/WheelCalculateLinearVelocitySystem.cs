@@ -49,7 +49,6 @@ namespace Assets.CodeBase.Vehicles.Wheels
             }
         }
 
-        [BurstCompile]
         private float CalculateVelocityOnAxis(float3 linearVelocity, float3 axis) =>
             math.dot(linearVelocity, axis);
     }

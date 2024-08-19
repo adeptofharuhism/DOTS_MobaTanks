@@ -26,14 +26,12 @@ namespace Assets.CodeBase.Vehicles.Wheels
             }
         }
 
-        [BurstCompile]
         private quaternion CalculateRotationQuaternion(float rotationInput, float maxRotationAngle, bool rotatesClockwise) =>
             quaternion.Euler(
                 0,
                 math.radians(CalculateRotationAngle(rotationInput, maxRotationAngle, rotatesClockwise)),
                 0);
 
-        [BurstCompile]
         private float CalculateRotationAngle(float rotationInput, float maxRotationAngle, bool rotatesClockwise) =>
             rotationInput * (rotatesClockwise ? 1 : -1) * maxRotationAngle;
     }

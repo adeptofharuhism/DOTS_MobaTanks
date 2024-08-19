@@ -1,4 +1,5 @@
 ﻿using Assets.CodeBase.GameStates.InGame;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.NetCode;
 
@@ -13,6 +14,7 @@ namespace Assets.CodeBase.GameStates.ReportEndGame
             state.RequireForUpdate<WinnerTeam>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 

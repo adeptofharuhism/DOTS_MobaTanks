@@ -49,7 +49,6 @@ namespace Assets.CodeBase.Vehicles.Wheels
             }
         }
 
-        [BurstCompile]
         private float CalculateZForce(
             float accelerationInput,
             float velocityZ,
@@ -76,7 +75,6 @@ namespace Assets.CodeBase.Vehicles.Wheels
                             hardBrakingForceMultiplier,
                             engineForceMultiplier);
 
-        [BurstCompile]
         private float CalculateAccelerationForce(
             float accelerationInput,
             float velocityZ,
@@ -90,11 +88,9 @@ namespace Assets.CodeBase.Vehicles.Wheels
                     * hardBrakingForceMultiplier
             ) * engineForceMultiplier;
 
-        [BurstCompile]
         private float CalculateEngineForce(float accelerationInput, float velocity, float maxSpeed) =>
             accelerationInput * HyperbolicCurve(velocity / maxSpeed);
 
-        [BurstCompile]
         private float HyperbolicCurve(float x) =>
             HyperbolicOffsetY + (HyperbolaAngleMultiplier / (x + HyperbolicOffsetX));
     }

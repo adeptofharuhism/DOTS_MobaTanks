@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Unity.Burst;
+using Unity.Entities;
 
 namespace Assets.CodeBase.GameStates.ReportInGame
 {
@@ -10,6 +11,7 @@ namespace Assets.CodeBase.GameStates.ReportInGame
             state.RequireForUpdate<ReportInGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             Entity stateEntity = SystemAPI.GetSingletonEntity<ReportInGameState>();
             state.EntityManager.RemoveComponent<ReportInGameState>(stateEntity);

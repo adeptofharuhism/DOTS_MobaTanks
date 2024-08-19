@@ -39,7 +39,6 @@ namespace Assets.CodeBase.Vehicles.Turrets
             ecb.Playback(state.EntityManager);
         }
 
-        [BurstCompile]
         private float CalculateLookAngle(RefRO<LocalToWorld> weaponTransform, float3 targetPosition) {
             float3 slotForward = weaponTransform.ValueRO.Forward;
             float3 slotRight = weaponTransform.ValueRO.Right;

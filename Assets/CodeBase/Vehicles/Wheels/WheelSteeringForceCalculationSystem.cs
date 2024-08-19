@@ -40,19 +40,15 @@ namespace Assets.CodeBase.Vehicles.Wheels
             }
         }
 
-        [BurstCompile]
         private float3 CalculateXVector(float3 forceCastRight, float maxSteering, float minSteering, float velocityX, float velocityZ) =>
             -forceCastRight * CalculateXForce(maxSteering, minSteering, velocityX, velocityZ);
 
-        [BurstCompile]
         private float CalculateXForce(float maxSteering, float minSteering, float velocityX, float velocityZ) =>
             CalculateTractionCoefficient(maxSteering, minSteering, velocityX, velocityZ) * velocityX;
 
-        [BurstCompile]
         private float CalculateTractionCoefficient(float maxSteering, float minSteering, float velocityX, float velocityZ) =>
             math.lerp(maxSteering, minSteering, CalculateXVelocityToHorizontalVelocityRatio(velocityX, velocityZ));
 
-        [BurstCompile]
         private float CalculateXVelocityToHorizontalVelocityRatio(float velocityX, float velocityZ) =>
             math.square(velocityX) / (Epsilon + math.square(velocityX) + math.square(velocityZ));
     }

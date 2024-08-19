@@ -56,7 +56,6 @@ namespace Assets.CodeBase.Vehicles.Wheels
             }
         }
 
-        [BurstCompile]
         private float CalculateSpringCompression(float springRestDistance, float compressionCoefficient) =>
             springRestDistance * (1 - compressionCoefficient);
     }

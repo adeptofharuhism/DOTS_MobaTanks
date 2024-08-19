@@ -1,4 +1,5 @@
 ﻿using Assets.CodeBase.GameStates;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.NetCode;
@@ -18,6 +19,7 @@ namespace Assets.CodeBase.Infrastructure.PlayerCount
             state.RequireForUpdate<PrepareForGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 

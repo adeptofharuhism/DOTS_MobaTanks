@@ -39,11 +39,9 @@ namespace Assets.CodeBase.Vehicles.Wheels
             }
         }
 
-        [BurstCompile]
         private float CalculateZForce(ref SystemState state, float velocityZ) =>
             CalculateBraking(velocityZ) * SystemAPI.Time.DeltaTime;
 
-        [BurstCompile]
         private float CalculateBraking(float velocity) {
             if (velocity > Epsilon)
                 return -BrakingStrength;

@@ -1,4 +1,5 @@
 ﻿using Assets.CodeBase.GameStates.InGame;
+using Unity.Burst;
 using Unity.Entities;
 
 namespace Assets.CodeBase.GameStates.ReportEndGame
@@ -12,6 +13,7 @@ namespace Assets.CodeBase.GameStates.ReportEndGame
             state.RequireForUpdate<WinnerTeam>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             Entity stateEntity = SystemAPI.GetSingletonEntity<ReportEndGameState>();
             state.EntityManager.RemoveComponent<ReportEndGameState>(stateEntity);

@@ -1,4 +1,5 @@
-﻿using Unity.Collections;
+﻿using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.NetCode;
 
@@ -14,6 +15,7 @@ namespace Assets.CodeBase.GameStates.ReportInGame
             state.RequireForUpdate(state.GetEntityQuery(inGameCommandQuery));
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 

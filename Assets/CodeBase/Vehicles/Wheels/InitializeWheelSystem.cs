@@ -29,7 +29,6 @@ namespace Assets.CodeBase.Vehicles.Wheels
             ecb.Playback(state.EntityManager);
         }
 
-        [BurstCompile]
         private Entity GetHighestParentOfEntity(ref SystemState state, Entity entity) {
             bool hasParent = true;
             Entity parent = entity;

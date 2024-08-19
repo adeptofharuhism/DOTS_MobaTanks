@@ -1,4 +1,5 @@
 ﻿using Assets.CodeBase.Infrastructure.PrefabInjection;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.NetCode;
@@ -22,6 +23,7 @@ namespace Assets.CodeBase.GameStates.PrepareForGame
             state.RequireForUpdate<SubScenesLoadPassedTag>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
             NativeArray<Entity> pendingNetworkIds = _pendingNetworkQuery.ToEntityArray(Allocator.Temp);

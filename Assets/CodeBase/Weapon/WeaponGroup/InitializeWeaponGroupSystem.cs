@@ -1,5 +1,6 @@
 ﻿using Assets.CodeBase.Combat.Teams;
 using Assets.CodeBase.GameStates;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -13,6 +14,7 @@ namespace Assets.CodeBase.Weapon.WeaponGroup
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 

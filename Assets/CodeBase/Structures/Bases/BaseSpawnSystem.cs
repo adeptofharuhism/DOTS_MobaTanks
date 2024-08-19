@@ -36,7 +36,6 @@ namespace Assets.CodeBase.Structures.Bases
             ecb.Playback(state.EntityManager);
         }
 
-        [BurstCompile]
         private void SpawnBase(ref SystemState state, ref EntityCommandBuffer ecb, Entity basePrefab, float3 spawnPosition, TeamType team) {
             Entity baseEntity = ecb.Instantiate(basePrefab);
 

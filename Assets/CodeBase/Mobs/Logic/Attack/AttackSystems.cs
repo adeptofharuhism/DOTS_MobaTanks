@@ -21,6 +21,7 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (Entity entity
                 in SystemAPI.QueryBuilder()
@@ -178,6 +179,7 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (transform, targetPosition)
                 in SystemAPI.Query<RefRW<LocalTransform>, ChasedTargetPosition>()
@@ -228,6 +230,7 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (target, aimPoint)
                 in SystemAPI.Query<ChasedTarget, RefRW<ProjectileAimPosition>>()
@@ -258,6 +261,7 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
@@ -294,6 +298,7 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 

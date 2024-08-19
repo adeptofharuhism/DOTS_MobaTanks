@@ -25,6 +25,7 @@ namespace Assets.CodeBase.Weapon.Projectile
             state.RequireForUpdate<PhysicsWorldSingleton>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             CollisionWorld collisionWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().CollisionWorld;
             EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);

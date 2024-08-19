@@ -1,5 +1,6 @@
 ﻿using Assets.CodeBase.Combat.Teams;
 using Assets.CodeBase.GameStates;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -29,6 +30,7 @@ namespace Assets.CodeBase.Targeting
             state.RequireForUpdate<InGameState>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             CollisionWorld collisionWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().CollisionWorld;
 
