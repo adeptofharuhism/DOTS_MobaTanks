@@ -11,6 +11,7 @@ namespace Assets.CodeBase.Finances
                 Entity entity = GetEntity(TransformUsageFlags.None);
 
                 AddComponent<MoneyAmount>(entity);
+                AddBuffer<MoneyAddBufferElement>(entity);
                 AddComponent<GhostFinancesConnectionId>(entity);
             }
         }

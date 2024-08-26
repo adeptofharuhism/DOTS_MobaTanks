@@ -243,7 +243,7 @@ MonoBehaviour:
   _targetSearchInterval: 0.5
   _targetChaseTime: 3
   _attackType: 0
-  _attackCooldown: 1
+  _attackCooldown: 0.95
   _attackDistance: 7
   _attackDamage: 17
   _projectilePrefab: {fileID: 0}

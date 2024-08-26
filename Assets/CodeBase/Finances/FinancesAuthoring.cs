@@ -6,9 +6,13 @@ namespace Assets.CodeBase.Finances
     public class FinancesAuthoring : MonoBehaviour
     {
         [SerializeField] private int _basicMoneyAmount;
+        [SerializeField] private int _moneyIncome;
+        [SerializeField] private float _moneyIncomeCooldown;
         [SerializeField] private GameObject _ghostFinancesPrefab;
 
         public int BasicMoneyAmount => _basicMoneyAmount;
+        public int MoneyIncome => _moneyIncome;
+        public float MoneyIncomeCooldown => _moneyIncomeCooldown;
         public GameObject GhostFinancesPrefab => _ghostFinancesPrefab;
 
         public class FinancesBaker : Baker<FinancesAuthoring>
@@ -20,6 +24,12 @@ namespace Assets.CodeBase.Finances
                 AddComponent(entity, new GhostFinancesPrefab {
                     Value = GetEntity(authoring.GhostFinancesPrefab, TransformUsageFlags.None)
                 });
+
+                AddComponent(entity, new MoneyIncome { Value = authoring.MoneyIncome });
+                AddComponent(entity, new MoneyIncomeCooldown { Value = authoring.MoneyIncomeCooldown });
+                AddComponent(entity, new MoneyIncomeTimeLeft { Value = authoring.MoneyIncomeCooldown });
+                AddComponent<MoneyIncomeTag>(entity);
+                SetComponentEnabled<MoneyIncomeTag>(entity, false);
             }
         }
     }

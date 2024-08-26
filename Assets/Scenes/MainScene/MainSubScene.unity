@@ -7419,6 +7419,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _basicMoneyAmount: 700
+  _moneyIncome: 50
+  _moneyIncomeCooldown: 10
   _ghostFinancesPrefab: {fileID: 2362109980483492767, guid: e4257b9cbba11974a89b4b2782ff6874,
     type: 3}
 --- !u!4 &300439987
