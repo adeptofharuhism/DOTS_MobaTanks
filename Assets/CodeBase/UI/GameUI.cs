@@ -1,6 +1,8 @@
 ﻿using Assets.CodeBase.Combat.Teams;
+using Assets.CodeBase.Finances;
 using Assets.CodeBase.GameStates.GameStart;
 using Assets.CodeBase.Infrastructure.PlayerCount;
+using System;
 using Unity.Entities;
 using Unity.NetCode;
 using UnityEngine;
@@ -14,22 +16,31 @@ namespace Assets.CodeBase.UI
         [SerializeField] private UIDocument _uiDocument;
         [SerializeField] private VisualTreeAsset _loadingPanel;
         [SerializeField] private VisualTreeAsset _gameReadyPanel;
+        [Header("End game")]
         [SerializeField] private VisualTreeAsset _blueWonPanel;
         [SerializeField] private VisualTreeAsset _orangeWonPanel;
+        [Header("Shop")]
+        [SerializeField] private VisualTreeAsset _moneyPanel;
 
         private VisualElement _buttonsPart;
+        private VisualElement _moneyPart;
 
         private VisualElement _loadingPanelInstantiated;
         private VisualElement _gameReadyPanelInstantiated;
+
         private VisualElement _blueWonPanelInstantiated;
         private VisualElement _orangeWonPanelInstantiated;
 
+        private VisualElement _moneyPanelInstantiated;
+        private Label _moneyAmount;
+
         private void OnEnable() {
             InstantiatePanels();
-            SetupButtonsPart();
+            SetupParts();
             SetupGameReadyPanel();
             SetupEndGamePanel(_blueWonPanelInstantiated);
             SetupEndGamePanel(_orangeWonPanelInstantiated);
+            SetupMoneyPanel();
 
             ConnectSystems();
         }
@@ -43,12 +54,16 @@ namespace Assets.CodeBase.UI
             _gameReadyPanelInstantiated = InstantiatePanel(_gameReadyPanel);
             _blueWonPanelInstantiated = InstantiatePanel(_blueWonPanel);
             _orangeWonPanelInstantiated = InstantiatePanel(_orangeWonPanel);
+            _moneyPanelInstantiated = InstantiatePanel(_moneyPanel);
         }
 
-        private void SetupButtonsPart() {
-            _buttonsPart = _uiDocument.rootVisualElement.Q<VisualElement>(Constants.VisualElementNames.GameUI.ButtonsPart);
-
+        private void SetupParts() {
+            _buttonsPart = _uiDocument.rootVisualElement
+                .Q<VisualElement>(Constants.VisualElementNames.GameUI.ButtonsPart);
             _buttonsPart.Add(_loadingPanelInstantiated);
+
+            _moneyPart = _uiDocument.rootVisualElement
+                .Q<VisualElement>(Constants.VisualElementNames.GameUI.MoneyPart);
         }
 
         private void SetupGameReadyPanel() {
@@ -63,34 +78,63 @@ namespace Assets.CodeBase.UI
                 .RegisterCallback<ClickEvent>(OnClickEndGameButton);
         }
 
+        private void SetupMoneyPanel() {
+            _moneyAmount = _moneyPanelInstantiated
+                .Q<Label>(Constants.VisualElementNames.GameUI.MoneyPanel.MoneyAmount);
+        }
+
         private void ConnectSystems() {
-            if (World.DefaultGameObjectInjectionWorld == null)
+            World defaultWorld = World.DefaultGameObjectInjectionWorld;
+
+            if (defaultWorld == null)
                 return;
 
             DeployUiOnClientSystem deployUiSystem =
-                World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<DeployUiOnClientSystem>();
+               defaultWorld.GetExistingSystemManaged<DeployUiOnClientSystem>();
             if (deployUiSystem != null)
                 deployUiSystem.OnReadyForUiDeploy += ShowGameReadyPanel;
 
             ClientEnterEndGameSystem endGameSystem =
-                World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<ClientEnterEndGameSystem>();
+                defaultWorld.GetExistingSystemManaged<ClientEnterEndGameSystem>();
             if (endGameSystem != null)
                 endGameSystem.OnEndGame += ShowEndGamePanel;
+
+            InGameUiActivationSystem inGameUiActivationSystem =
+                defaultWorld.GetExistingSystemManaged<InGameUiActivationSystem>();
+            if (inGameUiActivationSystem != null)
+                inGameUiActivationSystem.OnGameStart += ShowInGameUi;
+
+            ClientMoneyUpdateSystem moneyUpdateSystem =
+                defaultWorld.GetExistingSystemManaged<ClientMoneyUpdateSystem>();
+            if (moneyUpdateSystem != null)
+                moneyUpdateSystem.OnMoneyValueChanged += UpdateMoneyAmount;
         }
 
         private void DisconnectSystems() {
-            if (World.DefaultGameObjectInjectionWorld == null)
+            World defaultWorld = World.DefaultGameObjectInjectionWorld;
+
+            if (defaultWorld == null)
                 return;
 
             DeployUiOnClientSystem deployUiSystem =
-                World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<DeployUiOnClientSystem>();
+                defaultWorld.GetExistingSystemManaged<DeployUiOnClientSystem>();
             if (deployUiSystem != null)
                 deployUiSystem.OnReadyForUiDeploy -= ShowGameReadyPanel;
 
             ClientEnterEndGameSystem endGameSystem =
-                World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<ClientEnterEndGameSystem>();
+                defaultWorld.GetExistingSystemManaged<ClientEnterEndGameSystem>();
             if (endGameSystem != null)
                 endGameSystem.OnEndGame -= ShowEndGamePanel;
+
+            InGameUiActivationSystem inGameUiActivationSystem =
+                defaultWorld.GetExistingSystemManaged<InGameUiActivationSystem>();
+            if (inGameUiActivationSystem != null)
+                inGameUiActivationSystem.OnGameStart -= ShowInGameUi;
+
+            ClientMoneyUpdateSystem moneyUpdateSystem =
+                defaultWorld.GetExistingSystemManaged<ClientMoneyUpdateSystem>();
+            if (moneyUpdateSystem != null)
+                moneyUpdateSystem.OnMoneyValueChanged -= UpdateMoneyAmount;
         }
 
         private VisualElement InstantiatePanel(VisualTreeAsset panel) {
@@ -139,6 +183,16 @@ namespace Assets.CodeBase.UI
                 _buttonsPart.Add(_blueWonPanelInstantiated);
             else
                 _buttonsPart.Add(_orangeWonPanelInstantiated);
+        }
+
+        private void ShowInGameUi() {
+            ClearButtonsPartPanel();
+
+            _moneyPart.Add(_moneyPanelInstantiated);
+        }
+
+        private void UpdateMoneyAmount(int money) {
+            _moneyAmount.text = money.ToString();
         }
     }
 }

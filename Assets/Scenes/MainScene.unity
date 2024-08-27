@@ -588,6 +588,8 @@ MonoBehaviour:
     type: 3}
   _orangeWonPanel: {fileID: 9197481963319205126, guid: 08695d3c2d13f4e48853b44d2116c666,
     type: 3}
+  _moneyPanel: {fileID: 9197481963319205126, guid: 09d8759d518e078468b09938255b2d7a,
+    type: 3}
 --- !u!1 &1444963102
 GameObject:
   m_ObjectHideFlags: 0

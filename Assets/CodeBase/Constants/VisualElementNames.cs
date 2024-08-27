@@ -35,6 +35,7 @@
         public static class GameUI
         {
             public const string ButtonsPart = "ButtonsPart";
+            public const string MoneyPart = "MoneyPart";
 
             public class GameReadyPanel
             {
@@ -44,6 +45,11 @@
             public class EndGamePanel
             {
                 public const string EndGameButton = "EndGameButton";
+            }
+
+            public class MoneyPanel
+            {
+                public const string MoneyAmount = "MoneyAmount";
             }
         }
     }

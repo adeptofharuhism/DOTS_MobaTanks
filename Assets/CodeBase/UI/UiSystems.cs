@@ -30,4 +30,21 @@ namespace Assets.CodeBase.UI
             ecb.Playback(EntityManager);
         }
     }
+
+    [UpdateInGroup(typeof(GameStateSystemGroup))]
+    [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
+    public partial class InGameUiActivationSystem : SystemBase
+    {
+        public Action OnGameStart;
+
+        protected override void OnCreate() {
+            RequireForUpdate<InGameState>();
+        }
+
+        protected override void OnUpdate() {
+            OnGameStart?.Invoke();
+
+            Enabled = false;
+        }
+    }
 }
