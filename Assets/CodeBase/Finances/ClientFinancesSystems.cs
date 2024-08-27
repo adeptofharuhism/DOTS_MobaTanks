@@ -14,6 +14,7 @@ namespace Assets.CodeBase.Finances
             set {
                 if (value != _moneyAmount)
                     OnMoneyValueChanged?.Invoke(value);
+
                 _moneyAmount = value;
             }
         }

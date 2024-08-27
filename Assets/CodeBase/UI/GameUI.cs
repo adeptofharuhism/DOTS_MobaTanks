@@ -2,7 +2,6 @@
 using Assets.CodeBase.Finances;
 using Assets.CodeBase.GameStates.GameStart;
 using Assets.CodeBase.Infrastructure.PlayerCount;
-using System;
 using Unity.Entities;
 using Unity.NetCode;
 using UnityEngine;

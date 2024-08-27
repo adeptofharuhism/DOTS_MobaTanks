@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <ui:VisualElement name="MoneyPanel" class="panel" style="flex-grow: 1; flex-direction: row; justify-content: flex-end;">
         <ui:Label tabindex="-1" text="999" name="MoneyAmount" class="textHighlightWhite headerText" style="align-self: flex-end;" />
-        <ui:Button text="Shop" name="ShopButton" class="connectionChoiceButton" />
+        <ui:Button text="Shop" name="ShopButton" class="connectionChoiceButton blackBackground" />
     </ui:VisualElement>
 </ui:UXML>
