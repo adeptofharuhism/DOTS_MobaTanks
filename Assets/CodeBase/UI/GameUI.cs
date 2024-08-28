@@ -2,6 +2,8 @@
 using Assets.CodeBase.Finances;
 using Assets.CodeBase.GameStates.GameStart;
 using Assets.CodeBase.Infrastructure.PlayerCount;
+using Assets.CodeBase.Shop;
+using System;
 using Unity.Entities;
 using Unity.NetCode;
 using UnityEngine;
@@ -20,9 +22,11 @@ namespace Assets.CodeBase.UI
         [SerializeField] private VisualTreeAsset _orangeWonPanel;
         [Header("Shop")]
         [SerializeField] private VisualTreeAsset _moneyPanel;
+        [SerializeField] private VisualTreeAsset _shopPanel;
 
         private VisualElement _buttonsPart;
         private VisualElement _moneyPart;
+        private VisualElement _shopPart;
 
         private VisualElement _loadingPanelInstantiated;
         private VisualElement _gameReadyPanelInstantiated;
@@ -30,8 +34,10 @@ namespace Assets.CodeBase.UI
         private VisualElement _blueWonPanelInstantiated;
         private VisualElement _orangeWonPanelInstantiated;
 
+        private bool _shopIsAvailable;
         private VisualElement _moneyPanelInstantiated;
         private Label _moneyAmount;
+        private VisualElement _shopPanelInstantiated;
 
         private void OnEnable() {
             InstantiatePanels();
@@ -54,6 +60,7 @@ namespace Assets.CodeBase.UI
             _blueWonPanelInstantiated = InstantiatePanel(_blueWonPanel);
             _orangeWonPanelInstantiated = InstantiatePanel(_orangeWonPanel);
             _moneyPanelInstantiated = InstantiatePanel(_moneyPanel);
+            _shopPanelInstantiated = InstantiatePanel(_shopPanel);
         }
 
         private void SetupParts() {
@@ -63,6 +70,8 @@ namespace Assets.CodeBase.UI
 
             _moneyPart = _uiDocument.rootVisualElement
                 .Q<VisualElement>(Constants.VisualElementNames.GameUI.MoneyPart);
+            _shopPart = _uiDocument.rootVisualElement
+                .Q<VisualElement>(Constants.VisualElementNames.GameUI.ShopPart);
         }
 
         private void SetupGameReadyPanel() {
@@ -80,6 +89,10 @@ namespace Assets.CodeBase.UI
         private void SetupMoneyPanel() {
             _moneyAmount = _moneyPanelInstantiated
                 .Q<Label>(Constants.VisualElementNames.GameUI.MoneyPanel.MoneyAmount);
+
+            _moneyPanelInstantiated
+                .Q<Button>(Constants.VisualElementNames.GameUI.MoneyPanel.ShopButton)
+                .RegisterCallback<ClickEvent>(OnClickShopButton);
         }
 
         private void ConnectSystems() {
@@ -107,6 +120,11 @@ namespace Assets.CodeBase.UI
                 defaultWorld.GetExistingSystemManaged<ClientMoneyUpdateSystem>();
             if (moneyUpdateSystem != null)
                 moneyUpdateSystem.OnMoneyValueChanged += UpdateMoneyAmount;
+
+            ShopAvailabilityCheckSystem shopAvailabilityCheckSystem =
+                defaultWorld.GetExistingSystemManaged<ShopAvailabilityCheckSystem>();
+            if (shopAvailabilityCheckSystem != null)
+                shopAvailabilityCheckSystem.OnShopAvailabilityChanged += SetShopAvailability;
         }
 
         private void DisconnectSystems() {
@@ -134,6 +152,11 @@ namespace Assets.CodeBase.UI
                 defaultWorld.GetExistingSystemManaged<ClientMoneyUpdateSystem>();
             if (moneyUpdateSystem != null)
                 moneyUpdateSystem.OnMoneyValueChanged -= UpdateMoneyAmount;
+
+            ShopAvailabilityCheckSystem shopAvailabilityCheckSystem =
+                defaultWorld.GetExistingSystemManaged<ShopAvailabilityCheckSystem>();
+            if (shopAvailabilityCheckSystem != null)
+                shopAvailabilityCheckSystem.OnShopAvailabilityChanged -= SetShopAvailability;
         }
 
         private VisualElement InstantiatePanel(VisualTreeAsset panel) {
@@ -159,6 +182,14 @@ namespace Assets.CodeBase.UI
             World.DisposeAllWorlds();
 
             SceneManager.LoadScene(0);
+        }
+
+        private void OnClickShopButton(ClickEvent evt) {
+            if (_shopPart.childCount > 0)
+                _shopPart.RemoveAt(0);
+            else
+                if (_shopIsAvailable)
+                _shopPart.Add(_shopPanelInstantiated);
         }
 
         private void ClearButtonsPartPanel() {
@@ -192,6 +223,18 @@ namespace Assets.CodeBase.UI
 
         private void UpdateMoneyAmount(int money) {
             _moneyAmount.text = money.ToString();
+        }
+
+        private void SetShopAvailability(bool shopAvailability) {
+            if (!shopAvailability)
+                ClearShopPart();
+
+            _shopIsAvailable = shopAvailability;
+        }
+
+        private void ClearShopPart() {
+            if (_shopPart.childCount > 0)
+                _shopPart.RemoveAt(0);
         }
     }
 }

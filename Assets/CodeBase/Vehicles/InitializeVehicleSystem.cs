@@ -1,4 +1,5 @@
 ﻿using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 
 namespace Assets.CodeBase.Vehicles
@@ -12,14 +13,14 @@ namespace Assets.CodeBase.Vehicles
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
+            EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            foreach (var (newVehicleTag, newVehicle)
-                in SystemAPI.Query<NewVehicleTag>()
-                .WithEntityAccess()) {
+            foreach(Entity vehicle
+                in SystemAPI.QueryBuilder()
+                .WithAll<NewVehicleTag>()
+                .Build().ToEntityArray(Allocator.Temp))
 
-                ecb.RemoveComponent<NewVehicleTag>(newVehicle);
-            }
+                ecb.RemoveComponent<NewVehicleTag>(vehicle);
 
             ecb.Playback(state.EntityManager);
         }

@@ -1,4 +1,5 @@
 ﻿using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.NetCode;
@@ -10,12 +11,12 @@ namespace Assets.CodeBase.Vehicles
     {
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
+            EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            foreach (var (notOwnerTag, vehicle)
-                in SystemAPI.Query<NotOwnerVehicleTag>()
-                .WithAll<GhostOwnerIsLocal>()
-                .WithEntityAccess()) {
+            foreach (Entity vehicle
+                in SystemAPI.QueryBuilder()
+                .WithAll<GhostOwnerIsLocal, NotOwnerVehicleTag>()
+                .Build().ToEntityArray(Allocator.Temp)) {
 
                 ecb.AddComponent<OwnerVehicleTag>(vehicle);
                 ecb.RemoveComponent<NotOwnerVehicleTag>(vehicle);

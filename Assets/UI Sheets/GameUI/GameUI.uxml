@@ -7,19 +7,7 @@
             <ui:VisualElement name="InfoPart" style="height: 12%;" />
         </ui:VisualElement>
         <ui:VisualElement name="RightPart" style="width: 30%;">
-            <ui:VisualElement name="ShopPart" style="flex-grow: 1;">
-                <ui:VisualElement name="ShopPanel" style="flex-grow: 1;">
-                    <ui:VisualElement name="ItemPanel" class="panel bordersHighlightWhite blackBackground" style="flex-grow: 1;" />
-                    <ui:VisualElement name="InventoryPanel" class="panel bordersHighlightWhite blackBackground" style="height: 12%; flex-direction: row; align-items: center; justify-content: space-between;">
-                        <Assets.UI_Sheets.Controls.SquaredVisualElement class="bordersHighlightWhite shopSlot" />
-                        <Assets.UI_Sheets.Controls.SquaredVisualElement class="bordersHighlightWhite shopSlot" />
-                        <Assets.UI_Sheets.Controls.SquaredVisualElement class="bordersHighlightWhite shopSlot" />
-                        <Assets.UI_Sheets.Controls.SquaredVisualElement class="bordersHighlightWhite shopSlot" />
-                        <Assets.UI_Sheets.Controls.SquaredVisualElement class="bordersHighlightWhite shopSlot" />
-                        <Assets.UI_Sheets.Controls.SquaredVisualElement class="bordersHighlightWhite shopSlot" />
-                    </ui:VisualElement>
-                </ui:VisualElement>
-            </ui:VisualElement>
+            <ui:VisualElement name="ShopPart" style="flex-grow: 1;" />
             <ui:VisualElement name="MoneyPart" style="flex-grow: 0; height: 12%;" />
         </ui:VisualElement>
     </ui:VisualElement>

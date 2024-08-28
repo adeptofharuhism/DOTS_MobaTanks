@@ -36,6 +36,7 @@
         {
             public const string ButtonsPart = "ButtonsPart";
             public const string MoneyPart = "MoneyPart";
+            public const string ShopPart = "ShopPart";
 
             public class GameReadyPanel
             {
@@ -50,6 +51,7 @@
             public class MoneyPanel
             {
                 public const string MoneyAmount = "MoneyAmount";
+                public const string ShopButton = "ShopButton";
             }
         }
     }
