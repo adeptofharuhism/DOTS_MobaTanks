@@ -1,5 +1,4 @@
-﻿using Assets.CodeBase.Finances;
-using Unity.Collections;
+﻿using Unity.Collections;
 using Unity.Entities;
 using Unity.NetCode;
 
@@ -24,7 +23,7 @@ namespace Assets.CodeBase.Relevancy
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(RelevancySystemGroup))]
     [UpdateAfter(typeof(ClearRelevancySetSystem))]
-    public partial struct FinancesRelevancySystem : ISystem
+    public partial struct OwnerRelevancySystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<GhostRelevancy>();
@@ -34,8 +33,9 @@ namespace Assets.CodeBase.Relevancy
             NativeParallelHashMap<RelevantGhostForConnection, int> relevancySet = 
                 SystemAPI.GetSingleton<GhostRelevancy>().GhostRelevancySet;
 
-            foreach (var (connectionId, ghostInstance)
-                in SystemAPI.Query<GhostFinancesConnectionId, GhostInstance>()) {
+            foreach (var (owner, ghostInstance)
+                in SystemAPI.Query<GhostOwner, GhostInstance>()
+                .WithAll<OwnerRelevancyTag>()) {
 
                 if (ghostInstance.ghostId == 0)
                     continue;
@@ -43,12 +43,12 @@ namespace Assets.CodeBase.Relevancy
                 foreach (var networkId
                     in SystemAPI.Query<NetworkId>()) {
 
-                    if (networkId.Value == connectionId.Value)
+                    if (networkId.Value == owner.NetworkId)
                         continue;
 
                     relevancySet.Add(
                         new RelevantGhostForConnection { Connection = networkId.Value, Ghost = ghostInstance.ghostId },
-                        connectionId.Value);
+                        owner.NetworkId);
                 }
             }
         }

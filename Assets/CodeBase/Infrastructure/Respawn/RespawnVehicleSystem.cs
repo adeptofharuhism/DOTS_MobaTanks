@@ -20,7 +20,7 @@ namespace Assets.CodeBase.Infrastructure.Respawn
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
-            foreach (var (respawnParameters, respawnParametersEntity)
+            foreach (var (respawnParameters, playerEntity)
                 in SystemAPI.Query<VehicleRespawnParameters>()
                 .WithAll<ShouldRespawnTag>()
                 .WithEntityAccess()) {
@@ -37,10 +37,10 @@ namespace Assets.CodeBase.Infrastructure.Respawn
                 LocalTransform vehicleTransform = LocalTransform.FromPosition(respawnParameters.SpawnPosition);
                 ecb.SetComponent(newVehicle, vehicleTransform);
 
-                ecb.SetComponent(respawnParametersEntity, new RespawnedEntity { Value = newVehicle });
+                ecb.SetComponent(playerEntity, new RespawnedEntity { Value = newVehicle });
 
-                ecb.RemoveComponent<ShouldRespawnTag>(respawnParametersEntity);
-                ecb.AddComponent<ChecksRespawnedEntityPresenceTag>(respawnParametersEntity);
+                ecb.RemoveComponent<ShouldRespawnTag>(playerEntity);
+                ecb.AddComponent<ChecksRespawnedEntityPresenceTag>(playerEntity);
             }
 
             ecb.Playback(state.EntityManager);

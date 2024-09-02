@@ -5,6 +5,8 @@ namespace Assets.CodeBase.Infrastructure.PrefabInjection
 {
     public class GamePrefabsAuthoring : MonoBehaviour
     {
+        [SerializeField] private GameObject _playerEntity;
+
         [Header("Game Objects")]
         [SerializeField] private GameObject _vehicle;
         [SerializeField] private GameObject _base;
@@ -12,6 +14,8 @@ namespace Assets.CodeBase.Infrastructure.PrefabInjection
         [Header("UI Objects")]
         [SerializeField] private GameObject _healthBar;
         [SerializeField] private GameObject _vehicleHealthBar;
+
+        public GameObject PlayerEntity => _playerEntity;
 
         public GameObject Vehicle => _vehicle;
         public GameObject Base => _base;
@@ -25,6 +29,7 @@ namespace Assets.CodeBase.Infrastructure.PrefabInjection
                 Entity entity = GetEntity(TransformUsageFlags.None);
 
                 AddComponent(entity, new GamePrefabs {
+                    Player = GetEntity(authoring.PlayerEntity, TransformUsageFlags.None),
                     Vehicle = GetEntity(authoring.Vehicle, TransformUsageFlags.Dynamic),
                     Base = GetEntity(authoring.Base, TransformUsageFlags.Dynamic)
                 });

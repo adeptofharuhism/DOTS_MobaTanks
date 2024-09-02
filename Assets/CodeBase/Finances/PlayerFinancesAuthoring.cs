@@ -3,16 +3,15 @@ using UnityEngine;
 
 namespace Assets.CodeBase.Finances
 {
-    public class GhostFinancesAuthoring : MonoBehaviour
+    public class PlayerFinancesAuthoring : MonoBehaviour
     {
-        public class GhostFinancesBaker : Baker<GhostFinancesAuthoring>
+        public class GhostFinancesBaker : Baker<PlayerFinancesAuthoring>
         {
-            public override void Bake(GhostFinancesAuthoring authoring) {
+            public override void Bake(PlayerFinancesAuthoring authoring) {
                 Entity entity = GetEntity(TransformUsageFlags.None);
 
                 AddComponent<MoneyAmount>(entity);
                 AddBuffer<MoneyAddBufferElement>(entity);
-                AddComponent<GhostFinancesConnectionId>(entity);
             }
         }
     }

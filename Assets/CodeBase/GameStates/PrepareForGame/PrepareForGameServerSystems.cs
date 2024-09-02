@@ -1,5 +1,6 @@
 ﻿using Assets.CodeBase.Combat.Teams;
 using Assets.CodeBase.Finances;
+using Assets.CodeBase.Infrastructure.Player;
 using Assets.CodeBase.Infrastructure.PlayerCount;
 using Assets.CodeBase.Infrastructure.PrefabInjection;
 using Assets.CodeBase.Infrastructure.Respawn;
@@ -37,8 +38,6 @@ namespace Assets.CodeBase.GameStates.PrepareForGame
     [UpdateBefore(typeof(EnterReportInGameStateSystem))]
     public partial struct ServerProcessGameEntrySystem : ISystem
     {
-        private const int PlayerRespawnCooldown = 10;
-
         public void OnCreate(ref SystemState state) {
             EntityQueryBuilder newPlayerDataRequestQuery = new EntityQueryBuilder(Allocator.Temp)
                 .WithAll<SetNewPlayerDataRpc, ReceiveRpcCommandRequest>();
@@ -52,6 +51,8 @@ namespace Assets.CodeBase.GameStates.PrepareForGame
 
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
+
+            Entity playerPrefab = SystemAPI.GetSingleton<GamePrefabs>().Player;
 
             Entity vehiclePrefab = SystemAPI.GetSingleton<GamePrefabs>().Vehicle;
             RefRW<ConnectedPlayerCount> playerCount = SystemAPI.GetSingletonRW<ConnectedPlayerCount>();
@@ -71,63 +72,30 @@ namespace Assets.CodeBase.GameStates.PrepareForGame
                 Debug.Log($"Connected {newPlayerData.PlayerName} with Client Id: {clientId}.");
 #endif
 
-                Entity playerEntity = requestSource.SourceConnection;
-                AddRespawnComponents(
-                    ref ecb,
-                    playerEntity,
-                    playerCount.ValueRW.Value,
-                    clientId,
-                    newPlayerData.PlayerName,
-                    vehiclePrefab);
-                AddPlayerCountComponents(ref ecb, playerEntity);
-                AddFinancesComponents(ref ecb, playerEntity, financesPrefab, basicMoneyAmount, clientId);
+                Entity playerEntity = ecb.Instantiate(playerPrefab);
+
+                TeamType newPlayerTeam = GetNewPlayerTeam(playerCount.ValueRW.Value);
+
+                ecb.SetComponent(playerEntity, new GhostOwner { NetworkId =  clientId });
+
+                ecb.SetComponent(playerEntity, new VehicleRespawnParameters {
+                    ClientId = clientId,
+                    Team = newPlayerTeam,
+                    VehiclePrefab = vehiclePrefab,
+                    PlayerName = newPlayerData.PlayerName,
+                    SpawnPosition = GetSpawnPosition(newPlayerTeam, playerCount.ValueRO.Value)
+                });
+                ecb.AddComponent<RespawnedEntity>(playerEntity);
+
+                ecb.SetComponent(playerEntity, new MoneyAmount { Value = basicMoneyAmount });
+
+                ecb.AddComponent(requestSource.SourceConnection, new PlayerEntity { Value = playerEntity });
+                ecb.AppendToBuffer(requestSource.SourceConnection, new LinkedEntityGroup { Value = playerEntity });
 
                 playerCount.ValueRW.Value++;
             }
 
             ecb.Playback(state.EntityManager);
-        }
-
-        private void AddRespawnComponents(
-            ref EntityCommandBuffer ecb,
-            Entity entity,
-            int playerCount,
-            int clientId,
-            FixedString64Bytes playerName,
-            Entity vehiclePrefab) {
-
-            TeamType newPlayerTeam = GetNewPlayerTeam(playerCount);
-
-            ecb.AddComponent(entity, new VehicleRespawnParameters {
-                ClientId = clientId,
-                Team = newPlayerTeam,
-                VehiclePrefab = vehiclePrefab,
-                PlayerName = playerName,
-                SpawnPosition = GetSpawnPosition(newPlayerTeam, playerCount),
-            });
-            ecb.AddComponent(entity, new RespawnCooldown { Value = PlayerRespawnCooldown });
-            ecb.AddComponent<TimeToRespawn>(entity);
-            ecb.AddComponent<ShouldRespawnTag>(entity);
-            ecb.AddComponent<RespawnedEntity>(entity);
-        }
-
-        private void AddPlayerCountComponents(ref EntityCommandBuffer ecb, Entity entity) {
-            ecb.AddComponent<CountAsPlayerTag>(entity);
-            ecb.AddComponent<DecreaseConnectedPlayerCountOnCleanUpTag>(entity);
-        }
-
-        private void AddFinancesComponents(
-            ref EntityCommandBuffer ecb,
-            Entity entity,
-            Entity financesPrefab,
-            int basicMoneyAmount,
-            int clientId) {
-
-            Entity financesEntity = ecb.Instantiate(financesPrefab);
-            ecb.SetComponent(financesEntity, new MoneyAmount { Value = basicMoneyAmount });
-            ecb.SetComponent(financesEntity, new GhostFinancesConnectionId { Value = clientId });
-
-            ecb.AddComponent(entity, new FinancesEntity { Value = financesEntity });
         }
 
         private TeamType GetNewPlayerTeam(int playerCount) =>
