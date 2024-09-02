@@ -1,5 +1,5 @@
-﻿using Assets.CodeBase.Combat.Teams;
-using Assets.CodeBase.GameStates;
+﻿using Assets.CodeBase.GameStates;
+using Assets.CodeBase.Teams;
 using Assets.CodeBase.Vehicles;
 using System;
 using Unity.Burst;
@@ -12,8 +12,7 @@ using Unity.Transforms;
 namespace Assets.CodeBase.Shop
 {
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
-    [UpdateInGroup(typeof(SimulationSystemGroup), OrderFirst = true)]
-    [UpdateBefore(typeof(InitializeVehicleSystem))]
+    [UpdateInGroup(typeof(ShopSystemGroup), OrderFirst = true)]
     public partial struct ServerShopActivatorInitializationSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
@@ -48,7 +47,7 @@ namespace Assets.CodeBase.Shop
     }
 
     [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
-    [UpdateBefore(typeof(InitializeVehicleLocalOwnershipSystem))]
+    [UpdateInGroup(typeof(ShopSystemGroup))]
     public partial struct ClientShopActivatorInitializationSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {

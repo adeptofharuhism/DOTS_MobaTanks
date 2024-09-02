@@ -5,8 +5,8 @@ using Unity.Entities;
 
 namespace Assets.CodeBase.UI
 {
-    [UpdateInGroup(typeof(GameStateSystemGroup))]
     [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
+    [UpdateInGroup(typeof(UiSystemGroup))]
     public partial class DeployUiOnClientSystem : SystemBase
     {
         public Action OnReadyForUiDeploy;
@@ -31,8 +31,8 @@ namespace Assets.CodeBase.UI
         }
     }
 
-    [UpdateInGroup(typeof(GameStateSystemGroup))]
     [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
+    [UpdateInGroup(typeof(UiSystemGroup))]
     public partial class InGameUiActivationSystem : SystemBase
     {
         public Action OnGameStart;

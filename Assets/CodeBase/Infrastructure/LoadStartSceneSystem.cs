@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace Assets.CodeBase.Infrastructure
 {
+    [UpdateInGroup(typeof(SimulationSystemGroup), OrderFirst = true)]
     public partial class LoadStartSceneSystem : SystemBase
     {
         protected override void OnCreate() {

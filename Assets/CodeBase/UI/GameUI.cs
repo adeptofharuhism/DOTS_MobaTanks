@@ -1,8 +1,8 @@
-﻿using Assets.CodeBase.Combat.Teams;
-using Assets.CodeBase.Finances;
+﻿using Assets.CodeBase.Finances;
 using Assets.CodeBase.GameStates.GameStart;
 using Assets.CodeBase.Infrastructure.PlayerCount;
 using Assets.CodeBase.Shop;
+using Assets.CodeBase.Teams;
 using System;
 using Unity.Entities;
 using Unity.NetCode;

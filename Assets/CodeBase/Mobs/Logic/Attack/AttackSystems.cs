@@ -1,8 +1,8 @@
 ﻿using Assets.CodeBase.Combat.Health;
-using Assets.CodeBase.Combat.Teams;
 using Assets.CodeBase.GameStates;
 using Assets.CodeBase.Mobs.Logic.MoveToTarget;
 using Assets.CodeBase.Targeting;
+using Assets.CodeBase.Teams;
 using ProjectDawn.Navigation;
 using Unity.Burst;
 using Unity.Collections;

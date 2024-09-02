@@ -1,11 +1,11 @@
-﻿using Assets.CodeBase.Combat.Teams;
-using Assets.CodeBase.Mobs.Logic.Animation;
+﻿using Assets.CodeBase.Mobs.Logic.Animation;
 using Assets.CodeBase.Mobs.Logic.Attack;
 using Assets.CodeBase.Mobs.Logic.MoveToPoint;
 using Assets.CodeBase.Mobs.Logic.MoveToTarget;
 using Assets.CodeBase.Mobs.Logic.TargetSearch;
 using Assets.CodeBase.Mobs.Spawn;
 using Assets.CodeBase.Targeting;
+using Assets.CodeBase.Teams;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -78,8 +78,6 @@ namespace Assets.CodeBase.Mobs.Logic
                 AddComponent<ChaseTimeLeft>(mob);
                 AddComponent(mob, new ChaseDuration { Value = authoring.TargetChaseTime });
 
-                AddComponent<MobReadyToSearchTargetTag>(mob);
-                SetComponentEnabled<MobReadyToSearchTargetTag>(mob, false);
                 AddComponent(mob, new TargetSearchCooldown { Value = authoring._targetSearchInterval });
                 AddComponent(mob, new TargetSearchCooldownTimeLeft { Value = authoring._targetSearchInterval });
 

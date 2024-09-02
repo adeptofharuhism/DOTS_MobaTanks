@@ -1,4 +1,4 @@
-﻿using Assets.CodeBase.Combat.Teams;
+﻿using Assets.CodeBase.Teams;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;

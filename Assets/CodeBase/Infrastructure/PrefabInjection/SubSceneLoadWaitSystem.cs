@@ -5,6 +5,7 @@ using Unity.Scenes;
 namespace Assets.CodeBase.Infrastructure.PrefabInjection
 {
     [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
+    [UpdateInGroup(typeof(SimulationSystemGroup), OrderFirst = true)]
     public partial struct SubSceneLoadWaitSystem : ISystem
     {
         private EntityQuery _pendingSubScenesQuery;
@@ -22,7 +23,9 @@ namespace Assets.CodeBase.Infrastructure.PrefabInjection
                 if (!SceneSystem.IsSceneLoaded(state.WorldUnmanaged, subScene))
                     return;
 
+#if UNITY_EDITOR
             UnityEngine.Debug.Log("All sub scenes loaded");
+#endif
 
             EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
             Entity prefabsEntity = SystemAPI.GetSingletonEntity<GamePrefabs>();

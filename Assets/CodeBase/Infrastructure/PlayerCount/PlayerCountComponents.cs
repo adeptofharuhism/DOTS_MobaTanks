@@ -3,14 +3,17 @@ using Unity.NetCode;
 
 namespace Assets.CodeBase.Infrastructure.PlayerCount
 {
-    public struct ReadyRpc : IRpcCommand { }
+    [GhostComponent(PrefabType = GhostPrefabType.Server)]
     public struct PlayerReady : IComponentData { }
+    public struct ReadyRpc : IRpcCommand { }
 
+    [GhostComponent(PrefabType = GhostPrefabType.Server)]
     public struct ConnectedPlayerCount : IComponentData
     {
         public int Value;
     }
 
+    [GhostComponent(PrefabType = GhostPrefabType.Server)]
     public struct ReadyPlayersCount : IComponentData
     {
         public int Value;

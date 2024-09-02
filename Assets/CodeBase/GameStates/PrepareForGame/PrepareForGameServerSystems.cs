@@ -1,9 +1,9 @@
-﻿using Assets.CodeBase.Combat.Teams;
-using Assets.CodeBase.Finances;
+﻿using Assets.CodeBase.Finances;
 using Assets.CodeBase.Infrastructure.Player;
 using Assets.CodeBase.Infrastructure.PlayerCount;
 using Assets.CodeBase.Infrastructure.PrefabInjection;
 using Assets.CodeBase.Infrastructure.Respawn;
+using Assets.CodeBase.Teams;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
