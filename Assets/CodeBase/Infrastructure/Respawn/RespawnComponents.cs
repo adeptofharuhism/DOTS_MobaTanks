@@ -16,7 +16,7 @@ namespace Assets.CodeBase.Infrastructure.Respawn
 
     public struct ShouldRespawnTag : IComponentData { }
     public struct OnRespawnCooldownTag : IComponentData { }
-    public struct ChecksRespawnedEntityPresenceTag : IComponentData { }
+    public struct RespawnedEntityIsAliveTag : IComponentData { }
 
     public struct RespawnCooldown : IComponentData
     {

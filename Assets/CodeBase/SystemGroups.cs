@@ -26,7 +26,7 @@ namespace Assets.CodeBase
 
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(PlayerCountSystemGroup))]
-    [UpdateBefore(typeof(RespawnSystemGroup))]
+    [UpdateBefore(typeof(PlayerSystemGroup))]
     public partial class GameStateSystemGroup : ComponentSystemGroup { }
 
     [UpdateInGroup(typeof(GameStateSystemGroup))]
@@ -56,28 +56,41 @@ namespace Assets.CodeBase
 
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(GameStateSystemGroup))]
-    [UpdateBefore(typeof(VehicleSystemGroup))]
-    public partial class RespawnSystemGroup : ComponentSystemGroup { }
-
-
-
-    [UpdateInGroup(typeof(SimulationSystemGroup))]
-    [UpdateAfter(typeof(RespawnSystemGroup))]
     [UpdateBefore(typeof(WeaponSystemGroup))]
+    public partial class PlayerSystemGroup : ComponentSystemGroup { }
+
+    [UpdateInGroup(typeof(PlayerSystemGroup))]
+    [UpdateBefore(typeof(InventorySystemGroup))]
+    public partial class BeginRespawnSystemGroup : ComponentSystemGroup { }
+
+    [UpdateInGroup(typeof(PlayerSystemGroup))]
+    [UpdateAfter(typeof(BeginRespawnSystemGroup))]
+    [UpdateBefore(typeof(VehicleSystemGroup))]
+    public partial class InventorySystemGroup : ComponentSystemGroup { }
+
+    [UpdateInGroup(typeof(PlayerSystemGroup))]
+    [UpdateAfter(typeof(InventorySystemGroup))]
+    [UpdateBefore(typeof(TurretSystemGroup))]
     public partial class VehicleSystemGroup : ComponentSystemGroup { }
 
-    [UpdateInGroup(typeof(VehicleSystemGroup))]
+    [UpdateInGroup(typeof(PlayerSystemGroup))]
+    [UpdateAfter(typeof(VehicleSystemGroup))]
     [UpdateBefore(typeof(WheelSystemGroup))]
     public partial class TurretSystemGroup : ComponentSystemGroup { }
 
-    [UpdateInGroup(typeof(VehicleSystemGroup))]
+    [UpdateInGroup(typeof(PlayerSystemGroup))]
     [UpdateAfter(typeof(TurretSystemGroup))]
+    [UpdateBefore(typeof(EndRespawnSystemGroup))]
     public partial class WheelSystemGroup : ComponentSystemGroup { }
+
+    [UpdateInGroup(typeof(PlayerSystemGroup))]
+    [UpdateAfter(typeof(WheelSystemGroup))]
+    public partial class EndRespawnSystemGroup: ComponentSystemGroup { }
 
 
 
     [UpdateInGroup(typeof(SimulationSystemGroup))]
-    [UpdateAfter(typeof(VehicleSystemGroup))]
+    [UpdateAfter(typeof(PlayerSystemGroup))]
     [UpdateBefore(typeof(MobUpdateSystemGroup))]
     public partial class WeaponSystemGroup : ComponentSystemGroup { }
 

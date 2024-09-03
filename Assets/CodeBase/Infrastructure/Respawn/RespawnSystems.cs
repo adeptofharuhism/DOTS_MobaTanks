@@ -3,6 +3,7 @@ using Assets.CodeBase.GameStates;
 using Assets.CodeBase.Infrastructure.Destruction;
 using Assets.CodeBase.Teams;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.NetCode;
 using Unity.Transforms;
@@ -10,7 +11,7 @@ using Unity.Transforms;
 namespace Assets.CodeBase.Infrastructure.Respawn
 {
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
-    [UpdateInGroup(typeof(RespawnSystemGroup))]
+    [UpdateInGroup(typeof(BeginRespawnSystemGroup))]
     [UpdateBefore(typeof(RespawnVehicleCooldownSystem))]
     public partial struct RespawnVehicleStartCooldownSystem : ISystem
     {
@@ -20,11 +21,11 @@ namespace Assets.CodeBase.Infrastructure.Respawn
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
+            EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
             foreach (var (spawnedEntity, timeToRespawn, cooldown, parametersEntity)
                 in SystemAPI.Query<RespawnedEntity, RefRW<TimeToRespawn>, RespawnCooldown>()
-                .WithAll<ChecksRespawnedEntityPresenceTag>()
+                .WithAll<RespawnedEntityIsAliveTag>()
                 .WithEntityAccess()) {
 
                 if (state.EntityManager.Exists(spawnedEntity.Value))
@@ -32,7 +33,7 @@ namespace Assets.CodeBase.Infrastructure.Respawn
 
                 timeToRespawn.ValueRW.Value = cooldown.Value;
 
-                ecb.RemoveComponent<ChecksRespawnedEntityPresenceTag>(parametersEntity);
+                ecb.RemoveComponent<RespawnedEntityIsAliveTag>(parametersEntity);
                 ecb.AddComponent<OnRespawnCooldownTag>(parametersEntity);
             }
 
@@ -41,7 +42,7 @@ namespace Assets.CodeBase.Infrastructure.Respawn
     }
 
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
-    [UpdateInGroup(typeof(RespawnSystemGroup))]
+    [UpdateInGroup(typeof(BeginRespawnSystemGroup))]
     [UpdateAfter(typeof(RespawnVehicleStartCooldownSystem))]
     [UpdateBefore(typeof(RespawnVehicleSystem))]
     public partial struct RespawnVehicleCooldownSystem : ISystem
@@ -52,7 +53,7 @@ namespace Assets.CodeBase.Infrastructure.Respawn
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
+            EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
             foreach (var (timeToRespawn, entity)
                 in SystemAPI.Query<RefRW<TimeToRespawn>>()
@@ -73,9 +74,8 @@ namespace Assets.CodeBase.Infrastructure.Respawn
     }
 
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
-    [UpdateInGroup(typeof(RespawnSystemGroup))]
+    [UpdateInGroup(typeof(BeginRespawnSystemGroup))]
     [UpdateAfter(typeof(RespawnVehicleCooldownSystem))]
-    [UpdateBefore(typeof(RespawnedEntityCleanUpSystem))]
     public partial struct RespawnVehicleSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
@@ -84,7 +84,7 @@ namespace Assets.CodeBase.Infrastructure.Respawn
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
+            EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
             foreach (var (respawnParameters, playerEntity)
                 in SystemAPI.Query<VehicleRespawnParameters>()
@@ -104,9 +104,6 @@ namespace Assets.CodeBase.Infrastructure.Respawn
                 ecb.SetComponent(newVehicle, vehicleTransform);
 
                 ecb.SetComponent(playerEntity, new RespawnedEntity { Value = newVehicle });
-
-                ecb.RemoveComponent<ShouldRespawnTag>(playerEntity);
-                ecb.AddComponent<ChecksRespawnedEntityPresenceTag>(playerEntity);
             }
 
             ecb.Playback(state.EntityManager);
@@ -114,8 +111,34 @@ namespace Assets.CodeBase.Infrastructure.Respawn
     }
 
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
-    [UpdateInGroup(typeof(RespawnSystemGroup))]
-    [UpdateAfter(typeof(RespawnVehicleSystem))]
+    [UpdateInGroup(typeof(EndRespawnSystemGroup))]
+    [UpdateBefore(typeof(RespawnedEntityCleanUpSystem))]
+    public partial struct EndRespawnSystem : ISystem
+    {
+        public void OnCreate(ref SystemState state) {
+            state.RequireForUpdate<InGameState>();
+        }
+
+        [BurstCompile]
+        public void OnUpdate(ref SystemState state) {
+            EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
+
+            foreach (Entity entity
+                in SystemAPI.QueryBuilder()
+                .WithAll<ShouldRespawnTag>()
+                .Build().ToEntityArray(Allocator.Temp)) {
+
+                ecb.RemoveComponent<ShouldRespawnTag>(entity);
+                ecb.AddComponent<RespawnedEntityIsAliveTag>(entity);
+            }
+
+            ecb.Playback(state.EntityManager);
+        }
+    }
+
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
+    [UpdateInGroup(typeof(EndRespawnSystemGroup))]
+    [UpdateAfter(typeof(EndRespawnSystem))]
     public partial struct RespawnedEntityCleanUpSystem : ISystem
     {
         [BurstCompile]
