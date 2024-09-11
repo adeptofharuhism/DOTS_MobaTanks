@@ -23,11 +23,10 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            foreach (Entity entity
-                in SystemAPI.QueryBuilder()
-                .WithAll<AttackHappenedThisFrameTag>()
-                .Build().ToEntityArray(Allocator.Temp))
-                state.EntityManager.SetComponentEnabled<AttackHappenedThisFrameTag>(entity, false);
+            EntityQuery query = SystemAPI.QueryBuilder()
+                .WithAll<AttackHappenedThisFrameTag>().Build();
+
+            state.EntityManager.SetComponentEnabled<AttackHappenedThisFrameTag>(query, false);
         }
     }
 
@@ -237,16 +236,16 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
                 .WithAll<AttackState, AttackIsReadyTag, ProjectileAttackerTag>()) {
 
                 if (SystemAPI.GetComponentLookup<TargetPoint>(true)
-                    .TryGetComponent(target.Value,out TargetPoint targetPoint)) {
+                    .TryGetComponent(target.Value, out TargetPoint targetPoint)) {
 
                     if (SystemAPI.GetComponentLookup<LocalToWorld>(true)
                         .TryGetComponent(targetPoint.Value, out LocalToWorld targetTransform))
                         aimPoint.ValueRW.Value = targetTransform.Position;
 
-                } else 
+                } else
                     if (SystemAPI.GetComponentLookup<LocalTransform>(true)
                         .TryGetComponent(target.Value, out LocalTransform targetLocalTransform))
-                        aimPoint.ValueRW.Value = targetLocalTransform.Position;
+                    aimPoint.ValueRW.Value = targetLocalTransform.Position;
             }
         }
     }
@@ -254,7 +253,7 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(AttackStateSystemGroup))]
     [UpdateAfter(typeof(UpdateAimPositionSystem))]
-    [UpdateBefore(typeof(PostAttacTagSwitchkSystem))]
+    [UpdateBefore(typeof(PostAttacTagSwitchSystem))]
     public partial struct ProjectileAttackSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
@@ -292,7 +291,7 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
     [UpdateInGroup(typeof(AttackStateSystemGroup))]
     [UpdateAfter(typeof(ProjectileAttackSystem))]
     [UpdateBefore(typeof(UpdateAttackCooldownSystem))]
-    public partial struct PostAttacTagSwitchkSystem : ISystem
+    public partial struct PostAttacTagSwitchSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<InGameState>();
@@ -319,7 +318,7 @@ namespace Assets.CodeBase.Mobs.Logic.Attack
 
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(AttackStateSystemGroup))]
-    [UpdateAfter(typeof(PostAttacTagSwitchkSystem))]
+    [UpdateAfter(typeof(PostAttacTagSwitchSystem))]
     public partial struct UpdateAttackCooldownSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {

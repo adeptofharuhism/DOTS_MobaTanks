@@ -106,16 +106,11 @@ namespace Assets.CodeBase.Targeting
         }
 
         public void OnUpdate(ref SystemState state) {
-            EntityCommandBuffer ecb = new(Allocator.Temp);
+            EntityQuery targeterQuery = 
+                SystemAPI.QueryBuilder()
+                .WithAll<Targeter>().Build();
 
-            foreach (Entity entity
-                in SystemAPI.QueryBuilder()
-                .WithAll<Targeter>()
-                .Build().ToEntityArray(Allocator.Temp))
-
-                ecb.SetComponentEnabled<Targeter>(entity, false);
-
-            ecb.Playback(state.EntityManager);
+            state.EntityManager.SetComponentEnabled<Targeter>(targeterQuery, false);
         }
     }
 }

@@ -39,7 +39,7 @@ namespace Assets.CodeBase.Inventory
     {
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new(Allocator.Temp);
-
+            
             foreach (var (itemCollection, entity)
                 in SystemAPI.Query<ItemEntityCollection>()
                 .WithNone<InventoryTag>()
