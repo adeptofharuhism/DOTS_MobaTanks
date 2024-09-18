@@ -37,14 +37,16 @@ namespace Assets.CodeBase.UI
         }
 
         private void InstantiatePanels() {
-            _connectionChoicePanelInstantiated = _connectionChoicePanel.Instantiate();
-            _connectionChoicePanelInstantiated.style.flexGrow = 1;
+            _connectionChoicePanelInstantiated = InstantiatePanel(_connectionChoicePanel);
+            _joinGamePanelInstantiated = InstantiatePanel(_joinGamePanel);
+            _hostGamePanelInstantiated = InstantiatePanel(_hostGamePanel);
+        }
 
-            _joinGamePanelInstantiated = _joinGamePanel.Instantiate();
-            _joinGamePanelInstantiated.style.flexGrow = 1;
+        private VisualElement InstantiatePanel(VisualTreeAsset panelAsset) {
+            VisualElement newPanel = panelAsset.Instantiate();
+            newPanel.style.flexGrow = 1;
 
-            _hostGamePanelInstantiated = _hostGamePanel.Instantiate();
-            _hostGamePanelInstantiated.style.flexGrow = 1;
+            return newPanel;
         }
 
         private void SetupContentPanel() {
