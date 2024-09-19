@@ -1,6 +1,6 @@
 ﻿using Assets.CodeBase.Combat.Health;
+using Assets.CodeBase.Destruction;
 using Assets.CodeBase.GameStates;
-using Assets.CodeBase.Infrastructure.Destruction;
 using Unity.Burst;
 using Unity.Entities;
 

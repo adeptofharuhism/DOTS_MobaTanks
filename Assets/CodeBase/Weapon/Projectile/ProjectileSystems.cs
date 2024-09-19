@@ -1,5 +1,5 @@
 ﻿using Assets.CodeBase.Combat.Health;
-using Assets.CodeBase.Infrastructure.Destruction;
+using Assets.CodeBase.Destruction;
 using Assets.CodeBase.Teams;
 using Unity.Burst;
 using Unity.Collections;

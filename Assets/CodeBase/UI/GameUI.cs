@@ -1,9 +1,8 @@
 ﻿using Assets.CodeBase.Finances;
 using Assets.CodeBase.GameStates.GameStart;
-using Assets.CodeBase.Infrastructure.PlayerCount;
+using Assets.CodeBase.Player.PlayerCount;
 using Assets.CodeBase.Shop;
 using Assets.CodeBase.Teams;
-using System;
 using Unity.Entities;
 using Unity.NetCode;
 using UnityEngine;
@@ -181,7 +180,7 @@ namespace Assets.CodeBase.UI
 
             World.DisposeAllWorlds();
 
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene(Constants.SceneNames.StartSceneName);
         }
 
         private void OnClickShopButton(ClickEvent evt) {

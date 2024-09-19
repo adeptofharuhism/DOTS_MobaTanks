@@ -107,14 +107,14 @@ namespace Assets.CodeBase.UI
 
         private void OnClickJoinAsClient(ClickEvent evt) {
             DestroyLocalSimulationWorld();
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(Constants.SceneNames.MainSceneName);
 
             StartClient(_joinIPInput.text, ushort.Parse(_joinPortInput.text), _joinPlayerName.text);
         }
 
         private void OnClickHostButton(ClickEvent evt) {
             DestroyLocalSimulationWorld();
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(Constants.SceneNames.MainSceneName);
 
             StartServer(ushort.Parse(_hostPortInput.text));
             StartClient(LocalHostIP, ushort.Parse(_hostPortInput.text), _hostPlayerName.text);
