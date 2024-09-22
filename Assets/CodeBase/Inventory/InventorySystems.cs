@@ -1,5 +1,7 @@
-﻿using Unity.Collections;
+﻿using Assets.CodeBase.Player;
+using Unity.Collections;
 using Unity.Entities;
+using Unity.NetCode;
 
 namespace Assets.CodeBase.Inventory
 {
@@ -35,11 +37,39 @@ namespace Assets.CodeBase.Inventory
 
     [UpdateInGroup(typeof(InventorySystemGroup))]
     [UpdateAfter(typeof(InventoryInitializationSystem))]
+    public partial struct InventoryAddItemSystem : ISystem
+    {
+        public void OnCreate(ref SystemState state) {
+            state.RequireForUpdate<BasicInventoryCapacity>();
+        }
+
+        public void OnUpdate(ref SystemState state) {
+            EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
+
+            foreach (var (addItemData, requestSource, requestEntity)
+                in SystemAPI.Query<AddItemToInventoryRpc, ReceiveRpcCommandRequest>()
+                .WithEntityAccess()) {
+
+                ItemEntityCollection itemEntityCollection =
+                    SystemAPI.GetComponent<ItemEntityCollection>(
+                        SystemAPI.GetComponent<PlayerEntity>(requestSource.SourceConnection).Value);
+
+
+
+                ecb.DestroyEntity(requestEntity);
+            }
+
+            ecb.Playback(state.EntityManager);
+        }
+    }
+
+    [UpdateInGroup(typeof(InventorySystemGroup))]
+    [UpdateAfter(typeof(InventoryAddItemSystem))]
     public partial struct InventoryCleanUpSystem : ISystem
     {
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new(Allocator.Temp);
-            
+
             foreach (var (itemCollection, entity)
                 in SystemAPI.Query<ItemEntityCollection>()
                 .WithNone<InventoryTag>()

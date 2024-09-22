@@ -13,7 +13,7 @@ namespace Assets.CodeBase.Inventory
     //Inventory components
     [GhostComponent(PrefabType = GhostPrefabType.Server)]
     public struct InventoryInitializationTag : IComponentData { }
-    
+
     [GhostComponent(PrefabType = GhostPrefabType.Server)]
     public struct InventoryTag : IComponentData { }
 
@@ -21,5 +21,17 @@ namespace Assets.CodeBase.Inventory
     public struct ItemEntityCollection : ICleanupComponentData
     {
         public NativeArray<Entity> Items;
+    }
+
+    [GhostComponent(PrefabType = GhostPrefabType.Server)]
+    public struct InventorySlotEntity : IComponentData
+    {
+        public Entity Value;
+    }
+
+    //Rpcs
+    public struct AddItemToInventoryRpc : IRpcCommand
+    {
+        
     }
 }

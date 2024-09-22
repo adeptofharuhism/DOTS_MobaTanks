@@ -7,7 +7,6 @@ namespace Assets.CodeBase.Infrastructure.StateMachine.States
     {
         private readonly IGameStateMachine _gameStateMachine;
 
-        [Inject]
         public BootstrapState(IGameStateMachine gameStateMachine) {
             _gameStateMachine = gameStateMachine;
         }

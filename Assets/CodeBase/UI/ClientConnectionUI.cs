@@ -1,10 +1,9 @@
-﻿using Assets.CodeBase.GameStates.PrepareForGame;
-using Unity.Entities;
-using Unity.NetCode;
-using Unity.Networking.Transport;
+﻿using Assets.CodeBase.Infrastructure.Services.WorldControl;
+using Assets.CodeBase.Infrastructure.StateMachine;
+using Assets.CodeBase.Infrastructure.StateMachine.States;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using Zenject;
 
 namespace Assets.CodeBase.UI
 {
@@ -27,6 +26,15 @@ namespace Assets.CodeBase.UI
         private VisualElement _hostGamePanelInstantiated;
         private TextField _hostPlayerName;
         private TextField _hostPortInput;
+
+        private IGameStateMachine _gameStateMachine;
+        private IWorldControlService _worldControlService;
+
+        [Inject]
+        private void Construct(IGameStateMachine gameStateMachine, IWorldControlService worldControlService) {
+            _gameStateMachine = gameStateMachine;
+            _worldControlService = worldControlService;
+        }
 
         private void OnEnable() {
             InstantiatePanels();
@@ -105,19 +113,12 @@ namespace Assets.CodeBase.UI
         private void OnClickExitGame(ClickEvent evt) =>
             Application.Quit();
 
-        private void OnClickJoinAsClient(ClickEvent evt) {
-            DestroyLocalSimulationWorld();
-            SceneManager.LoadScene(Constants.SceneNames.MainSceneName);
-
-            StartClient(_joinIPInput.text, ushort.Parse(_joinPortInput.text), _joinPlayerName.text);
-        }
+        private void OnClickJoinAsClient(ClickEvent evt) => 
+            _gameStateMachine.Enter<LoadLevelState, string>(Constants.SceneNames.MainSceneName);
 
         private void OnClickHostButton(ClickEvent evt) {
-            DestroyLocalSimulationWorld();
-            SceneManager.LoadScene(Constants.SceneNames.MainSceneName);
-
-            StartServer(ushort.Parse(_hostPortInput.text));
-            StartClient(LocalHostIP, ushort.Parse(_hostPortInput.text), _hostPlayerName.text);
+            _worldControlService.SetHost(true);
+            _gameStateMachine.Enter<LoadLevelState, string>(Constants.SceneNames.MainSceneName);
         }
 
         private void OnClickCancel(ClickEvent evt) {
@@ -129,43 +130,5 @@ namespace Assets.CodeBase.UI
             if (_contentPanel.childCount > 0)
                 _contentPanel.RemoveAt(0);
         }
-
-        #region Rewrite As Service
-        private const string LocalHostIP = "127.0.0.1";
-
-        private void DestroyLocalSimulationWorld() {
-            foreach (World world in World.All)
-                if (world.Flags == WorldFlags.Game) {
-                    world.Dispose();
-                    break;
-                }
-        }
-
-        private void StartServer(ushort port) {
-            World serverWorld = ClientServerBootstrap.CreateServerWorld(Constants.WorldNames.ServerWorld);
-
-            NetworkEndpoint serverEndpoint = NetworkEndpoint.AnyIpv4.WithPort(port);
-
-            using (EntityQuery networkDriverQuery =
-                serverWorld.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>()))
-                networkDriverQuery.GetSingletonRW<NetworkStreamDriver>().ValueRW.Listen(serverEndpoint);
-        }
-
-        private void StartClient(string ipAddress, ushort port, string playerName) {
-            World clientWorld = ClientServerBootstrap.CreateClientWorld(Constants.WorldNames.ClientWorld);
-            World.DefaultGameObjectInjectionWorld = clientWorld;
-
-            NetworkEndpoint connectionEndpoint = NetworkEndpoint.Parse(ipAddress, port);
-
-            using (EntityQuery networkDriverQuery =
-                clientWorld.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>()))
-                networkDriverQuery.GetSingletonRW<NetworkStreamDriver>().ValueRW.Connect(clientWorld.EntityManager, connectionEndpoint);
-
-            Entity connectionDataEntity = clientWorld.EntityManager.CreateEntity();
-            clientWorld.EntityManager.AddComponentData(connectionDataEntity, new ConnectionRequestData {
-                PlayerName = playerName
-            });
-        }
-        #endregion
     }
 }

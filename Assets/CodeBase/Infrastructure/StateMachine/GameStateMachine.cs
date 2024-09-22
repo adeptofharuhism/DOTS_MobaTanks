@@ -1,4 +1,5 @@
 ﻿using Assets.CodeBase.Infrastructure.Services.SceneLoader;
+using Assets.CodeBase.Infrastructure.Services.WorldControl;
 using Assets.CodeBase.Infrastructure.StateMachine.States;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,13 @@ namespace Assets.CodeBase.Infrastructure.StateMachine
         private IExitableState _activeState;
 
         [Inject]
-        public GameStateMachine(ISceneLoader sceneLoader) {
+        public GameStateMachine(ISceneLoader sceneLoader, IWorldControlService worldControlService) {
             _states = new Dictionary<Type, IExitableState> {
                 [typeof(BootstrapState)] = new BootstrapState(this),
-                [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader)
+                [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader),
+                [typeof(ActiveSceneSelectionState)] = new ActiveSceneSelectionState(this),
+                [typeof(StartSceneActiveState)] = new StartSceneActiveState(this),
+                [typeof(MainSceneActiveState)] = new MainSceneActiveState(this, worldControlService)
             };
         }
 

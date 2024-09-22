@@ -96,9 +96,10 @@ namespace Assets.CodeBase.UI
 
         private void ConnectSystems() {
             World defaultWorld = World.DefaultGameObjectInjectionWorld;
-
+            UnityEngine.Debug.Log("ConnectingSystems");
             if (defaultWorld == null)
                 return;
+            UnityEngine.Debug.Log("Connected");
 
             DeployUiOnClientSystem deployUiSystem =
                defaultWorld.GetExistingSystemManaged<DeployUiOnClientSystem>();

@@ -91,7 +91,7 @@ namespace Assets.CodeBase.GameStates.PrepareForGame
 
                 ecb.AddComponent(requestSource.SourceConnection, new PlayerEntity { Value = playerEntity });
                 ecb.AppendToBuffer(requestSource.SourceConnection, new LinkedEntityGroup { Value = playerEntity });
-
+                
                 playerCount.ValueRW.Value++;
             }
 
