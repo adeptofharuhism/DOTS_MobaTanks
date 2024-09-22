@@ -21,7 +21,7 @@ namespace Assets.CodeBase.UI
             foreach (var (tag, entity)
                 in SystemAPI.Query<ReadyForUIDeployTag>()
                 .WithEntityAccess()) {
-
+                UnityEngine.Debug.Log("Loaded");
                 OnReadyForUiDeploy?.Invoke();
 
                 ecb.RemoveComponent<ReadyForUIDeployTag>(entity);
