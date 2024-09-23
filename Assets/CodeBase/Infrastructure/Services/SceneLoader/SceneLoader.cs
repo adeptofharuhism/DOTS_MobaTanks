@@ -14,11 +14,11 @@ namespace Assets.CodeBase.Infrastructure.Services.SceneLoader
             _coroutineRunner = coroutineRunner;
         }
 
-        public void Load(string sceneName, Action onLoaded) {
-            _coroutineRunner.StartCoroutine(LoadScene(sceneName, onLoaded));
+        public void Load(string sceneName, LoadSceneMode loadSceneMode, Action onLoaded) {
+            _coroutineRunner.StartCoroutine(LoadScene(sceneName, loadSceneMode, onLoaded));
         }
 
-        private IEnumerator LoadScene(string sceneName, Action onLoaded) {
+        private IEnumerator LoadScene(string sceneName, LoadSceneMode loadSceneMode, Action onLoaded) {
             AsyncOperation asyncOperation =
                 SceneManager.LoadSceneAsync(sceneName);
 

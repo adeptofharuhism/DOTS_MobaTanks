@@ -1,7 +1,4 @@
-﻿using Assets.CodeBase.Constants;
-using Zenject;
-
-namespace Assets.CodeBase.Infrastructure.StateMachine.States
+﻿namespace Assets.CodeBase.Infrastructure.StateMachine.States
 {
     public class BootstrapState : IState
     {
@@ -12,7 +9,7 @@ namespace Assets.CodeBase.Infrastructure.StateMachine.States
         }
 
         public void Enter() => 
-            _gameStateMachine.Enter<LoadLevelState, string>(SceneNames.StartSceneName);
+            _gameStateMachine.Enter<LoadStartSceneState>();
 
         public void Exit() { }
     }

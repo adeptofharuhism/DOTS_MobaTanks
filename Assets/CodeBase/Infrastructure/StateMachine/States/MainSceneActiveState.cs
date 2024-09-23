@@ -13,12 +13,11 @@ namespace Assets.CodeBase.Infrastructure.StateMachine.States
         }
 
         public void Enter() {
-            _worldControlService.CreateWorlds();
+            _worldControlService.StartWorlds();
         }
 
         public void Exit() {
-            _worldControlService.SetHost(false);
-            _worldControlService.DisposeWorlds();
+            _worldControlService.DisposeNetworkWorlds();
         }
     }
 }

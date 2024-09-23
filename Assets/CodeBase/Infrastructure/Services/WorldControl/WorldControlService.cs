@@ -1,6 +1,5 @@
 ﻿using Assets.CodeBase.GameStates.PrepareForGame;
 using Assets.CodeBase.Infrastructure.Services.ConnectionInfo;
-using System.Transactions;
 using Unity.Entities;
 using Unity.NetCode;
 using Unity.Networking.Transport;
@@ -12,36 +11,56 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldControl
     {
         private readonly IConnectionInfoService _connectionInfoService;
 
-        private bool _isHost = false;
-
         [Inject]
         public WorldControlService(IConnectionInfoService connectionInfoService) {
             _connectionInfoService = connectionInfoService;
         }
 
-        public void SetHost(bool isHost) =>
-            _isHost = isHost;
-
-        public void CreateWorlds() {
-            DisposeWorlds();
-
-            if (_isHost) {
-                StartServer();
-                StartClient(_connectionInfoService.LocalHost);
-            } else
-                StartClient(_connectionInfoService.ConnectionIP);
+        public void CreateServerWorld() {
+            ClientServerBootstrap.CreateServerWorld(Constants.WorldNames.ServerWorld);
         }
 
-        public void DisposeWorlds() {
+        public void CreateClientWorld() {
+            World.DefaultGameObjectInjectionWorld =
+                ClientServerBootstrap.CreateClientWorld(Constants.WorldNames.ClientWorld);
+        }
+
+        public void StartWorlds() {
+            bool isHost = 
+                ClientServerBootstrap.ServerWorld != null;
+
+            if (isHost) {
+                StartServer();
+                StartClient(_connectionInfoService.LocalHost);
+            } else {
+                StartClient(_connectionInfoService.ConnectionIP);
+            }
+        }
+
+        public void DisposeNetworkWorlds() {
+            DisposeServerWorld();
+            DisposeClientWorld();
+        }
+
+        public void DisposeDefaultWorld() =>
+            DisposeWorld(WorldFlags.Game);
+
+        private void DisposeServerWorld() =>
+            DisposeWorld(WorldFlags.GameServer);
+
+        private void DisposeClientWorld() =>
+            DisposeWorld(WorldFlags.GameClient);
+
+        private void DisposeWorld(WorldFlags worldFlag) {
             foreach (World world in World.All)
-                if (world.Flags == WorldFlags.Game) {
+                if (world.Flags == worldFlag) {
                     world.Dispose();
                     break;
                 }
         }
 
         private void StartServer() {
-            World serverWorld = ClientServerBootstrap.CreateServerWorld(Constants.WorldNames.ServerWorld);
+            World serverWorld = ClientServerBootstrap.ServerWorld;
 
             NetworkEndpoint serverEndpoint = NetworkEndpoint.AnyIpv4.WithPort(_connectionInfoService.ConnectionPort);
 
@@ -51,8 +70,7 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldControl
         }
 
         private void StartClient(string ipAddress) {
-            World clientWorld = ClientServerBootstrap.CreateClientWorld(Constants.WorldNames.ClientWorld);
-            World.DefaultGameObjectInjectionWorld = clientWorld;
+            World clientWorld = ClientServerBootstrap.ClientWorld;
 
             NetworkEndpoint connectionEndpoint = NetworkEndpoint.Parse(ipAddress, _connectionInfoService.ConnectionPort);
 

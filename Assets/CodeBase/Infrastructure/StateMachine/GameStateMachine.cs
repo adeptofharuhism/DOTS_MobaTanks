@@ -16,9 +16,9 @@ namespace Assets.CodeBase.Infrastructure.StateMachine
         public GameStateMachine(ISceneLoader sceneLoader, IWorldControlService worldControlService) {
             _states = new Dictionary<Type, IExitableState> {
                 [typeof(BootstrapState)] = new BootstrapState(this),
-                [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader),
-                [typeof(ActiveSceneSelectionState)] = new ActiveSceneSelectionState(this),
+                [typeof(LoadStartSceneState)] = new LoadStartSceneState(this, sceneLoader),
                 [typeof(StartSceneActiveState)] = new StartSceneActiveState(this),
+                [typeof(LoadMainSceneState)] = new LoadMainSceneState(this, sceneLoader, worldControlService),
                 [typeof(MainSceneActiveState)] = new MainSceneActiveState(this, worldControlService)
             };
         }

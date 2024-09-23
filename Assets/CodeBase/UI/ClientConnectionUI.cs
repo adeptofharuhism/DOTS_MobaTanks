@@ -1,5 +1,4 @@
-﻿using Assets.CodeBase.Infrastructure.Services.WorldControl;
-using Assets.CodeBase.Infrastructure.StateMachine;
+﻿using Assets.CodeBase.Infrastructure.StateMachine;
 using Assets.CodeBase.Infrastructure.StateMachine.States;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -28,12 +27,10 @@ namespace Assets.CodeBase.UI
         private TextField _hostPortInput;
 
         private IGameStateMachine _gameStateMachine;
-        private IWorldControlService _worldControlService;
 
         [Inject]
-        private void Construct(IGameStateMachine gameStateMachine, IWorldControlService worldControlService) {
+        private void Construct(IGameStateMachine gameStateMachine) {
             _gameStateMachine = gameStateMachine;
-            _worldControlService = worldControlService;
         }
 
         private void OnEnable() {
@@ -113,13 +110,11 @@ namespace Assets.CodeBase.UI
         private void OnClickExitGame(ClickEvent evt) =>
             Application.Quit();
 
-        private void OnClickJoinAsClient(ClickEvent evt) => 
-            _gameStateMachine.Enter<LoadLevelState, string>(Constants.SceneNames.MainSceneName);
+        private void OnClickJoinAsClient(ClickEvent evt) =>
+            _gameStateMachine.Enter<LoadMainSceneState, bool>(false);
 
-        private void OnClickHostButton(ClickEvent evt) {
-            _worldControlService.SetHost(true);
-            _gameStateMachine.Enter<LoadLevelState, string>(Constants.SceneNames.MainSceneName);
-        }
+        private void OnClickHostButton(ClickEvent evt) =>
+            _gameStateMachine.Enter<LoadMainSceneState, bool>(true);
 
         private void OnClickCancel(ClickEvent evt) {
             ClearContentPanel();

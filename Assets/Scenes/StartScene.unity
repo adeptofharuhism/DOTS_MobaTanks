@@ -405,6 +405,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: NetworkBootstrapDisabler
       objectReference: {fileID: 0}
+    - target: {fileID: 4196110661969510854, guid: 894785daeb5821f4e9fc24b56c72dff2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4298179815900746712, guid: 894785daeb5821f4e9fc24b56c72dff2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -453,6 +458,11 @@ PrefabInstance:
     - target: {fileID: 4298179815900746712, guid: 894785daeb5821f4e9fc24b56c72dff2,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8465303876621045854, guid: 894785daeb5821f4e9fc24b56c72dff2,
+        type: 3}
+      propertyPath: ForceAutomaticBootstrapInScene
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

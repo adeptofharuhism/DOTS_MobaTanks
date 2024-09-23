@@ -2,8 +2,10 @@
 {
     public interface IWorldControlService
     {
-        void CreateWorlds();
-        void DisposeWorlds();
-        void SetHost(bool isHost);
+        void CreateClientWorld();
+        void CreateServerWorld();
+        void DisposeDefaultWorld();
+        void DisposeNetworkWorlds();
+        void StartWorlds();
     }
 }
