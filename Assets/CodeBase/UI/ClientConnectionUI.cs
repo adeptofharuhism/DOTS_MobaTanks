@@ -42,16 +42,9 @@ namespace Assets.CodeBase.UI
         }
 
         private void InstantiatePanels() {
-            _connectionChoicePanelInstantiated = InstantiatePanel(_connectionChoicePanel);
-            _joinGamePanelInstantiated = InstantiatePanel(_joinGamePanel);
-            _hostGamePanelInstantiated = InstantiatePanel(_hostGamePanel);
-        }
-
-        private VisualElement InstantiatePanel(VisualTreeAsset panelAsset) {
-            VisualElement newPanel = panelAsset.Instantiate();
-            newPanel.style.flexGrow = 1;
-
-            return newPanel;
+            _connectionChoicePanelInstantiated = _connectionChoicePanel.InstantiatePanel();
+            _joinGamePanelInstantiated = _joinGamePanel.InstantiatePanel();
+            _hostGamePanelInstantiated = _hostGamePanel.InstantiatePanel();
         }
 
         private void SetupContentPanel() {
@@ -65,7 +58,7 @@ namespace Assets.CodeBase.UI
                 .Q<Button>(Constants.VisualElementNames.ConnectionMenu.ConnectionChoicePanel.HostButton)
                 .RegisterCallback<ClickEvent>(OnClickHostGame);
             _connectionChoicePanelInstantiated
-                .Q<Button>(Constants.VisualElementNames.ConnectionMenu.ConnectionChoicePanel.ClientButton)
+                .Q<Button>(Constants.VisualElementNames.ConnectionMenu.ConnectionChoicePanel.JoinButton)
                 .RegisterCallback<ClickEvent>(OnClickJoinGame);
             _connectionChoicePanelInstantiated
                 .Q<Button>(Constants.VisualElementNames.ConnectionMenu.ConnectionChoicePanel.ExitButton)

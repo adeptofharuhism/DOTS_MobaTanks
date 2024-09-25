@@ -31,9 +31,9 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldControl
 
             if (isHost) {
                 StartServer();
-                StartClient(_connectionInfoService.LocalHost);
+                StartClient(_connectionInfoService.LocalIp);
             } else {
-                StartClient(_connectionInfoService.ConnectionIP);
+                StartClient(_connectionInfoService.ConnectionIp.Value);
             }
         }
 
@@ -62,7 +62,7 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldControl
         private void StartServer() {
             World serverWorld = ClientServerBootstrap.ServerWorld;
 
-            NetworkEndpoint serverEndpoint = NetworkEndpoint.AnyIpv4.WithPort(_connectionInfoService.ConnectionPort);
+            NetworkEndpoint serverEndpoint = NetworkEndpoint.AnyIpv4.WithPort(_connectionInfoService.ConnectionPort.Value);
 
             using (EntityQuery networkDriverQuery =
                 serverWorld.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>()))
@@ -72,7 +72,7 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldControl
         private void StartClient(string ipAddress) {
             World clientWorld = ClientServerBootstrap.ClientWorld;
 
-            NetworkEndpoint connectionEndpoint = NetworkEndpoint.Parse(ipAddress, _connectionInfoService.ConnectionPort);
+            NetworkEndpoint connectionEndpoint = NetworkEndpoint.Parse(ipAddress, _connectionInfoService.ConnectionPort.Value);
 
             using (EntityQuery networkDriverQuery =
                 clientWorld.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>()))
@@ -80,7 +80,7 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldControl
 
             Entity connectionDataEntity = clientWorld.EntityManager.CreateEntity();
             clientWorld.EntityManager.AddComponentData(connectionDataEntity, new ConnectionRequestData {
-                PlayerName = _connectionInfoService.PlayerName
+                PlayerName = _connectionInfoService.PlayerName.Value
             });
         }
     }

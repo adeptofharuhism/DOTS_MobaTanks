@@ -18,6 +18,8 @@ I make this game to practice DOTS. This is a moba game where you have to destroy
 
 - Bright neon style
 
+- Zenject inside
+
 ## Made with DOTS
 
 DOTS - Data-Oriented Technology Stack, Unity's ECS framework. Convenient and performant thing what I study to have fun.
@@ -63,6 +65,8 @@ Play it on LAN or using soft to imitate LAN (Radmin, Hamachi).
 - Игра по локальной сети
 
 - Яркая неоновая стилистика
+
+- Zenject под капотом
 
 ## Сделана на DOTS
 

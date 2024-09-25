@@ -9,7 +9,7 @@
             public static class ConnectionChoicePanel
             {
                 public const string HostButton = "HostButton";
-                public const string ClientButton = "ClientButton";
+                public const string JoinButton = "ClientButton";
                 public const string ExitButton = "ExitButton";
             }
 
