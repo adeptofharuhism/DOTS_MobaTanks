@@ -12,7 +12,7 @@ namespace Assets.CodeBase.Utility
             get => _value;
             set {
                 _value = value;
-                OnChanged.Invoke(_value);
+                OnChanged?.Invoke(_value);
             }
         }
     }

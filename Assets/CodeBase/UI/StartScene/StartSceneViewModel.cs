@@ -1,6 +1,9 @@
 ﻿using Assets.CodeBase.Infrastructure.Services.ConnectionInfo;
+using Assets.CodeBase.Infrastructure.StateMachine;
+using Assets.CodeBase.Infrastructure.StateMachine.States;
 using Assets.CodeBase.Utility;
 using System;
+using UnityEngine;
 using Zenject;
 
 namespace Assets.CodeBase.UI.StartScene
@@ -14,14 +17,21 @@ namespace Assets.CodeBase.UI.StartScene
 
     public interface IStartSceneViewModel
     {
+        ReactiveProperty<StartSceneMode> Mode { get; }
+
         ReactiveProperty<string> JoinPortView { get; }
         ReactiveProperty<string> JoinIpView { get; }
         ReactiveProperty<string> HostPortView { get; }
         ReactiveProperty<string> PlayerNameView { get; }
 
+        void OnClickCancel();
         void OnClickExit();
         void OnClickHostChoice();
         void OnClickJoinChoice();
+        void OnClickPlay();
+        void OnFocusOutIp(string ip);
+        void OnFocusOutPlayerName(string name);
+        void OnFocusOutPort(string port);
     }
 
     public class StartSceneViewModel : IStartSceneViewModel, IInitializable, IDisposable
@@ -40,9 +50,12 @@ namespace Assets.CodeBase.UI.StartScene
         private readonly ReactiveProperty<string> _hostPortView = new();
         private readonly ReactiveProperty<string> _playerNameView = new();
 
+        private readonly IGameStateMachine _gameStateMachine;
         private readonly IConnectionInfoService _connectionInfoService;
 
-        public StartSceneViewModel(IConnectionInfoService connectionInfoService) {
+        [Inject]
+        public StartSceneViewModel(IGameStateMachine gameStateMachine, IConnectionInfoService connectionInfoService) {
+            _gameStateMachine = gameStateMachine;
             _connectionInfoService = connectionInfoService;
         }
 
@@ -56,11 +69,50 @@ namespace Assets.CodeBase.UI.StartScene
             UnsubscribeFromModelChanges();
         }
 
-        public void OnClickHostChoice() { }
+        public void OnClickHostChoice() =>
+            _mode.Value = StartSceneMode.Host;
 
-        public void OnClickJoinChoice() { }
+        public void OnClickJoinChoice() =>
+            _mode.Value = StartSceneMode.Join;
 
-        public void OnClickExit() { }
+        public void OnClickExit() =>
+            Application.Quit();
+
+        public void OnClickPlay() {
+            if (_mode.Value == StartSceneMode.ConnectionChoice)
+                return;
+
+            bool isHost = false;
+
+            if (_mode.Value == StartSceneMode.Host)
+                isHost = true;
+
+            _gameStateMachine.Enter<LoadMainSceneState, bool>(isHost);
+        }
+
+        public void OnFocusOutPlayerName(string name) => 
+            _connectionInfoService.SetPlayerName(name);
+
+        public void OnFocusOutPort(string port) { 
+            ushort parsedPort = ushort.Parse(port);
+
+            switch (_mode.Value) {
+                case StartSceneMode.Host:
+                    _connectionInfoService.SetLocalPort(parsedPort);
+                    break;
+                case StartSceneMode.Join:
+                    _connectionInfoService.SetConnectionPort(parsedPort);
+                    break;
+            }
+        }
+
+        public void OnFocusOutIp(string ip) {
+            if (_mode.Value == StartSceneMode.Join)
+                _connectionInfoService.SetConnectionIp(ip);
+        }
+
+        public void OnClickCancel() =>
+            _mode.Value = StartSceneMode.ConnectionChoice;
 
         private void SetInitialMode() =>
             _mode.Value = StartSceneMode.ConnectionChoice;

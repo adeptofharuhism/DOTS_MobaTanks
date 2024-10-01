@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Assets.CodeBase.UI.StartScene.Panels;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Zenject;
@@ -14,92 +16,103 @@ namespace Assets.CodeBase.UI.StartScene
 
         private IStartSceneViewModel _startSceneViewModel;
 
+        private Dictionary<Type, UiPanel> _panels;
+        private UiPanel _activePanel;
+
+        private VisualElement _contentPanel;
+
         [Inject]
         public void Construct(IStartSceneViewModel startSceneViewModel) {
             _startSceneViewModel = startSceneViewModel;
+
+            _panels = new Dictionary<Type, UiPanel> {
+                [typeof(ConnectionChoicePanel)] = new ConnectionChoicePanel(_connectionChoicePanel, startSceneViewModel),
+                [typeof(JoinPanel)] = new JoinPanel(_joinGamePanel, startSceneViewModel),
+                [typeof(HostPanel)] = new HostPanel(_hostGamePanel, startSceneViewModel),
+            };
         }
 
         public void Initialize() {
+            InitializePanels();
 
+            CacheContentPanel();
+            SubscribeToViewModel();
+            ActivatePanel<ConnectionChoicePanel>();
         }
 
         public void Dispose() {
+            DeactivateActivePanel();
+            UnsubscribeFromViewModel();
 
-        }
-    }
-
-    public abstract class UiPanel
-    {
-        public VisualElement Panel => _panel;
-
-        protected readonly VisualElement _panel;
-
-        public UiPanel(VisualTreeAsset panelAsset) {
-            _panel = panelAsset.InstantiatePanel();
-
-            CacheVisualElements();
+            DisposePanels();
         }
 
-        public virtual void Enable() { }
-
-        public virtual void Disable() { }
-
-        protected virtual void CacheVisualElements() { }
-    }
-
-    public abstract class StartSceneUiPanel : UiPanel
-    {
-        protected readonly IStartSceneViewModel _startSceneViewModel;
-
-        protected StartSceneUiPanel(VisualTreeAsset panelAsset, IStartSceneViewModel startSceneViewModel)
-            : base(panelAsset) {
-
-            _startSceneViewModel = startSceneViewModel;
-        }
-    }
-
-    public class ConnectionChoicePanel : StartSceneUiPanel
-    {
-        private Button _hostButton;
-        private Button _joinButton;
-        private Button _exitButton;
-
-        public ConnectionChoicePanel(VisualTreeAsset panelAsset, IStartSceneViewModel startSceneViewModel)
-            : base(panelAsset, startSceneViewModel) { }
-
-        public override void Enable() {
-            _hostButton.RegisterCallback<ClickEvent>(OnClickHostButton);
-            _joinButton.RegisterCallback<ClickEvent>(OnClickJoinButton);
-            _exitButton.RegisterCallback<ClickEvent>(OnClickExitButton);
+        private void InitializePanels() {
+            foreach (UiPanel panel in _panels.Values)
+                panel.Initialize();
         }
 
-        public override void Disable() {
-            _hostButton.UnregisterCallback<ClickEvent>(OnClickHostButton);
-            _joinButton.UnregisterCallback<ClickEvent>(OnClickJoinButton);
-            _exitButton.UnregisterCallback<ClickEvent>(OnClickExitButton);
+        private void DisposePanels() {
+            foreach (UiPanel panel in _panels.Values)
+                panel.Dispose();
         }
 
-        protected override void CacheVisualElements() {
-            _hostButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.ConnectionChoicePanel.HostButton);
-            _joinButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.ConnectionChoicePanel.JoinButton);
-            _exitButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.ConnectionChoicePanel.ExitButton);
+        private void CacheContentPanel() =>
+            _contentPanel = _uiDocument.rootVisualElement
+                .Q<VisualElement>(Constants.VisualElementNames.ConnectionMenu.ContentPanel);
+
+        private void SubscribeToViewModel() =>
+            _startSceneViewModel.Mode.OnChanged += OnChangeMode;
+
+        private void UnsubscribeFromViewModel() =>
+            _startSceneViewModel.Mode.OnChanged -= OnChangeMode;
+
+        private void ActivatePanel<TPanel>() where TPanel : UiPanel {
+            DeactivateActivePanel();
+            EnablePanel<TPanel>();
+            ShowActivePanel();
         }
 
-        private void OnClickHostButton(ClickEvent evt) =>
-            _startSceneViewModel.OnClickHostChoice();
+        private void DeactivateActivePanel() {
+            HideActivePanel();
+            DisableActivePanel();
+        }
 
-        private void OnClickJoinButton(ClickEvent evt) =>
-            _startSceneViewModel.OnClickHostChoice();
+        private void EnablePanel<TPanel>() where TPanel : UiPanel {
+            _activePanel = _panels[typeof(TPanel)];
+            _activePanel.Enable();
+        }
 
-        private void OnClickExitButton(ClickEvent evt) =>
-            _startSceneViewModel.OnClickExit();
-    }
+        private void DisableActivePanel() {
+            if (_activePanel == null)
+                return;
 
-    public class HostPanel : StartSceneUiPanel
-    {
-        public HostPanel(VisualTreeAsset panelAsset, IStartSceneViewModel startSceneViewModel)
-            : base(panelAsset, startSceneViewModel) { }
+            _activePanel.Disable();
+            _activePanel = null;
+        }
 
+        private void ShowActivePanel() {
+            _contentPanel.Add(_activePanel.Panel);
+        }
 
+        private void HideActivePanel() {
+            if (_contentPanel.childCount > 0)
+                _contentPanel.RemoveAt(0);
+        }
+
+        private void OnChangeMode(StartSceneMode mode) {
+            switch (mode) {
+                case StartSceneMode.Join:
+                    ActivatePanel<JoinPanel>();
+                    break;
+                case StartSceneMode.Host:
+                    ActivatePanel<HostPanel>();
+                    break;
+                case StartSceneMode.ConnectionChoice:
+                default:
+                    ActivatePanel<ConnectionChoicePanel>();
+                    break;
+            }
+        }
     }
 }

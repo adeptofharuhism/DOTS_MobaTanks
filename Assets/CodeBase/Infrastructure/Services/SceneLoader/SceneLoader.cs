@@ -2,7 +2,6 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Zenject;
 
 namespace Assets.CodeBase.Infrastructure.Services.SceneLoader
 {
