@@ -1,9 +1,9 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <ui:VisualElement name="BlueWonPanel" style="flex-grow: 1;">
         <ui:VisualElement style="flex-grow: 1;" />
-        <ui:Label tabindex="-1" text="Game Over" parse-escape-sequences="true" display-tooltip-when-elided="true" class="headerText textHighlightWhite" />
-        <ui:Label tabindex="-1" text="Blue team wins!" parse-escape-sequences="true" display-tooltip-when-elided="true" class="headerText textHighlightBlue" />
-        <ui:Button text="Disconnect" parse-escape-sequences="true" display-tooltip-when-elided="true" name="EndGameButton" class="connectionChoiceButton" />
+        <ui:Label tabindex="-1" text="Game Over" parse-escape-sequences="true" display-tooltip-when-elided="true" class="headerText textHighlightWhite font" />
+        <ui:Label tabindex="-1" text="Blue team wins!" parse-escape-sequences="true" display-tooltip-when-elided="true" class="headerText textHighlightBlue font" />
+        <ui:Button text="Disconnect" parse-escape-sequences="true" display-tooltip-when-elided="true" name="EndGameButton" class="connectionChoiceButton font" />
         <ui:VisualElement style="flex-grow: 1;" />
     </ui:VisualElement>
 </ui:UXML>

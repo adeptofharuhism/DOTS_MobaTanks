@@ -63,8 +63,8 @@
 }
 
 .textHighlightWhite {
-    -unity-text-outline-color: rgb(255, 255, 255);
     -unity-text-outline-width: 2px;
+    -unity-text-outline-color: rgb(255, 255, 255);
 }
 
 .textHighlightBlue {
@@ -114,4 +114,9 @@
 
 .blackBackground {
     background-color: rgba(0, 0, 0, 0.71);
+}
+
+.font {
+    -unity-font: url("project://database/Assets/TextMesh%20Pro/Fonts/Orange%20Kid.otf?fileID=12800000&guid=e08564ed95bd52f45b77dfa002af3995&type=3#Orange Kid");
+    -unity-font-definition: initial;
 }

@@ -1,11 +1,11 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <ui:VisualElement name="JoinGamePanel" style="flex-grow: 1; flex-shrink: 0;">
-        <ui:Label tabindex="-1" text="JOIN GAME" parse-escape-sequences="true" display-tooltip-when-elided="true" class="headerText textHighlightWhite" />
-        <ui:TextField picking-mode="Ignore" label="Name:" value="Dingus" name="PlayerName" class="inputField textHighlightWhite" />
-        <ui:TextField picking-mode="Ignore" label="IP:" value="127.0.0.1" name="JoinIP" class="inputField textHighlightWhite" />
-        <ui:TextField picking-mode="Ignore" label="Port:" value="7979" name="JoinPort" class="inputField textHighlightWhite" />
-        <ui:Button text="Join" parse-escape-sequences="true" display-tooltip-when-elided="true" name="JoinButton" class="connectionChoiceButton" />
+        <ui:Label tabindex="-1" text="JOIN GAME" parse-escape-sequences="true" display-tooltip-when-elided="true" class="headerText textHighlightWhite font" />
+        <ui:TextField picking-mode="Ignore" label="Name:" value="Dingus" name="PlayerName" class="inputField textHighlightWhite font" />
+        <ui:TextField picking-mode="Ignore" label="IP:" value="127.0.0.1" name="JoinIP" class="inputField textHighlightWhite font" />
+        <ui:TextField picking-mode="Ignore" label="Port:" value="7979" name="JoinPort" class="inputField textHighlightWhite font" />
+        <ui:Button text="Join" parse-escape-sequences="true" display-tooltip-when-elided="true" name="JoinButton" class="connectionChoiceButton font" />
         <ui:VisualElement style="flex-grow: 1; flex-shrink: 0;" />
-        <ui:Button text="Cancel" parse-escape-sequences="true" display-tooltip-when-elided="true" name="CancelButton" class="connectionChoiceButton" />
+        <ui:Button text="Cancel" parse-escape-sequences="true" display-tooltip-when-elided="true" name="CancelButton" class="connectionChoiceButton font" />
     </ui:VisualElement>
 </ui:UXML>

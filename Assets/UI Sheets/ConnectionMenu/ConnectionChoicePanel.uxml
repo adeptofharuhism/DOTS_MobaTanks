@@ -1,9 +1,9 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <ui:VisualElement name="ConnectionChoicePanel" style="flex-grow: 1; flex-shrink: 0;">
-        <ui:Label tabindex="-1" text="FORGOTTEN CLICK" parse-escape-sequences="true" display-tooltip-when-elided="true" name="GameName" class="headerText textHighlightWhite" style="flex-grow: 0; flex-shrink: 1; align-self: center;" />
-        <ui:Button text="Host Game" parse-escape-sequences="true" display-tooltip-when-elided="true" name="HostButton" class="connectionChoiceButton" />
-        <ui:Button text="Join Game" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ClientButton" class="connectionChoiceButton" />
+        <ui:Label tabindex="-1" text="FORGOTTEN CLICK" parse-escape-sequences="true" display-tooltip-when-elided="true" name="GameName" class="headerText textHighlightWhite font" style="flex-grow: 0; flex-shrink: 1; align-self: center;" />
+        <ui:Button text="Host Game" parse-escape-sequences="true" display-tooltip-when-elided="true" name="HostButton" class="connectionChoiceButton font" />
+        <ui:Button text="Join Game" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ClientButton" class="connectionChoiceButton font" />
         <ui:VisualElement style="flex-grow: 2; flex-shrink: 0;" />
-        <ui:Button text="Exit" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ExitButton" class="connectionChoiceButton" />
+        <ui:Button text="Exit" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ExitButton" class="connectionChoiceButton font" />
     </ui:VisualElement>
 </ui:UXML>
