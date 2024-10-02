@@ -3,12 +3,17 @@ using Assets.CodeBase.Infrastructure.Services.ConnectionInfo;
 using Assets.CodeBase.Infrastructure.Services.SceneLoader;
 using Assets.CodeBase.Infrastructure.Services.WorldControl;
 using Assets.CodeBase.Infrastructure.StateMachine;
+using Assets.CodeBase.UI.Curtain;
+using System;
+using UnityEngine;
 using Zenject;
 
 namespace Assets.CodeBase.Infrastructure.Installers
 {
     public class BootstrapInstaller : MonoInstaller, ICoroutineRunner
     {
+        [SerializeField] private LoadingCurtain _loadingCurtain;
+
         public override void InstallBindings() {
 #if UNITY_EDITOR
             UnityEngine.SceneManagement.SceneManager.LoadScene(0);
@@ -17,6 +22,7 @@ namespace Assets.CodeBase.Infrastructure.Installers
             RegisterConnectionInfo();
             RegisterWorldControlService();
             RegisterCoroutineRunner();
+            RegisterLoadingCurtain();
             RegisterSceneLoader();
             RegisterStateMachine();
         }
@@ -45,6 +51,16 @@ namespace Assets.CodeBase.Infrastructure.Installers
                 .FromInstance(this)
                 .AsSingle()
                 .NonLazy();
+
+        private void RegisterLoadingCurtain() {
+            LoadingCurtain curtain = Instantiate(_loadingCurtain);
+
+            Container
+                .Bind<ILoadingCurtain>()
+                .FromInstance(curtain)
+                .AsSingle()
+                .NonLazy();
+        }
 
         private void RegisterSceneLoader() =>
             Container

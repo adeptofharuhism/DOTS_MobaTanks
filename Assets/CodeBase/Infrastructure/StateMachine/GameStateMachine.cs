@@ -1,6 +1,7 @@
 ﻿using Assets.CodeBase.Infrastructure.Services.SceneLoader;
 using Assets.CodeBase.Infrastructure.Services.WorldControl;
 using Assets.CodeBase.Infrastructure.StateMachine.States;
+using Assets.CodeBase.UI.Curtain;
 using System;
 using System.Collections.Generic;
 using Zenject;
@@ -13,12 +14,12 @@ namespace Assets.CodeBase.Infrastructure.StateMachine
         private IExitableState _activeState;
 
         [Inject]
-        public GameStateMachine(ISceneLoader sceneLoader, IWorldControlService worldControlService) {
+        public GameStateMachine(ISceneLoader sceneLoader, IWorldControlService worldControlService, ILoadingCurtain loadingCurtain) {
             _states = new Dictionary<Type, IExitableState> {
                 [typeof(BootstrapState)] = new BootstrapState(this),
-                [typeof(LoadStartSceneState)] = new LoadStartSceneState(this, sceneLoader),
+                [typeof(LoadStartSceneState)] = new LoadStartSceneState(this, sceneLoader, loadingCurtain),
                 [typeof(StartSceneActiveState)] = new StartSceneActiveState(this),
-                [typeof(LoadMainSceneState)] = new LoadMainSceneState(this, sceneLoader, worldControlService),
+                [typeof(LoadMainSceneState)] = new LoadMainSceneState(this, sceneLoader, worldControlService, loadingCurtain),
                 [typeof(MainSceneActiveState)] = new MainSceneActiveState(this, worldControlService)
             };
         }

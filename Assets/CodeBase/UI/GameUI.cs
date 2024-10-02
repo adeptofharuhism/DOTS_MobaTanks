@@ -65,7 +65,6 @@ namespace Assets.CodeBase.UI
         private void SetupParts() {
             _buttonsPart = _uiDocument.rootVisualElement
                 .Q<VisualElement>(Constants.VisualElementNames.GameUI.ButtonsPart);
-            _buttonsPart.Add(_loadingPanelInstantiated);
 
             _moneyPart = _uiDocument.rootVisualElement
                 .Q<VisualElement>(Constants.VisualElementNames.GameUI.MoneyPart);

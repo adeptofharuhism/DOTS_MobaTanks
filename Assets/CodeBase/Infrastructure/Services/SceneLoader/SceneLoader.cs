@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Assets.CodeBase.UI.Curtain;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Zenject;
 
 namespace Assets.CodeBase.Infrastructure.Services.SceneLoader
 {
@@ -9,6 +11,7 @@ namespace Assets.CodeBase.Infrastructure.Services.SceneLoader
     {
         private readonly ICoroutineRunner _coroutineRunner;
 
+        [Inject]
         public SceneLoader(ICoroutineRunner coroutineRunner) {
             _coroutineRunner = coroutineRunner;
         }

@@ -1,5 +1,6 @@
 ﻿using Assets.CodeBase.Infrastructure.Services.SceneLoader;
 using Assets.CodeBase.Infrastructure.Services.WorldControl;
+using Assets.CodeBase.UI.Curtain;
 using UnityEngine.SceneManagement;
 
 namespace Assets.CodeBase.Infrastructure.StateMachine.States
@@ -9,22 +10,27 @@ namespace Assets.CodeBase.Infrastructure.StateMachine.States
         private readonly IGameStateMachine _gameStateMachine;
         private readonly ISceneLoader _sceneLoader;
         private readonly IWorldControlService _worldControlService;
+        private readonly ILoadingCurtain _loadingCurtain;
 
         public LoadMainSceneState(
             IGameStateMachine gameStateMachine,
             ISceneLoader sceneLoader,
-            IWorldControlService worldControlService) {
+            IWorldControlService worldControlService,
+            ILoadingCurtain loadingCurtain) {
 
             _gameStateMachine = gameStateMachine;
             _sceneLoader = sceneLoader;
             _worldControlService = worldControlService;
+            _loadingCurtain = loadingCurtain;
         }
 
         public void Enter(bool isHost) {
+            _loadingCurtain.Show();
+
             StartWorlds(isHost);
             DisposeDefaultWorld();
 
-            _sceneLoader.Load(Constants.SceneNames.MainSceneName, LoadSceneMode.Additive, OnSceneLoaded);
+            _sceneLoader.Load(Constants.SceneNames.MainSceneName, LoadSceneMode.Single, OnSceneLoaded);
         }
 
         public void Exit() { }
@@ -40,6 +46,7 @@ namespace Assets.CodeBase.Infrastructure.StateMachine.States
         }
 
         private void OnSceneLoaded() {
+            _loadingCurtain.Hide();
             _gameStateMachine.Enter<MainSceneActiveState>();
         }
     }
