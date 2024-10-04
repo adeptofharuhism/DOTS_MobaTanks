@@ -1,5 +1,7 @@
 ﻿using Assets.CodeBase.Infrastructure.GameStateManagement.States;
+using Assets.CodeBase.Infrastructure.Services.MainSceneModeNotifier;
 using Assets.CodeBase.Infrastructure.Services.SceneLoader;
+using Assets.CodeBase.Infrastructure.Services.WinnerNotifier;
 using Assets.CodeBase.Infrastructure.Services.WorldControl;
 using Assets.CodeBase.UI.Curtain;
 using Assets.CodeBase.Utility.StateMachine;
@@ -21,12 +23,22 @@ namespace Assets.CodeBase.Infrastructure.GameStateManagement
     public class GameStateMachine : StateMachine, IInitializable, IGameStateMachine
     {
         [Inject]
-        public GameStateMachine(ISceneLoader sceneLoader, IWorldControlService worldControlService, ILoadingCurtain loadingCurtain) {
+        public GameStateMachine(
+            ISceneLoader sceneLoader, 
+            IWorldControlService worldControlService, 
+            ILoadingCurtain loadingCurtain,
+            IMainSceneModeNotifier mainSceneModeNotifier,
+            IWinnerNotifier winnerNotifier) {
+
             AddGameState(new BootstrapState(this));
+
             AddGameState(new LoadStartSceneState(this, sceneLoader, worldControlService, loadingCurtain));
             AddGameState(new StartSceneActiveState(this));
-            AddGameState(new LoadMainSceneState(this, sceneLoader, worldControlService, loadingCurtain));
-            AddGameState(new PrepareForGameState(this));
+
+            AddGameState(new LoadMainSceneState(this, sceneLoader, worldControlService, loadingCurtain, mainSceneModeNotifier));
+            AddGameState(new PrepareForGameState(this, mainSceneModeNotifier));
+            AddGameState(new InGameState(this, mainSceneModeNotifier, winnerNotifier));
+            AddGameState(new GameOverState(this, mainSceneModeNotifier));
         }
 
         public void Initialize() =>

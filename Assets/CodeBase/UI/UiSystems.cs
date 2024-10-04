@@ -33,7 +33,7 @@ namespace Assets.CodeBase.UI
 
     [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
     [UpdateInGroup(typeof(UiSystemGroup))]
-    public partial class InGameUiActivationSystem : SystemBase
+    public partial class GameStartNotificationSystem : SystemBase
     {
         public Action OnGameStart;
 

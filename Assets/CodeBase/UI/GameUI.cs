@@ -39,7 +39,6 @@ namespace Assets.CodeBase.UI
         private VisualElement _shopPanelInstantiated;
 
         private void OnEnable() {
-            UnityEngine.Debug.Log("GameUI Enabled");
             InstantiatePanels();
             SetupParts();
             SetupGameReadyPanel();
@@ -111,8 +110,8 @@ namespace Assets.CodeBase.UI
             if (endGameSystem != null)
                 endGameSystem.OnEndGame += ShowEndGamePanel;
 
-            InGameUiActivationSystem inGameUiActivationSystem =
-                defaultWorld.GetExistingSystemManaged<InGameUiActivationSystem>();
+            GameStartNotificationSystem inGameUiActivationSystem =
+                defaultWorld.GetExistingSystemManaged<GameStartNotificationSystem>();
             if (inGameUiActivationSystem != null)
                 inGameUiActivationSystem.OnGameStart += ShowInGameUi;
 
@@ -143,8 +142,8 @@ namespace Assets.CodeBase.UI
             if (endGameSystem != null)
                 endGameSystem.OnEndGame -= ShowEndGamePanel;
 
-            InGameUiActivationSystem inGameUiActivationSystem =
-                defaultWorld.GetExistingSystemManaged<InGameUiActivationSystem>();
+            GameStartNotificationSystem inGameUiActivationSystem =
+                defaultWorld.GetExistingSystemManaged<GameStartNotificationSystem>();
             if (inGameUiActivationSystem != null)
                 inGameUiActivationSystem.OnGameStart -= ShowInGameUi;
 

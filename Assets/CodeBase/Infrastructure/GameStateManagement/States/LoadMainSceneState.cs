@@ -1,4 +1,5 @@
-﻿using Assets.CodeBase.Infrastructure.Services.SceneLoader;
+﻿using Assets.CodeBase.Infrastructure.Services.MainSceneModeNotifier;
+using Assets.CodeBase.Infrastructure.Services.SceneLoader;
 using Assets.CodeBase.Infrastructure.Services.WorldControl;
 using Assets.CodeBase.UI;
 using Assets.CodeBase.UI.Curtain;
@@ -14,21 +15,26 @@ namespace Assets.CodeBase.Infrastructure.GameStateManagement.States
         private readonly ISceneLoader _sceneLoader;
         private readonly IWorldControlService _worldControlService;
         private readonly ILoadingCurtain _loadingCurtain;
+        private readonly IMainSceneModeNotifier _mainSceneModeNotifier;
 
         public LoadMainSceneState(
             IGameStateMachine gameStateMachine,
             ISceneLoader sceneLoader,
             IWorldControlService worldControlService,
-            ILoadingCurtain loadingCurtain) {
+            ILoadingCurtain loadingCurtain,
+            IMainSceneModeNotifier mainSceneModeNotifier) {
 
             _gameStateMachine = gameStateMachine;
             _sceneLoader = sceneLoader;
             _worldControlService = worldControlService;
             _loadingCurtain = loadingCurtain;
+            _mainSceneModeNotifier = mainSceneModeNotifier;
         }
 
         public void Enter(bool isHost) {
             _loadingCurtain.Show();
+
+            _mainSceneModeNotifier.SetMode(MainSceneMode.Loading);
 
             CreateWorlds(isHost);
             DisposeDefaultWorld();
@@ -70,45 +76,5 @@ namespace Assets.CodeBase.Infrastructure.GameStateManagement.States
             World.DefaultGameObjectInjectionWorld
                 .GetExistingSystemManaged<DeployUiOnClientSystem>()
                 .OnReadyForUiDeploy -= OnSubSceneLoaded;
-    }
-
-    public class PrepareForGameState : IState, IGameState
-    {
-        private readonly IGameStateMachine _gameStateMachine;
-
-        public PrepareForGameState(IGameStateMachine gameStateMachine)
-        {
-            _gameStateMachine = gameStateMachine;
-        }
-
-        public void Enter() {
-
-        }
-
-        public void Exit() {
-
-        }
-    }
-
-    public class InGameState : IState, IGameState
-    {
-        public void Enter() {
-            throw new System.NotImplementedException();
-        }
-
-        public void Exit() {
-            throw new System.NotImplementedException();
-        }
-    }
-
-    public class GameOverState : IState, IGameState
-    {
-        public void Enter() {
-            throw new System.NotImplementedException();
-        }
-
-        public void Exit() {
-            throw new System.NotImplementedException();
-        }
     }
 }

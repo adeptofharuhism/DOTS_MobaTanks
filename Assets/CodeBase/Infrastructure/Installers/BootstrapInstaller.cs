@@ -1,7 +1,9 @@
 ﻿using Assets.CodeBase.Infrastructure.GameStateManagement;
 using Assets.CodeBase.Infrastructure.Services;
 using Assets.CodeBase.Infrastructure.Services.ConnectionInfo;
+using Assets.CodeBase.Infrastructure.Services.MainSceneModeNotifier;
 using Assets.CodeBase.Infrastructure.Services.SceneLoader;
+using Assets.CodeBase.Infrastructure.Services.WinnerNotifier;
 using Assets.CodeBase.Infrastructure.Services.WorldControl;
 using Assets.CodeBase.UI.Curtain;
 using UnityEngine;
@@ -18,6 +20,8 @@ namespace Assets.CodeBase.Infrastructure.Installers
             UnityEngine.SceneManagement.SceneManager.LoadScene(0);
             UnityEngine.Debug.Log("Installing dependencies");
 #endif
+            RegisterWinnerNotifier();
+            RegisterMainSceneModeNotifier();
             RegisterConnectionInfo();
             RegisterWorldControlService();
             RegisterCoroutineRunner();
@@ -25,6 +29,22 @@ namespace Assets.CodeBase.Infrastructure.Installers
             RegisterSceneLoader();
             RegisterStateMachine();
         }
+
+        private void RegisterWinnerNotifier() => 
+            Container
+                .Bind<IWinnerNotifier>()
+                .To<WinnerNotifier>()
+                .FromNew()
+                .AsSingle()
+                .NonLazy();
+
+        private void RegisterMainSceneModeNotifier() =>
+            Container
+                .Bind<IMainSceneModeNotifier>()
+                .To<MainSceneModeNotifier>()
+                .FromNew()
+                .AsSingle()
+                .NonLazy();
 
         private void RegisterConnectionInfo() =>
             Container

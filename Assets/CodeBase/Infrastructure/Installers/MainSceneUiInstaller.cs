@@ -9,7 +9,7 @@ namespace Assets.CodeBase.Infrastructure.Installers
         [SerializeField] private MainSceneView _mainSceneView;
 
         public override void InstallBindings() {
-
+            
         }
     }
 }

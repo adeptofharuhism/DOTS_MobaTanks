@@ -3,14 +3,6 @@ using Zenject;
 
 namespace Assets.CodeBase.UI.MainScene
 {
-    public enum MainSceneMode
-    {
-        Loading,
-        Preparing,
-        InGame,
-        GameOver
-    }
-
     public interface IMainSceneViewModel
     {
 

@@ -53,7 +53,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93f3042af9f24fd47bc00cf454a7a1ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maximalHealth: 2500
+  _maximalHealth: 1
   _healthBarOffset: {x: 0, y: 22, z: 0}
 --- !u!114 &7771534656832645305
 MonoBehaviour:
