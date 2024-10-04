@@ -1,5 +1,7 @@
-﻿namespace Assets.CodeBase.Infrastructure.StateMachine.States
+﻿namespace Assets.CodeBase.Utility.StateMachine
 {
+    public interface IStateRestriction { }
+
     public interface IExitableState
     {
         void Exit();

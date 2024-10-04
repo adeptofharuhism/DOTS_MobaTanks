@@ -1,6 +1,6 @@
 ﻿using Assets.CodeBase.Infrastructure.Services.ConnectionInfo;
-using Assets.CodeBase.Infrastructure.StateMachine;
-using Assets.CodeBase.Infrastructure.StateMachine.States;
+using Assets.CodeBase.Infrastructure.GameStateManagement;
+using Assets.CodeBase.Infrastructure.GameStateManagement.States;
 using Assets.CodeBase.Utility;
 using System;
 using UnityEngine;
@@ -87,7 +87,7 @@ namespace Assets.CodeBase.UI.StartScene
             if (_mode.Value == StartSceneMode.Host)
                 isHost = true;
 
-            _gameStateMachine.Enter<LoadMainSceneState, bool>(isHost);
+            _gameStateMachine.EnterGameState<LoadMainSceneState, bool>(isHost);
         }
 
         public void OnFocusOutPlayerName(string name) => 

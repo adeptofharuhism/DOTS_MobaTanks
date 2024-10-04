@@ -1,10 +1,9 @@
-﻿using Assets.CodeBase.Infrastructure.Services;
+﻿using Assets.CodeBase.Infrastructure.GameStateManagement;
+using Assets.CodeBase.Infrastructure.Services;
 using Assets.CodeBase.Infrastructure.Services.ConnectionInfo;
 using Assets.CodeBase.Infrastructure.Services.SceneLoader;
 using Assets.CodeBase.Infrastructure.Services.WorldControl;
-using Assets.CodeBase.Infrastructure.StateMachine;
 using Assets.CodeBase.UI.Curtain;
-using System;
 using UnityEngine;
 using Zenject;
 
@@ -27,23 +26,21 @@ namespace Assets.CodeBase.Infrastructure.Installers
             RegisterStateMachine();
         }
 
-        private void RegisterConnectionInfo() {
+        private void RegisterConnectionInfo() =>
             Container
                 .Bind<IConnectionInfoService>()
                 .To<ConnectionInfoService>()
                 .FromNew()
                 .AsSingle()
                 .NonLazy();
-        }
 
-        private void RegisterWorldControlService() {
+        private void RegisterWorldControlService() =>
             Container
                 .Bind<IWorldControlService>()
                 .To<WorldControlService>()
                 .FromNew()
                 .AsSingle()
                 .NonLazy();
-        }
 
         private void RegisterCoroutineRunner() =>
             Container

@@ -1,8 +1,9 @@
 ﻿using Assets.CodeBase.Infrastructure.Services.WorldControl;
+using Assets.CodeBase.Utility.StateMachine;
 
-namespace Assets.CodeBase.Infrastructure.StateMachine.States
+namespace Assets.CodeBase.Infrastructure.GameStateManagement.States
 {
-    public class MainSceneActiveState : IState
+    public class MainSceneActiveState : IState , IGameState
     {
         private readonly IGameStateMachine _gameStateMachine;
         private readonly IWorldControlService _worldControlService;
