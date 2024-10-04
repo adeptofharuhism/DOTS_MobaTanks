@@ -1,7 +1,9 @@
 ﻿using Assets.CodeBase.Infrastructure.Services.SceneLoader;
 using Assets.CodeBase.Infrastructure.Services.WorldControl;
+using Assets.CodeBase.UI;
 using Assets.CodeBase.UI.Curtain;
 using Assets.CodeBase.Utility.StateMachine;
+using Unity.Entities;
 using UnityEngine.SceneManagement;
 
 namespace Assets.CodeBase.Infrastructure.GameStateManagement.States
@@ -28,7 +30,7 @@ namespace Assets.CodeBase.Infrastructure.GameStateManagement.States
         public void Enter(bool isHost) {
             _loadingCurtain.Show();
 
-            StartWorlds(isHost);
+            CreateWorlds(isHost);
             DisposeDefaultWorld();
 
             _sceneLoader.Load(Constants.SceneNames.MainSceneName, LoadSceneMode.Single, OnSceneLoaded);
@@ -36,7 +38,7 @@ namespace Assets.CodeBase.Infrastructure.GameStateManagement.States
 
         public void Exit() { }
 
-        private void StartWorlds(bool isHost) {
+        private void CreateWorlds(bool isHost) {
             if (isHost)
                 _worldControlService.CreateServerWorld();
             _worldControlService.CreateClientWorld();
@@ -47,8 +49,66 @@ namespace Assets.CodeBase.Infrastructure.GameStateManagement.States
         }
 
         private void OnSceneLoaded() {
+            SubscribeToWorldLoadingEvent();
+            _worldControlService.StartWorlds();
+        }
+
+        private void SubscribeToWorldLoadingEvent() =>
+            World.DefaultGameObjectInjectionWorld
+                .GetExistingSystemManaged<DeployUiOnClientSystem>()
+                .OnReadyForUiDeploy += OnSubSceneLoaded;
+
+        private void OnSubSceneLoaded() {
+            UnsubscribeFromWorldLoadingEvent();
+
             _loadingCurtain.Hide();
-            _gameStateMachine.EnterGameState<MainSceneActiveState>();
+
+            _gameStateMachine.EnterGameState<PrepareForGameState>();
+        }
+
+        private void UnsubscribeFromWorldLoadingEvent() =>
+            World.DefaultGameObjectInjectionWorld
+                .GetExistingSystemManaged<DeployUiOnClientSystem>()
+                .OnReadyForUiDeploy -= OnSubSceneLoaded;
+    }
+
+    public class PrepareForGameState : IState, IGameState
+    {
+        private readonly IGameStateMachine _gameStateMachine;
+
+        public PrepareForGameState(IGameStateMachine gameStateMachine)
+        {
+            _gameStateMachine = gameStateMachine;
+        }
+
+        public void Enter() {
+
+        }
+
+        public void Exit() {
+
+        }
+    }
+
+    public class InGameState : IState, IGameState
+    {
+        public void Enter() {
+            throw new System.NotImplementedException();
+        }
+
+        public void Exit() {
+            throw new System.NotImplementedException();
+        }
+    }
+
+    public class GameOverState : IState, IGameState
+    {
+        public void Enter() {
+            throw new System.NotImplementedException();
+        }
+
+        public void Exit() {
+            throw new System.NotImplementedException();
         }
     }
 }

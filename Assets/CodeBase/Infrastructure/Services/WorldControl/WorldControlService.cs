@@ -16,14 +16,12 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldControl
             _connectionInfoService = connectionInfoService;
         }
 
-        public void CreateServerWorld() {
+        public void CreateServerWorld() => 
             ClientServerBootstrap.CreateServerWorld(Constants.WorldNames.ServerWorld);
-        }
 
-        public void CreateClientWorld() {
+        public void CreateClientWorld() => 
             World.DefaultGameObjectInjectionWorld =
                 ClientServerBootstrap.CreateClientWorld(Constants.WorldNames.ClientWorld);
-        }
 
         public void StartWorlds() {
             bool isHost = 

@@ -547,6 +547,7 @@ GameObject:
   m_Component:
   - component: {fileID: 591445690}
   - component: {fileID: 591445689}
+  - component: {fileID: 591445691}
   m_Layer: 0
   m_Name: SceneContext
   m_TagString: Untagged
@@ -567,7 +568,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers: []
-  _monoInstallers: []
+  _monoInstallers:
+  - {fileID: 591445691}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -600,6 +602,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &591445691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 591445688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 852d295e216046e46910fc5cb37cdfa6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mainSceneView: {fileID: 1253407838}
 --- !u!1 &1252991803
 GameObject:
   m_ObjectHideFlags: 0
@@ -664,6 +679,7 @@ GameObject:
   - component: {fileID: 1253407836}
   - component: {fileID: 1253407835}
   - component: {fileID: 1253407837}
+  - component: {fileID: 1253407838}
   m_Layer: 5
   m_Name: UIDocument
   m_TagString: Untagged
@@ -728,6 +744,18 @@ MonoBehaviour:
     type: 3}
   _shopPanel: {fileID: 9197481963319205126, guid: 1a8e997bc7774174a9ac72f56054994d,
     type: 3}
+--- !u!114 &1253407838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1253407834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 832d23eed8c7ba9458f2b53040b0e57b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1444963102
 GameObject:
   m_ObjectHideFlags: 0

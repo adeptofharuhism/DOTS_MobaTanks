@@ -23,10 +23,10 @@ namespace Assets.CodeBase.Infrastructure.GameStateManagement
         [Inject]
         public GameStateMachine(ISceneLoader sceneLoader, IWorldControlService worldControlService, ILoadingCurtain loadingCurtain) {
             AddGameState(new BootstrapState(this));
-            AddGameState(new LoadStartSceneState(this, sceneLoader, loadingCurtain));
+            AddGameState(new LoadStartSceneState(this, sceneLoader, worldControlService, loadingCurtain));
             AddGameState(new StartSceneActiveState(this));
             AddGameState(new LoadMainSceneState(this, sceneLoader, worldControlService, loadingCurtain));
-            AddGameState(new MainSceneActiveState(this, worldControlService));
+            AddGameState(new PrepareForGameState(this));
         }
 
         public void Initialize() =>

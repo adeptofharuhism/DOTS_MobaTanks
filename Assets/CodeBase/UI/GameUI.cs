@@ -39,6 +39,7 @@ namespace Assets.CodeBase.UI
         private VisualElement _shopPanelInstantiated;
 
         private void OnEnable() {
+            UnityEngine.Debug.Log("GameUI Enabled");
             InstantiatePanels();
             SetupParts();
             SetupGameReadyPanel();
@@ -101,8 +102,9 @@ namespace Assets.CodeBase.UI
 
             DeployUiOnClientSystem deployUiSystem =
                defaultWorld.GetExistingSystemManaged<DeployUiOnClientSystem>();
-            if (deployUiSystem != null)
+            if (deployUiSystem != null) {
                 deployUiSystem.OnReadyForUiDeploy += ShowGameReadyPanel;
+            }
 
             ClientEnterEndGameSystem endGameSystem =
                 defaultWorld.GetExistingSystemManaged<ClientEnterEndGameSystem>();

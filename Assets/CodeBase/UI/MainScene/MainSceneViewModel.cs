@@ -3,7 +3,7 @@ using Zenject;
 
 namespace Assets.CodeBase.UI.MainScene
 {
-    public enum MainSceneViewMode
+    public enum MainSceneMode
     {
         Loading,
         Preparing,
@@ -18,9 +18,8 @@ namespace Assets.CodeBase.UI.MainScene
 
     public class MainSceneViewModel : IMainSceneViewModel, IInitializable, IDisposable
     {
-        public MainSceneViewModel()
-        {
-            
+        public MainSceneViewModel() {
+
         }
 
         public void Initialize() {

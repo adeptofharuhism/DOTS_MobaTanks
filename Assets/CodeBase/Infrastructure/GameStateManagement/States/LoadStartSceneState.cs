@@ -1,4 +1,5 @@
 ﻿using Assets.CodeBase.Infrastructure.Services.SceneLoader;
+using Assets.CodeBase.Infrastructure.Services.WorldControl;
 using Assets.CodeBase.UI.Curtain;
 using Assets.CodeBase.Utility.StateMachine;
 using UnityEngine.SceneManagement;
@@ -9,16 +10,25 @@ namespace Assets.CodeBase.Infrastructure.GameStateManagement.States
     {
         private readonly IGameStateMachine _gameStateMachine;
         private readonly ISceneLoader _sceneLoader;
+        private readonly IWorldControlService _worldControlService;
         private readonly ILoadingCurtain _loadingCurtain;
 
-        public LoadStartSceneState(IGameStateMachine gameStateMachine, ISceneLoader sceneLoader, ILoadingCurtain loadingCurtain) {
+        public LoadStartSceneState(
+            IGameStateMachine gameStateMachine,
+            ISceneLoader sceneLoader,
+            IWorldControlService worldControlService,
+            ILoadingCurtain loadingCurtain) {
+
             _gameStateMachine = gameStateMachine;
             _sceneLoader = sceneLoader;
+            _worldControlService = worldControlService;
             _loadingCurtain = loadingCurtain;
         }
 
         public void Enter() {
             _loadingCurtain.Show();
+
+            _worldControlService.DisposeNetworkWorlds();
             _sceneLoader.Load(Constants.SceneNames.StartSceneName, LoadSceneMode.Single, OnSceneLoaded);
         }
 
@@ -26,6 +36,7 @@ namespace Assets.CodeBase.Infrastructure.GameStateManagement.States
 
         private void OnSceneLoaded() {
             _loadingCurtain.Hide();
+
             _gameStateMachine.EnterGameState<StartSceneActiveState>();
         }
     }

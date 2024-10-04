@@ -14,26 +14,32 @@ namespace Assets.CodeBase.Utility.StateMachine
         protected void AddState<TState>(TState state) where TState : class, IExitableState, IStateRestriction =>
             _states.Add(typeof(TState), state);
 
-        protected void Enter<TState>() where TState : class, IState {
-            IState state = ChangeState<TState>();
+        protected void Enter<TState>() 
+            where TState : class, IState , IStateRestriction{
 
+            IState state = ChangeState<TState>();
             state.Enter();
         }
 
-        protected void Enter<TState, TPayload>(TPayload payload) where TState : class, IPayloadedState<TPayload> {
-            IPayloadedState<TPayload> state = ChangeState<TState>();
+        protected void Enter<TState, TPayload>(TPayload payload) 
+            where TState : class, IPayloadedState<TPayload> , IStateRestriction{
 
+            IPayloadedState<TPayload> state = ChangeState<TState>();
             state.Enter(payload);
         }
 
-        private TState ChangeState<TState>() where TState : class, IExitableState {
+        private TState ChangeState<TState>() 
+            where TState : class, IExitableState {
+
             _activeState?.Exit();
 
             TState state = GetState<TState>();
             _activeState = state;
+
 #if UNITY_EDITOR
             UnityEngine.Debug.Log($"Entering {typeof(TState).Name} in {GetType().Name}");
 #endif
+
             return state;
         }
 
