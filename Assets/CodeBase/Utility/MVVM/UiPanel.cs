@@ -1,6 +1,6 @@
 ﻿using UnityEngine.UIElements;
 
-namespace Assets.CodeBase.UI
+namespace Assets.CodeBase.Utility.MVVM
 {
     public abstract class UiPanel
     {

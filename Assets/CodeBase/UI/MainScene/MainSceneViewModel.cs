@@ -1,25 +1,39 @@
-﻿using System;
-using Zenject;
+﻿using Assets.CodeBase.Infrastructure.Services.MainSceneModeNotifier;
+using Assets.CodeBase.Utility;
+using Assets.CodeBase.Utility.MVVM;
 
 namespace Assets.CodeBase.UI.MainScene
 {
     public interface IMainSceneViewModel
     {
-
+        ReactiveProperty<MainSceneMode> Mode { get; }
     }
 
-    public class MainSceneViewModel : IMainSceneViewModel, IInitializable, IDisposable
+    public class MainSceneViewModel : ViewModel, IMainSceneViewModel
     {
-        public MainSceneViewModel() {
+        public ReactiveProperty<MainSceneMode> Mode => _mode;
 
+        private readonly ReactiveProperty<MainSceneMode> _mode = new();
+
+        private readonly IMainSceneModeNotifier _mainSceneModeNotifier;
+
+        public MainSceneViewModel(IMainSceneModeNotifier mainSceneModeNotifier) {
+            _mainSceneModeNotifier = mainSceneModeNotifier;
         }
 
-        public void Initialize() {
-            throw new NotImplementedException();
+        protected override void GetModelValues() {
+            _mode.Value = _mainSceneModeNotifier.Mode.Value;
         }
 
-        public void Dispose() {
-            throw new NotImplementedException();
+        protected override void SubscribeToModel() {
+            _mainSceneModeNotifier.Mode.OnChanged += OnChangedMode;
         }
+
+        protected override void UnsubscribeFromModel() {
+            _mainSceneModeNotifier.Mode.OnChanged -= OnChangedMode;
+        }
+
+        private void OnChangedMode(MainSceneMode mode) =>
+            _mode.Value = mode;
     }
 }

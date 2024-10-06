@@ -2,7 +2,7 @@
 using Assets.CodeBase.Infrastructure.GameStateManagement.States;
 using Assets.CodeBase.Infrastructure.Services.ConnectionInfo;
 using Assets.CodeBase.Utility;
-using System;
+using Assets.CodeBase.Utility.MVVM;
 using UnityEngine;
 using Zenject;
 
@@ -15,7 +15,7 @@ namespace Assets.CodeBase.UI.StartScene
         Host
     }
 
-    public class StartSceneViewModel : IStartSceneViewModel, IInitializable, IDisposable
+    public class StartSceneViewModel : ViewModel, IStartSceneViewModel
     {
         public ReactiveProperty<StartSceneMode> Mode => _mode;
 
@@ -40,14 +40,10 @@ namespace Assets.CodeBase.UI.StartScene
             _connectionInfoService = connectionInfoService;
         }
 
-        public void Initialize() {
+        public override void Initialize() {
             SetInitialMode();
-            GetModelValues();
-            SubscribeOnModelChanges();
-        }
 
-        public void Dispose() {
-            UnsubscribeFromModelChanges();
+            base.Initialize();
         }
 
         public void OnClickHostConnectionVariant() =>
@@ -100,6 +96,27 @@ namespace Assets.CodeBase.UI.StartScene
             _connectionInfoService.SetConnectionIp(ip);
         }
 
+        protected override void GetModelValues() {
+            _joinPortView.Value = _connectionInfoService.ConnectionPort.Value.ToString();
+            _joinIpView.Value = _connectionInfoService.ConnectionIp.Value;
+            _hostPortView.Value = _connectionInfoService.LocalPort.Value.ToString();
+            _playerNameView.Value = _connectionInfoService.PlayerName.Value;
+        }
+
+        protected override void SubscribeToModel() {
+            _connectionInfoService.ConnectionPort.OnChanged += OnChangedConnectionPort;
+            _connectionInfoService.ConnectionIp.OnChanged += OnChangedConnectionIp;
+            _connectionInfoService.LocalPort.OnChanged += OnChangedLocalPort;
+            _connectionInfoService.PlayerName.OnChanged += OnChangedPlayerName;
+        }
+
+        protected override void UnsubscribeFromModel() {
+            _connectionInfoService.ConnectionPort.OnChanged -= OnChangedConnectionPort;
+            _connectionInfoService.ConnectionIp.OnChanged -= OnChangedConnectionIp;
+            _connectionInfoService.LocalPort.OnChanged -= OnChangedLocalPort;
+            _connectionInfoService.PlayerName.OnChanged -= OnChangedPlayerName;
+        }
+
         private void SetInitialMode() =>
             _mode.Value = StartSceneMode.ConnectionChoice;
 
@@ -108,27 +125,6 @@ namespace Assets.CodeBase.UI.StartScene
 
         private ushort ParsePort(string port) =>
             ushort.Parse(port);
-
-        private void GetModelValues() {
-            _joinPortView.Value = _connectionInfoService.ConnectionPort.Value.ToString();
-            _joinIpView.Value = _connectionInfoService.ConnectionIp.Value;
-            _hostPortView.Value = _connectionInfoService.LocalPort.Value.ToString();
-            _playerNameView.Value = _connectionInfoService.PlayerName.Value;
-        }
-
-        private void SubscribeOnModelChanges() {
-            _connectionInfoService.ConnectionPort.OnChanged += OnChangedConnectionPort;
-            _connectionInfoService.ConnectionIp.OnChanged += OnChangedConnectionIp;
-            _connectionInfoService.LocalPort.OnChanged += OnChangedLocalPort;
-            _connectionInfoService.PlayerName.OnChanged += OnChangedPlayerName;
-        }
-
-        private void UnsubscribeFromModelChanges() {
-            _connectionInfoService.ConnectionPort.OnChanged -= OnChangedConnectionPort;
-            _connectionInfoService.ConnectionIp.OnChanged -= OnChangedConnectionIp;
-            _connectionInfoService.LocalPort.OnChanged -= OnChangedLocalPort;
-            _connectionInfoService.PlayerName.OnChanged -= OnChangedPlayerName;
-        }
 
         private void OnChangedConnectionPort(ushort newPort) =>
             _joinPortView.Value = newPort.ToString();

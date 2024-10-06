@@ -1,4 +1,5 @@
-﻿using UnityEngine.UIElements;
+﻿using Assets.CodeBase.Utility.MVVM;
+using UnityEngine.UIElements;
 
 namespace Assets.CodeBase.UI.StartScene.Panels
 {
