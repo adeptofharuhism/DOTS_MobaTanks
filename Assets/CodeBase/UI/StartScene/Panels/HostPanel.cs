@@ -1,28 +1,60 @@
-﻿using System;
-using UnityEngine.UIElements;
+﻿using UnityEngine.UIElements;
 
 namespace Assets.CodeBase.UI.StartScene.Panels
 {
     public sealed class HostPanel : ConnectionPanel
     {
-        public HostPanel(VisualTreeAsset panelAsset, IStartSceneViewModel startSceneViewModel)
-            : base(panelAsset, startSceneViewModel) { }
+        private readonly IHostVariantViewModel _hostVariantViewModel;
 
-        protected override void CacheVisualElements() {
-            _playButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.HostButton);
-            _cancelButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.CancelButton);
-            _playerName = _panel.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.PlayerName);
-            _port = _panel.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.JoinPort);
+        private Button _hostButton;
+        private TextField _hostPort;
+
+        public HostPanel(VisualTreeAsset panelAsset, IHostVariantViewModel hostVariantViewModel)
+            : base(panelAsset, hostVariantViewModel) {
+
+            _hostVariantViewModel = hostVariantViewModel;
+        }
+
+        public override void Enable() {
+            base.Enable();
+
+            _hostButton.RegisterCallback<ClickEvent>(OnClickHostButton);
+            _hostPort.RegisterCallback<FocusOutEvent>(OnFocusOutHostPort);
+        }
+
+        public override void Disable() {
+            base.Disable();
+
+            _hostButton.UnregisterCallback<ClickEvent>(OnClickHostButton);
+            _hostPort.UnregisterCallback<FocusOutEvent>(OnFocusOutHostPort);
         }
 
         protected override void BindData() {
-            _startSceneViewModel.PlayerNameView.OnChanged += OnChangedPlayerName;
-            _startSceneViewModel.HostPortView.OnChanged += OnChangedPort;
+            base.BindData();
+
+            _hostVariantViewModel.HostPortView.OnChanged += OnChangedHostPort;
         }
 
         protected override void UnbindData() {
-            _startSceneViewModel.PlayerNameView.OnChanged -= OnChangedPlayerName;
-            _startSceneViewModel.HostPortView.OnChanged -= OnChangedPort;
+            base.UnbindData();
+
+            _hostVariantViewModel.HostPortView.OnChanged -= OnChangedHostPort;
         }
+
+        protected override void CacheVisualElements() {
+            _hostButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.HostButton);
+            _cancelButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.CancelButton);
+            _playerName = _panel.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.PlayerName);
+            _hostPort = _panel.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.JoinPort);
+        }
+
+        private void OnClickHostButton(ClickEvent evt) =>
+            _hostVariantViewModel.OnClickHostGame();
+
+        private void OnFocusOutHostPort(FocusOutEvent evt) =>
+            _hostVariantViewModel.OnFocusOutHostPort(_hostPort.value);
+
+        private void OnChangedHostPort(string port) =>
+            _hostPort.value = port;
     }
 }

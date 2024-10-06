@@ -2,14 +2,19 @@
 
 namespace Assets.CodeBase.UI.StartScene.Panels
 {
-    public sealed class ConnectionChoicePanel : StartSceneUiPanel
+    public sealed class ConnectionChoicePanel : UiPanel
     {
+        private readonly IConnectionChoiceViewModel _connectionChoiceViewModel;
+
         private Button _hostButton;
         private Button _joinButton;
         private Button _exitButton;
 
-        public ConnectionChoicePanel(VisualTreeAsset panelAsset, IStartSceneViewModel startSceneViewModel)
-            : base(panelAsset, startSceneViewModel) { }
+        public ConnectionChoicePanel(VisualTreeAsset panelAsset, IConnectionChoiceViewModel connectionChoiceViewModel)
+            : base(panelAsset) {
+
+            _connectionChoiceViewModel = connectionChoiceViewModel;
+        }
 
         public override void Enable() {
             _hostButton.RegisterCallback<ClickEvent>(OnClickHostButton);
@@ -30,12 +35,12 @@ namespace Assets.CodeBase.UI.StartScene.Panels
         }
 
         private void OnClickHostButton(ClickEvent evt) =>
-            _startSceneViewModel.OnClickHostChoice();
+            _connectionChoiceViewModel.OnClickHostConnectionVariant();
 
         private void OnClickJoinButton(ClickEvent evt) =>
-            _startSceneViewModel.OnClickJoinChoice();
+            _connectionChoiceViewModel.OnClickJoinConnectionVariant();
 
         private void OnClickExitButton(ClickEvent evt) =>
-            _startSceneViewModel.OnClickExit();
+            _connectionChoiceViewModel.OnClickExit();
     }
 }

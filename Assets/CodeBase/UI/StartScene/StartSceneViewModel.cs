@@ -1,6 +1,6 @@
-﻿using Assets.CodeBase.Infrastructure.Services.ConnectionInfo;
-using Assets.CodeBase.Infrastructure.GameStateManagement;
+﻿using Assets.CodeBase.Infrastructure.GameStateManagement;
 using Assets.CodeBase.Infrastructure.GameStateManagement.States;
+using Assets.CodeBase.Infrastructure.Services.ConnectionInfo;
 using Assets.CodeBase.Utility;
 using System;
 using UnityEngine;
@@ -13,25 +13,6 @@ namespace Assets.CodeBase.UI.StartScene
         ConnectionChoice,
         Join,
         Host
-    }
-
-    public interface IStartSceneViewModel
-    {
-        ReactiveProperty<StartSceneMode> Mode { get; }
-
-        ReactiveProperty<string> JoinPortView { get; }
-        ReactiveProperty<string> JoinIpView { get; }
-        ReactiveProperty<string> HostPortView { get; }
-        ReactiveProperty<string> PlayerNameView { get; }
-
-        void OnClickCancel();
-        void OnClickExit();
-        void OnClickHostChoice();
-        void OnClickJoinChoice();
-        void OnClickPlay();
-        void OnFocusOutIp(string ip);
-        void OnFocusOutPlayerName(string name);
-        void OnFocusOutPort(string port);
     }
 
     public class StartSceneViewModel : IStartSceneViewModel, IInitializable, IDisposable
@@ -69,53 +50,64 @@ namespace Assets.CodeBase.UI.StartScene
             UnsubscribeFromModelChanges();
         }
 
-        public void OnClickHostChoice() =>
+        public void OnClickHostConnectionVariant() =>
             _mode.Value = StartSceneMode.Host;
 
-        public void OnClickJoinChoice() =>
+        public void OnClickJoinConnectionVariant() =>
             _mode.Value = StartSceneMode.Join;
 
         public void OnClickExit() =>
             Application.Quit();
 
-        public void OnClickPlay() {
-            if (_mode.Value == StartSceneMode.ConnectionChoice)
-                return;
-
-            bool isHost = false;
-
-            if (_mode.Value == StartSceneMode.Host)
-                isHost = true;
-
-            _gameStateMachine.EnterGameState<LoadMainSceneState, bool>(isHost);
-        }
-
-        public void OnFocusOutPlayerName(string name) => 
+        public void OnFocusOutPlayerName(string name) =>
             _connectionInfoService.SetPlayerName(name);
-
-        public void OnFocusOutPort(string port) { 
-            ushort parsedPort = ushort.Parse(port);
-
-            switch (_mode.Value) {
-                case StartSceneMode.Host:
-                    _connectionInfoService.SetLocalPort(parsedPort);
-                    break;
-                case StartSceneMode.Join:
-                    _connectionInfoService.SetConnectionPort(parsedPort);
-                    break;
-            }
-        }
-
-        public void OnFocusOutIp(string ip) {
-            if (_mode.Value == StartSceneMode.Join)
-                _connectionInfoService.SetConnectionIp(ip);
-        }
 
         public void OnClickCancel() =>
             _mode.Value = StartSceneMode.ConnectionChoice;
 
+        public void OnClickHostGame() {
+            if (_mode.Value != StartSceneMode.Host)
+                return;
+
+            StartGameConnection(isHost: true);
+        }
+
+        public void OnFocusOutHostPort(string port) {
+            if (_mode.Value != StartSceneMode.Host)
+                return;
+
+            _connectionInfoService.SetLocalPort(ParsePort(port));
+        }
+
+        public void OnClickJoinGame() {
+            if (_mode.Value != StartSceneMode.Join)
+                return;
+
+            StartGameConnection(isHost: false);
+        }
+
+        public void OnFocusOutJoinPort(string port) {
+            if (_mode.Value != StartSceneMode.Join)
+                return;
+
+            _connectionInfoService.SetConnectionPort(ParsePort(port));
+        }
+
+        public void OnFocusOutIp(string ip) {
+            if (_mode.Value != StartSceneMode.Join)
+                return;
+
+            _connectionInfoService.SetConnectionIp(ip);
+        }
+
         private void SetInitialMode() =>
             _mode.Value = StartSceneMode.ConnectionChoice;
+
+        private void StartGameConnection(bool isHost) =>
+            _gameStateMachine.EnterGameState<LoadMainSceneState, bool>(isHost);
+
+        private ushort ParsePort(string port) =>
+            ushort.Parse(port);
 
         private void GetModelValues() {
             _joinPortView.Value = _connectionInfoService.ConnectionPort.Value.ToString();
