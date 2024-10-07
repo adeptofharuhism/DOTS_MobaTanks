@@ -31,8 +31,9 @@ namespace Assets.CodeBase.Utility.MVVM
 
         protected abstract void UnsubscribeFromViewModel();
 
-        protected void AddPanel<TPanel>(TPanel panel) where TPanel : UiPanel =>
+        protected void AddPanel<TPanel>(TPanel panel) where TPanel : UiPanel {
             _panels.Add(typeof(TPanel), panel);
+        }
 
         protected void ActivatePanel<TPanel>() where TPanel : UiPanel {
             DeactivateActivePanel();
@@ -40,9 +41,14 @@ namespace Assets.CodeBase.Utility.MVVM
             ShowActivePanel();
         }
 
-        private void CacheContentPanel() => 
+        protected void DeactivateActivePanel() {
+            HideActivePanel();
+            DisableActivePanel();
+        }
+
+        private void CacheContentPanel() =>
             _contentPanel = _uiDocument.rootVisualElement
-                .Q<VisualElement>(Constants.VisualElementNames.ConnectionMenu.ContentPanel);
+                .Q<VisualElement>(Constants.VisualElementNames.ContentPanel);
 
         private void InitializePanels() {
             foreach (UiPanel panel in _panels.Values)
@@ -52,11 +58,6 @@ namespace Assets.CodeBase.Utility.MVVM
         private void DisposePanels() {
             foreach (UiPanel panel in _panels.Values)
                 panel.Dispose();
-        }
-
-        private void DeactivateActivePanel() {
-            HideActivePanel();
-            DisableActivePanel();
         }
 
         private void EnablePanel<TPanel>() where TPanel : UiPanel {

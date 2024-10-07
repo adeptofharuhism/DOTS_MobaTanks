@@ -4,6 +4,7 @@ using Assets.CodeBase.Infrastructure.Services.ConnectionInfo;
 using Assets.CodeBase.Infrastructure.Services.MainSceneModeNotifier;
 using Assets.CodeBase.Infrastructure.Services.SceneLoader;
 using Assets.CodeBase.Infrastructure.Services.WinnerNotifier;
+using Assets.CodeBase.Infrastructure.Services.WorldCommandSender;
 using Assets.CodeBase.Infrastructure.Services.WorldControl;
 using Assets.CodeBase.UI.Curtain;
 using UnityEngine;
@@ -20,6 +21,7 @@ namespace Assets.CodeBase.Infrastructure.Installers
             UnityEngine.SceneManagement.SceneManager.LoadScene(0);
             UnityEngine.Debug.Log("Installing dependencies");
 #endif
+            RegisterWorldRpcSenderService();
             RegisterWinnerNotifier();
             RegisterMainSceneModeNotifier();
             RegisterConnectionInfo();
@@ -29,6 +31,14 @@ namespace Assets.CodeBase.Infrastructure.Installers
             RegisterSceneLoader();
             RegisterStateMachine();
         }
+
+        private void RegisterWorldRpcSenderService() => 
+            Container
+                .Bind<IWorldRpcSenderService>()
+                .To<WorldRpcSenderService>()
+                .FromNew()
+                .AsSingle()
+                .NonLazy();
 
         private void RegisterWinnerNotifier() => 
             Container

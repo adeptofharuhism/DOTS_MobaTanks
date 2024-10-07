@@ -19,12 +19,15 @@ namespace Assets.CodeBase.Utility.MVVM
         public virtual void Disable() { }
 
         public void Initialize() {
+            ReadInitialViewModelData();
             BindData();
         }
 
         public void Dispose() {
             UnbindData();
         }
+
+        protected virtual void ReadInitialViewModelData() { }
 
         protected virtual void BindData() { }
 

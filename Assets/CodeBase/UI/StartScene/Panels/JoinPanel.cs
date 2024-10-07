@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine.UIElements;
+﻿using UnityEngine.UIElements;
 
 namespace Assets.CodeBase.UI.StartScene.Panels
 {
@@ -39,6 +38,13 @@ namespace Assets.CodeBase.UI.StartScene.Panels
             _playerName = _panel.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.JoinGamePanel.PlayerName);
             _joinPort = _panel.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.JoinGamePanel.JoinPort);
             _ip = _panel.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.JoinGamePanel.JoinIP);
+        }
+
+        protected override void ReadInitialViewModelData() {
+            base.ReadInitialViewModelData();
+
+            _joinPort.value = _joinVariantViewModel.JoinPortView.Value;
+            _ip.value = _joinVariantViewModel.JoinIpView.Value;
         }
 
         protected override void BindData() {

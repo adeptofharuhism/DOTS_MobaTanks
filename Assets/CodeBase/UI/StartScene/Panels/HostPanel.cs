@@ -29,6 +29,12 @@ namespace Assets.CodeBase.UI.StartScene.Panels
             _hostPort.UnregisterCallback<FocusOutEvent>(OnFocusOutHostPort);
         }
 
+        protected override void ReadInitialViewModelData() {
+            base.ReadInitialViewModelData();
+
+            _hostPort.value = _hostVariantViewModel.HostPortView.Value;
+        }
+
         protected override void BindData() {
             base.BindData();
 

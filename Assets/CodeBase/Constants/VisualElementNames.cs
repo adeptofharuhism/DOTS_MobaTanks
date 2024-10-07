@@ -2,10 +2,10 @@
 {
     public static class VisualElementNames
     {
+        public const string ContentPanel = "ContentPanel";
+
         public static class ConnectionMenu
         {
-            public const string ContentPanel = "ContentPanel";
-
             public static class ConnectionChoicePanel
             {
                 public const string HostButton = "HostButton";
@@ -34,25 +34,18 @@
 
         public static class GameUI
         {
-            public const string ButtonsPart = "ButtonsPart";
-            public const string MoneyPart = "MoneyPart";
-            public const string ShopPart = "ShopPart";
-
-            public class GameReadyPanel
+            public static class PreparingPanel
             {
-                public const string ReadyButton = "ReadyButton";
+                public const string SubContentPanel = "PreparingPanel";
+
+                public static class AskReadyPanel
+                {
+                    public const string ReadyButton = "ReadyButton";
+                }
             }
 
-            public class EndGamePanel
-            {
-                public const string EndGameButton = "EndGameButton";
-            }
-
-            public class MoneyPanel
-            {
-                public const string MoneyAmount = "MoneyAmount";
-                public const string ShopButton = "ShopButton";
-            }
+            public static class InGamePanel { }
+            public static class EndGamePanel { }
         }
     }
 }

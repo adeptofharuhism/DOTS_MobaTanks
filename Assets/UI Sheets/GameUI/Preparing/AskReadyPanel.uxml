@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="AskReadyPanel" style="flex-grow: 1;">
+        <ui:VisualElement style="flex-grow: 1;" />
+        <ui:Label tabindex="-1" text="Are you ready?" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ReadyText" class="font textHighlightWhite headerText" />
+        <ui:Button text="Button" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ReadyButton" class="gameButton font" />
+        <ui:VisualElement style="flex-grow: 1;" />
+    </ui:VisualElement>
+</ui:UXML>

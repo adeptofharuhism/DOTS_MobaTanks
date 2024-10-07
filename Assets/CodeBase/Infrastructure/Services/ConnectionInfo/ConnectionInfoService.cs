@@ -6,7 +6,7 @@ namespace Assets.CodeBase.Infrastructure.Services.ConnectionInfo
     {
         private const string LocalHostIp = "127.0.0.1";
         private const string JoinPortHardcoded = "7979";
-        private const string PlayerNameHardcoded = "Bingus";
+        private const string PlayerNameHardcoded = "Adept";
 
         public ReactiveProperty<string> ConnectionIp => _connectionIp;
         public ReactiveProperty<ushort> ConnectionPort => _connectionPort;

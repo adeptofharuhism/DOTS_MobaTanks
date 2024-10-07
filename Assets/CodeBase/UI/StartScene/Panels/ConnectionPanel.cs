@@ -26,6 +26,10 @@ namespace Assets.CodeBase.UI.StartScene.Panels
             _playerName.UnregisterCallback<FocusOutEvent>(OnFocusOutPlayerName);
         }
 
+        protected override void ReadInitialViewModelData() {
+            _playerName.value = _connectionVariantViewModel.PlayerNameView.Value;
+        }
+
         protected override void BindData() {
             _connectionVariantViewModel.PlayerNameView.OnChanged += OnChangedPlayerName;
         }

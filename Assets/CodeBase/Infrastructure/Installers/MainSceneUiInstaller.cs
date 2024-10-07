@@ -15,8 +15,7 @@ namespace Assets.CodeBase.Infrastructure.Installers
 
         private void RegisterMainSceneViewModel() => 
             Container
-                .Bind<IMainSceneViewModel>()
-                .To<MainSceneViewModel>()
+                .BindInterfacesTo<MainSceneViewModel>()
                 .FromNew()
                 .AsSingle()
                 .NonLazy();

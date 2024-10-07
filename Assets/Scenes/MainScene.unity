@@ -678,7 +678,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1253407836}
   - component: {fileID: 1253407835}
-  - component: {fileID: 1253407837}
   - component: {fileID: 1253407838}
   m_Layer: 5
   m_Name: UIDocument
@@ -719,31 +718,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1253407837
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1253407834}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 12adafc78f403db449f53bc58de01d15, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _uiDocument: {fileID: 1253407835}
-  _loadingPanel: {fileID: 9197481963319205126, guid: 4319370448cc42e478376d0cec17c17c,
-    type: 3}
-  _gameReadyPanel: {fileID: 9197481963319205126, guid: 09e6dc4e01d5c4a42a6a3b86f244ba46,
-    type: 3}
-  _blueWonPanel: {fileID: 9197481963319205126, guid: b2666a6480d279e47aea01230c6a05eb,
-    type: 3}
-  _orangeWonPanel: {fileID: 9197481963319205126, guid: 08695d3c2d13f4e48853b44d2116c666,
-    type: 3}
-  _moneyPanel: {fileID: 9197481963319205126, guid: 09d8759d518e078468b09938255b2d7a,
-    type: 3}
-  _shopPanel: {fileID: 9197481963319205126, guid: 1a8e997bc7774174a9ac72f56054994d,
-    type: 3}
 --- !u!114 &1253407838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -757,6 +731,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _uiDocument: {fileID: 1253407835}
+  _preparingPanel: {fileID: 9197481963319205126, guid: b5d0e4b0d1295ba4c870ba3de9e21643,
+    type: 3}
+  _askReadyPanel: {fileID: 9197481963319205126, guid: 52517223bca3d8f43bfbe378bd2c25f1,
+    type: 3}
+  _waitingPanel: {fileID: 9197481963319205126, guid: 88f8f313340d5424bae4b64cc44a21ec,
+    type: 3}
+  _inGamePanel: {fileID: 0}
+  _endGamePanel: {fileID: 0}
 --- !u!1 &1444963102
 GameObject:
   m_ObjectHideFlags: 0
