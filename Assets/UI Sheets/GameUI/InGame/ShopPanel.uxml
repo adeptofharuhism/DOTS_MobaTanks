@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="ShopPanel" style="flex-grow: 1; flex-direction: column-reverse;">
+        <ui:VisualElement name="MoneyPart" style="flex-grow: 1; flex-direction: row; height: 12%; justify-content: flex-end; margin-right: 2%;">
+            <ui:Label tabindex="-1" text="999999" parse-escape-sequences="true" display-tooltip-when-elided="true" name="MoneyLabel" class="headerText textHighlightWhite font" style="width: 45%; -unity-text-align: middle-right;" />
+            <ui:Button text="Shop" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ShopButton" class="gameButton font" style="width: 45%;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="ShopPart" style="flex-grow: 1; height: 88%;" />
+    </ui:VisualElement>
+</ui:UXML>

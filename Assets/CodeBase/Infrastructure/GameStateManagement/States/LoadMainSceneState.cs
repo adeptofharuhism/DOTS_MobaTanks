@@ -1,10 +1,9 @@
 ﻿using Assets.CodeBase.Infrastructure.Services.MainSceneModeNotifier;
 using Assets.CodeBase.Infrastructure.Services.SceneLoader;
 using Assets.CodeBase.Infrastructure.Services.WorldControl;
-using Assets.CodeBase.UI;
+using Assets.CodeBase.Infrastructure.Services.WorldEvents;
 using Assets.CodeBase.UI.Curtain;
 using Assets.CodeBase.Utility.StateMachine;
-using Unity.Entities;
 using UnityEngine.SceneManagement;
 
 namespace Assets.CodeBase.Infrastructure.GameStateManagement.States
@@ -13,7 +12,8 @@ namespace Assets.CodeBase.Infrastructure.GameStateManagement.States
     {
         private readonly IGameStateMachine _gameStateMachine;
         private readonly ISceneLoader _sceneLoader;
-        private readonly IWorldControlService _worldControlService;
+        private readonly IWorldControlService _worldControl;
+        private readonly IWorldEventBusService _worldEventBus;
         private readonly ILoadingCurtain _loadingCurtain;
         private readonly IMainSceneModeNotifier _mainSceneModeNotifier;
 
@@ -21,12 +21,14 @@ namespace Assets.CodeBase.Infrastructure.GameStateManagement.States
             IGameStateMachine gameStateMachine,
             ISceneLoader sceneLoader,
             IWorldControlService worldControlService,
+            IWorldEventBusService worldEventBus,
             ILoadingCurtain loadingCurtain,
             IMainSceneModeNotifier mainSceneModeNotifier) {
 
             _gameStateMachine = gameStateMachine;
             _sceneLoader = sceneLoader;
-            _worldControlService = worldControlService;
+            _worldControl = worldControlService;
+            _worldEventBus = worldEventBus;
             _loadingCurtain = loadingCurtain;
             _mainSceneModeNotifier = mainSceneModeNotifier;
         }
@@ -46,25 +48,23 @@ namespace Assets.CodeBase.Infrastructure.GameStateManagement.States
 
         private void CreateWorlds(bool isHost) {
             if (isHost)
-                _worldControlService.CreateServerWorld();
-            _worldControlService.CreateClientWorld();
+                _worldControl.CreateServerWorld();
+            _worldControl.CreateClientWorld();
         }
 
         private void DisposeDefaultWorld() {
-            _worldControlService.DisposeDefaultWorld();
+            _worldControl.DisposeDefaultWorld();
         }
 
         private void OnSceneLoaded() {
             SubscribeToWorldLoadingEvent();
-            _worldControlService.StartWorlds();
+            _worldControl.StartWorlds();
         }
 
         private void SubscribeToWorldLoadingEvent() =>
-            World.DefaultGameObjectInjectionWorld
-                .GetExistingSystemManaged<DeployUiOnClientSystem>()
-                .OnReadyForUiDeploy += OnSubSceneLoaded;
+            _worldEventBus.OnLoadedSubScene += OnLoadedSubScene;
 
-        private void OnSubSceneLoaded() {
+        private void OnLoadedSubScene() {
             UnsubscribeFromWorldLoadingEvent();
 
             _loadingCurtain.Hide();
@@ -73,8 +73,6 @@ namespace Assets.CodeBase.Infrastructure.GameStateManagement.States
         }
 
         private void UnsubscribeFromWorldLoadingEvent() =>
-            World.DefaultGameObjectInjectionWorld
-                .GetExistingSystemManaged<DeployUiOnClientSystem>()
-                .OnReadyForUiDeploy -= OnSubSceneLoaded;
+            _worldEventBus.OnLoadedSubScene -= OnLoadedSubScene;
     }
 }

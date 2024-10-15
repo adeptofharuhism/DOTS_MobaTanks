@@ -1,6 +1,5 @@
 ﻿using Assets.CodeBase.Finances;
 using Assets.CodeBase.GameStates.GameStart;
-using Assets.CodeBase.Player.PlayerCount;
 using Assets.CodeBase.Shop;
 using Assets.CodeBase.Teams;
 using Unity.Entities;
@@ -94,11 +93,6 @@ namespace Assets.CodeBase.UI
                 defaultWorld.GetExistingSystemManaged<GameStartNotificationSystem>();
             if (inGameUiActivationSystem != null)
                 inGameUiActivationSystem.OnGameStart += ShowInGameUi;
-
-            ClientMoneyUpdateSystem moneyUpdateSystem =
-                defaultWorld.GetExistingSystemManaged<ClientMoneyUpdateSystem>();
-            if (moneyUpdateSystem != null)
-                moneyUpdateSystem.OnMoneyValueChanged += UpdateMoneyAmount;
 
             ShopAvailabilityCheckSystem shopAvailabilityCheckSystem =
                 defaultWorld.GetExistingSystemManaged<ShopAvailabilityCheckSystem>();

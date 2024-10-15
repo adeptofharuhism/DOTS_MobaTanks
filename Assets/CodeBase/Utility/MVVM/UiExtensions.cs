@@ -10,5 +10,15 @@ namespace Assets.CodeBase.Utility.MVVM
 
             return newPanel;
         }
+
+        public static void AddUiPanel(this VisualElement element, UiPanel panel) {
+            element.Add(panel.Panel);
+            panel.Enable();
+        }
+
+        public static void RemoveUiPanel(this VisualElement element, UiPanel panel) {
+            panel.Disable();
+            element.Remove(panel.Panel);
+        }
     }
 }

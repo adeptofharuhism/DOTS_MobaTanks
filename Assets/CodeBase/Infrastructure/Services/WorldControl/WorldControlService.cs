@@ -1,5 +1,7 @@
 ﻿using Assets.CodeBase.GameStates.PrepareForGame;
 using Assets.CodeBase.Infrastructure.Services.ConnectionInfo;
+using Assets.CodeBase.Infrastructure.Services.WorldAccess;
+using Assets.CodeBase.Infrastructure.Services.WorldEvents;
 using Unity.Entities;
 using Unity.NetCode;
 using Unity.Networking.Transport;
@@ -9,29 +11,40 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldControl
 {
     public class WorldControlService : IWorldControlService
     {
-        private readonly IConnectionInfoService _connectionInfoService;
+        private readonly IConnectionInfoService _connectionInfo;
+        private readonly IWorldAccessService _worldAccess;
+        private readonly IWorldEventSubscriptionControlService _worldEventSubscriptionControl;
 
         [Inject]
-        public WorldControlService(IConnectionInfoService connectionInfoService) {
-            _connectionInfoService = connectionInfoService;
+        public WorldControlService(
+            IConnectionInfoService connectionInfoService,
+            IWorldAccessService worldAccessService,
+            IWorldEventSubscriptionControlService worldEventSubscriptionControlService) {
+
+            _connectionInfo = connectionInfoService;
+            _worldAccess = worldAccessService;
+            _worldEventSubscriptionControl = worldEventSubscriptionControlService;
         }
 
-        public void CreateServerWorld() => 
+        public void CreateServerWorld() =>
             ClientServerBootstrap.CreateServerWorld(Constants.WorldNames.ServerWorld);
 
-        public void CreateClientWorld() => 
-            World.DefaultGameObjectInjectionWorld =
+        public void CreateClientWorld() {
+            _worldAccess.DefaultWorld = 
                 ClientServerBootstrap.CreateClientWorld(Constants.WorldNames.ClientWorld);
 
-        public void StartWorlds() {
-            bool isHost = 
-                ClientServerBootstrap.ServerWorld != null;
+            _worldEventSubscriptionControl.SubscribeToWorldEvents();
+        }
 
+        public void StartWorlds() {
+            bool isHost =
+                ClientServerBootstrap.ServerWorld != null;
+            
             if (isHost) {
                 StartServer();
-                StartClient(_connectionInfoService.LocalIp);
+                StartClient(_connectionInfo.LocalIp);
             } else {
-                StartClient(_connectionInfoService.ConnectionIp.Value);
+                StartClient(_connectionInfo.ConnectionIp.Value);
             }
         }
 
@@ -46,8 +59,11 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldControl
         private void DisposeServerWorld() =>
             DisposeWorld(WorldFlags.GameServer);
 
-        private void DisposeClientWorld() =>
+        private void DisposeClientWorld() {
+            _worldEventSubscriptionControl.UnsubscribeFromWorldEvents();
+
             DisposeWorld(WorldFlags.GameClient);
+        }
 
         private void DisposeWorld(WorldFlags worldFlag) {
             foreach (World world in World.All)
@@ -60,7 +76,7 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldControl
         private void StartServer() {
             World serverWorld = ClientServerBootstrap.ServerWorld;
 
-            NetworkEndpoint serverEndpoint = NetworkEndpoint.AnyIpv4.WithPort(_connectionInfoService.ConnectionPort.Value);
+            NetworkEndpoint serverEndpoint = NetworkEndpoint.AnyIpv4.WithPort(_connectionInfo.ConnectionPort.Value);
 
             using (EntityQuery networkDriverQuery =
                 serverWorld.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>()))
@@ -70,7 +86,7 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldControl
         private void StartClient(string ipAddress) {
             World clientWorld = ClientServerBootstrap.ClientWorld;
 
-            NetworkEndpoint connectionEndpoint = NetworkEndpoint.Parse(ipAddress, _connectionInfoService.ConnectionPort.Value);
+            NetworkEndpoint connectionEndpoint = NetworkEndpoint.Parse(ipAddress, _connectionInfo.ConnectionPort.Value);
 
             using (EntityQuery networkDriverQuery =
                 clientWorld.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>()))
@@ -78,7 +94,7 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldControl
 
             Entity connectionDataEntity = clientWorld.EntityManager.CreateEntity();
             clientWorld.EntityManager.AddComponentData(connectionDataEntity, new ConnectionRequestData {
-                PlayerName = _connectionInfoService.PlayerName.Value
+                PlayerName = _connectionInfo.PlayerName.Value
             });
         }
     }

@@ -44,7 +44,20 @@
                 }
             }
 
-            public static class InGamePanel { }
+            public static class InGamePanel
+            {
+                public const string LeftPart = "LeftPart";
+                public const string CentralPart = "CentralPart";
+                public const string RightPart = "RightPart";
+
+                public static class ShopPanel
+                {
+                    public const string ShopPart = "ShopPart";
+                    public const string ShopButton = "ShopButton";
+                    public const string MoneyLabel = "MoneyLabel";
+                }
+            }
+
             public static class EndGamePanel { }
         }
     }

@@ -3,9 +3,10 @@ using Assets.CodeBase.Infrastructure.Services;
 using Assets.CodeBase.Infrastructure.Services.ConnectionInfo;
 using Assets.CodeBase.Infrastructure.Services.MainSceneModeNotifier;
 using Assets.CodeBase.Infrastructure.Services.SceneLoader;
-using Assets.CodeBase.Infrastructure.Services.WinnerNotifier;
+using Assets.CodeBase.Infrastructure.Services.WorldAccess;
 using Assets.CodeBase.Infrastructure.Services.WorldCommandSender;
 using Assets.CodeBase.Infrastructure.Services.WorldControl;
+using Assets.CodeBase.Infrastructure.Services.WorldEvents;
 using Assets.CodeBase.UI.Curtain;
 using UnityEngine;
 using Zenject;
@@ -21,29 +22,24 @@ namespace Assets.CodeBase.Infrastructure.Installers
             UnityEngine.SceneManagement.SceneManager.LoadScene(0);
             UnityEngine.Debug.Log("Installing dependencies");
 #endif
-            RegisterWorldRpcSenderService();
-            RegisterWinnerNotifier();
             RegisterMainSceneModeNotifier();
             RegisterConnectionInfo();
+
+            RegisterWorldAccessService();
+            RegisterWorldRpcSenderService();
+            RegisterWorldEventService();
             RegisterWorldControlService();
+
             RegisterCoroutineRunner();
             RegisterLoadingCurtain();
             RegisterSceneLoader();
             RegisterStateMachine();
         }
 
-        private void RegisterWorldRpcSenderService() => 
+        private void RegisterWorldRpcSenderService() =>
             Container
                 .Bind<IWorldRpcSenderService>()
                 .To<WorldRpcSenderService>()
-                .FromNew()
-                .AsSingle()
-                .NonLazy();
-
-        private void RegisterWinnerNotifier() => 
-            Container
-                .Bind<IWinnerNotifier>()
-                .To<WinnerNotifier>()
                 .FromNew()
                 .AsSingle()
                 .NonLazy();
@@ -60,6 +56,21 @@ namespace Assets.CodeBase.Infrastructure.Installers
             Container
                 .Bind<IConnectionInfoService>()
                 .To<ConnectionInfoService>()
+                .FromNew()
+                .AsSingle()
+                .NonLazy();
+
+        private void RegisterWorldAccessService() =>
+            Container
+                .Bind<IWorldAccessService>()
+                .To<WorldAccessService>()
+                .FromNew()
+                .AsSingle()
+                .NonLazy();
+
+        private void RegisterWorldEventService() =>
+            Container
+                .BindInterfacesTo<WorldEventService>()
                 .FromNew()
                 .AsSingle()
                 .NonLazy();

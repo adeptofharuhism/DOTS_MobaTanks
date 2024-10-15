@@ -1,7 +1,6 @@
 ﻿using Assets.CodeBase.Infrastructure.Services.MainSceneModeNotifier;
-using Assets.CodeBase.UI;
+using Assets.CodeBase.Infrastructure.Services.WorldEvents;
 using Assets.CodeBase.Utility.StateMachine;
-using Unity.Entities;
 
 namespace Assets.CodeBase.Infrastructure.GameStateManagement.States
 {
@@ -9,10 +8,16 @@ namespace Assets.CodeBase.Infrastructure.GameStateManagement.States
     {
         private readonly IGameStateMachine _gameStateMachine;
         private readonly IMainSceneModeNotifier _mainSceneModeNotifier;
+        private readonly IWorldEventBusService _worldEventBus;
 
-        public PrepareForGameState(IGameStateMachine gameStateMachine, IMainSceneModeNotifier mainSceneModeNotifier) {
+        public PrepareForGameState(
+            IGameStateMachine gameStateMachine,
+            IMainSceneModeNotifier mainSceneModeNotifier,
+            IWorldEventBusService worldEventBusService) {
+
             _gameStateMachine = gameStateMachine;
             _mainSceneModeNotifier = mainSceneModeNotifier;
+            _worldEventBus = worldEventBusService;
         }
 
         public void Enter() {
@@ -25,14 +30,10 @@ namespace Assets.CodeBase.Infrastructure.GameStateManagement.States
         }
 
         private void SubscribeToGameStartEvent() =>
-            World.DefaultGameObjectInjectionWorld
-                .GetExistingSystemManaged<GameStartNotificationSystem>()
-                .OnGameStart += OnGameStart;
+            _worldEventBus.OnStartGame += OnGameStart;
 
         private void UnsubscribeFromGameStartEvent() =>
-            World.DefaultGameObjectInjectionWorld
-                .GetExistingSystemManaged<GameStartNotificationSystem>()
-                .OnGameStart -= OnGameStart;
+            _worldEventBus.OnStartGame -= OnGameStart;
 
         private void OnGameStart() =>
             _gameStateMachine.EnterGameState<InGameState>();

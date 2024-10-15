@@ -109,7 +109,7 @@
 }
 
 .shopSlot {
-    height: 76px;
+    height: 66%;
 }
 
 .blackBackground {

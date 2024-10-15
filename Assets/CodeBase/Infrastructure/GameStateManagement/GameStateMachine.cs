@@ -1,8 +1,8 @@
 ﻿using Assets.CodeBase.Infrastructure.GameStateManagement.States;
 using Assets.CodeBase.Infrastructure.Services.MainSceneModeNotifier;
 using Assets.CodeBase.Infrastructure.Services.SceneLoader;
-using Assets.CodeBase.Infrastructure.Services.WinnerNotifier;
 using Assets.CodeBase.Infrastructure.Services.WorldControl;
+using Assets.CodeBase.Infrastructure.Services.WorldEvents;
 using Assets.CodeBase.UI.Curtain;
 using Assets.CodeBase.Utility.StateMachine;
 using Zenject;
@@ -26,18 +26,25 @@ namespace Assets.CodeBase.Infrastructure.GameStateManagement
         public GameStateMachine(
             ISceneLoader sceneLoader, 
             IWorldControlService worldControlService, 
+            IWorldEventBusService worldEventBusService,
             ILoadingCurtain loadingCurtain,
-            IMainSceneModeNotifier mainSceneModeNotifier,
-            IWinnerNotifier winnerNotifier) {
+            IMainSceneModeNotifier mainSceneModeNotifier) {
 
             AddGameState(new BootstrapState(this));
 
             AddGameState(new LoadStartSceneState(this, sceneLoader, worldControlService, loadingCurtain));
             AddGameState(new StartSceneActiveState(this));
 
-            AddGameState(new LoadMainSceneState(this, sceneLoader, worldControlService, loadingCurtain, mainSceneModeNotifier));
-            AddGameState(new PrepareForGameState(this, mainSceneModeNotifier));
-            AddGameState(new InGameState(this, mainSceneModeNotifier, winnerNotifier));
+            AddGameState(
+                new LoadMainSceneState(
+                    this, 
+                    sceneLoader, 
+                    worldControlService, 
+                    worldEventBusService, 
+                    loadingCurtain, 
+                    mainSceneModeNotifier));
+            AddGameState(new PrepareForGameState(this, mainSceneModeNotifier, worldEventBusService));
+            AddGameState(new InGameState(this, mainSceneModeNotifier, worldEventBusService));
             AddGameState(new GameOverState(this, mainSceneModeNotifier));
         }
 

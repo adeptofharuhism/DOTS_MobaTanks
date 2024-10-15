@@ -10,7 +10,7 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 
         private VisualElement _subContentPanel;
 
-        private readonly IPreparingModeViewModel _preparingModeViewModel;
+        private readonly INotifyReadyViewModel _notifyReadyViewModel;
 
         public PreparingPanel(
             VisualTreeAsset preparingPanel,
@@ -19,7 +19,7 @@ namespace Assets.CodeBase.UI.MainScene.Panels
             VisualTreeAsset waitingPanel)
             : base(preparingPanel) {
 
-            _preparingModeViewModel = preparingModeViewModel;
+            _notifyReadyViewModel = preparingModeViewModel;
 
             _askReadyPanel = new AskReadyPanel(askReadyPanel, preparingModeViewModel);
             _waitingPanel = new WaitingPanel(waitingPanel);
@@ -39,28 +39,21 @@ namespace Assets.CodeBase.UI.MainScene.Panels
         }
 
         protected override void BindData() {
-            _preparingModeViewModel.OnReady += OnReady;
+            _notifyReadyViewModel.OnReady += OnReady;
         }
 
         protected override void UnbindData() {
-            _preparingModeViewModel.OnReady -= OnReady;
+            _notifyReadyViewModel.OnReady -= OnReady;
         }
+
+        private void AddPanelToSubContent(UiPanel panel) =>
+            _subContentPanel.AddUiPanel(panel);
+
+        private void RemovePanelFromSubContent(UiPanel panel) =>
+            _subContentPanel.RemoveUiPanel(panel);
 
         private void OnReady() =>
             SwitchPanels();
-
-        private void AddPanelToSubContent(UiPanel panel) {
-            _subContentPanel.Add(panel.Panel);
-
-            panel.Enable();
-        }
-
-        private void RemovePanelFromSubContent(UiPanel panel) {
-            panel.Disable();
-
-            if (_subContentPanel.childCount > 0)
-                _subContentPanel.RemoveAt(0);
-        }
 
         private void SwitchPanels() {
             RemovePanelFromSubContent(_askReadyPanel);
