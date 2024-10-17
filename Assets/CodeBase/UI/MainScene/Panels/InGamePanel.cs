@@ -71,7 +71,7 @@ namespace Assets.CodeBase.UI.MainScene.Panels
         private Label _moneyLabel;
 
         private bool _shopIsShown = false;
-        private bool _shopCanBeShown = false;
+        private bool _shopCanBeShown;
 
         private readonly IShopViewModel _shopViewModel;
         private readonly AvailableItemsPanel _availableItemsPanel;
@@ -100,6 +100,7 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 
         protected override void ReadInitialViewModelData() {
             ChangeMoneyValue(_shopViewModel.MoneyView.Value);
+            ChangeAvailabilityFlag(_shopViewModel.ShopCanBeShown.Value);
         }
 
         protected override void BindData() {
@@ -124,9 +125,9 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 
         private void OnClickShop(ClickEvent evt) {
             if (_shopIsShown)
-                ShowItemsPanel();
-            else
                 HideItemsPanel();
+            else
+                ShowItemsPanel();
         }
 
         private void ShowItemsPanel() {
@@ -138,6 +139,9 @@ namespace Assets.CodeBase.UI.MainScene.Panels
         }
 
         private void HideItemsPanel() {
+            if (!_shopIsShown)
+                return;
+
             _shopIsShown = false;
             _shopPart.RemoveUiPanel(_availableItemsPanel);
         }

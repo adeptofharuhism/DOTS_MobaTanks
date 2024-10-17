@@ -1,7 +1,4 @@
-﻿using Assets.CodeBase.Finances;
-using Assets.CodeBase.GameStates.GameStart;
-using Assets.CodeBase.Shop;
-using Assets.CodeBase.Teams;
+﻿using Assets.CodeBase.Teams;
 using Unity.Entities;
 using Unity.NetCode;
 using UnityEngine;

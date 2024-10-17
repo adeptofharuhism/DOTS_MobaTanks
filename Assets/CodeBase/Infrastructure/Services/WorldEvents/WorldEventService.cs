@@ -46,7 +46,7 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldEvents
 
             _worldAccess.DefaultWorld
                 .GetExistingSystemManaged<ShopAvailabilityCheckSystem>()
-                .OnShopAvailabilityChanged += ChangeShopAvailability;
+                .ShopAvailability.OnChanged += ChangeShopAvailability;
         }
 
         public void UnsubscribeFromWorldEvents() {
@@ -68,7 +68,7 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldEvents
 
             _worldAccess.DefaultWorld
                 .GetExistingSystemManaged<ShopAvailabilityCheckSystem>()
-                .OnShopAvailabilityChanged -= ChangeShopAvailability;
+                .ShopAvailability.OnChanged -= ChangeShopAvailability;
         }
 
         private void InvokeOnLoadedSubScene() =>

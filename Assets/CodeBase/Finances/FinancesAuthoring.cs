@@ -21,9 +21,6 @@ namespace Assets.CodeBase.Finances
                 Entity entity = GetEntity(TransformUsageFlags.None);
 
                 AddComponent(entity, new BasicMoneyAmount { Value = authoring.BasicMoneyAmount });
-                AddComponent(entity, new GhostFinancesPrefab {
-                    Value = GetEntity(authoring.GhostFinancesPrefab, TransformUsageFlags.None)
-                });
 
                 AddComponent(entity, new MoneyIncome { Value = authoring.MoneyIncome });
                 AddComponent(entity, new MoneyIncomeCooldown { Value = authoring.MoneyIncomeCooldown });

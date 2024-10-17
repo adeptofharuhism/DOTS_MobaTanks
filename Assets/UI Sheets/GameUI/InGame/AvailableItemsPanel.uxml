@@ -1,4 +1,4 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <ui:VisualElement name="AvailableItemsPanel" style="flex-grow: 1;">
         <ui:VisualElement name="AvailableItemsPart" class="blackBackground bordersHighlightWhite" style="flex-grow: 1; height: 85%; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px;" />
         <ui:VisualElement name="InventoryPart" class="bordersHighlightWhite blackBackground" style="flex-direction: row; justify-content: space-around; align-items: center; flex-grow: 1; height: 12%; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px;">

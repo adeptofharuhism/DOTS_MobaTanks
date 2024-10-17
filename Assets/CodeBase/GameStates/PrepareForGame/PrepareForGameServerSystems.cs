@@ -58,7 +58,6 @@ namespace Assets.CodeBase.GameStates.PrepareForGame
             RefRW<ConnectedPlayerCount> playerCount = SystemAPI.GetSingletonRW<ConnectedPlayerCount>();
 
             int basicMoneyAmount = SystemAPI.GetSingleton<BasicMoneyAmount>().Value;
-            Entity financesPrefab = SystemAPI.GetSingleton<GhostFinancesPrefab>().Value;
 
             foreach (var (newPlayerData, requestSource, requestEntity)
                 in SystemAPI.Query<SetNewPlayerDataRpc, ReceiveRpcCommandRequest>()

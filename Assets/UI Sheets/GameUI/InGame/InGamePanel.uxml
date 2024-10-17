@@ -1,7 +1,7 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <ui:VisualElement name="InGamePanel" style="flex-grow: 1; flex-direction: row;">
-        <ui:VisualElement name="LeftPart" style="flex-grow: 3;" />
-        <ui:VisualElement name="CentralPart" style="flex-grow: 4;" />
-        <ui:VisualElement name="RightPart" style="flex-grow: 3;" />
+        <ui:VisualElement name="LeftPart" style="flex-grow: 3; width: 30%;" />
+        <ui:VisualElement name="CentralPart" style="flex-grow: 4; width: 40%;" />
+        <ui:VisualElement name="RightPart" style="flex-grow: 1; width: 30%;" />
     </ui:VisualElement>
 </ui:UXML>

@@ -65,11 +65,16 @@ namespace Assets.CodeBase
 
     [UpdateInGroup(typeof(PlayerSystemGroup))]
     [UpdateAfter(typeof(BeginRespawnSystemGroup))]
-    [UpdateBefore(typeof(VehicleSystemGroup))]
+    [UpdateBefore(typeof(ShopSystemGroup))]
     public partial class InventorySystemGroup : ComponentSystemGroup { }
 
     [UpdateInGroup(typeof(PlayerSystemGroup))]
     [UpdateAfter(typeof(InventorySystemGroup))]
+    [UpdateBefore(typeof(VehicleSystemGroup))]
+    public partial class ShopSystemGroup : ComponentSystemGroup { }
+
+    [UpdateInGroup(typeof(PlayerSystemGroup))]
+    [UpdateAfter(typeof(ShopSystemGroup))]
     [UpdateBefore(typeof(TurretSystemGroup))]
     public partial class VehicleSystemGroup : ComponentSystemGroup { }
 
@@ -188,20 +193,13 @@ namespace Assets.CodeBase
 
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(EffectsSystemGroup))]
-    [UpdateBefore(typeof(ShopSystemGroup))]
+    [UpdateBefore(typeof(DestructionSystemGroup))]
     public partial class FinancesSystemGroup : ComponentSystemGroup { }
 
 
 
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(FinancesSystemGroup))]
-    [UpdateBefore(typeof(DestructionSystemGroup))]
-    public partial class ShopSystemGroup : ComponentSystemGroup { }
-
-
-
-    [UpdateInGroup(typeof(SimulationSystemGroup))]
-    [UpdateAfter(typeof(ShopSystemGroup))]
     [UpdateBefore(typeof(UiSystemGroup))]
     public partial class DestructionSystemGroup : ComponentSystemGroup { }
 

@@ -9,12 +9,6 @@ namespace Assets.CodeBase.Finances
         public int Value;
     }
 
-    [GhostComponent(PrefabType = GhostPrefabType.Server)]
-    public struct GhostFinancesPrefab : IComponentData
-    {
-        public Entity Value;
-    }
-
     public struct MoneyAmount : IComponentData
     {
         [GhostField] public int Value;

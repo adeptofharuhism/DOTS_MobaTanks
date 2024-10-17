@@ -69,16 +69,19 @@ namespace Assets.CodeBase.UI.MainScene
         protected override void GetModelValues() {
             _mode.Value = _mainSceneModeNotifier.Mode.Value;
             _moneyView.Value = _worldEventBus.MoneyAmount.Value.ToString();
+            _shopCanBeShown.Value = _worldEventBus.ShopAvailability.Value;
         }
 
         protected override void SubscribeToModel() {
             _mainSceneModeNotifier.Mode.OnChanged += ChangeMode;
             _worldEventBus.MoneyAmount.OnChanged += UpdateMoneyView;
+            _worldEventBus.ShopAvailability.OnChanged += UpdateShopAvailability;
         }
 
         protected override void UnsubscribeFromModel() {
             _mainSceneModeNotifier.Mode.OnChanged -= ChangeMode;
             _worldEventBus.MoneyAmount.OnChanged -= UpdateMoneyView;
+            _worldEventBus.ShopAvailability.OnChanged -= UpdateShopAvailability;
         }
 
         private void ChangeMode(MainSceneMode mode) =>
@@ -86,5 +89,8 @@ namespace Assets.CodeBase.UI.MainScene
 
         private void UpdateMoneyView(int money) =>
             _moneyView.Value = money.ToString();
+
+        private void UpdateShopAvailability(bool availability) =>
+            _shopCanBeShown.Value = availability;
     }
 }

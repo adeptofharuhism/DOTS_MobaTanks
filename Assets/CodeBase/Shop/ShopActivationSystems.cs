@@ -1,7 +1,7 @@
 ﻿using Assets.CodeBase.GameStates;
 using Assets.CodeBase.Teams;
+using Assets.CodeBase.Utility;
 using Assets.CodeBase.Vehicles;
-using System;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -117,22 +117,11 @@ namespace Assets.CodeBase.Shop
     [UpdateAfter(typeof(CheckIfShopIsActiveSystem))]
     public partial class ShopAvailabilityCheckSystem : SystemBase
     {
-        public Action<bool> OnShopAvailabilityChanged;
+        public IReactiveGetter<bool> ShopAvailability => _shopAvailability;
 
-        private bool _shopIsActive;
-        public bool ShopIsActive {
-            get => _shopIsActive;
-            private set {
-                if (_shopIsActive != value)
-                    OnShopAvailabilityChanged?.Invoke(value);
-
-                _shopIsActive = value;
-            }
-        }
+        private ReactivePropertyWithPassOnEquality<bool> _shopAvailability = new();
 
         protected override void OnCreate() {
-            ShopIsActive = false;
-
             RequireForUpdate<InGameState>();
         }
 
@@ -140,9 +129,9 @@ namespace Assets.CodeBase.Shop
             bool hasShopFlagCarrierInWorld = SystemAPI.TryGetSingleton(out ShopIsActive activeFlag);
 
             if (hasShopFlagCarrierInWorld)
-                ShopIsActive = activeFlag.Value;
+                _shopAvailability.Value = activeFlag.Value;
             else
-                ShopIsActive = false;
+                _shopAvailability.Value = false;
         }
     }
 }
