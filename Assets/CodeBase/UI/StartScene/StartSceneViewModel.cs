@@ -17,12 +17,12 @@ namespace Assets.CodeBase.UI.StartScene
 
     public class StartSceneViewModel : ViewModel, IStartSceneViewModel
     {
-        public ReactiveProperty<StartSceneMode> Mode => _mode;
+        public IReactiveGetter<StartSceneMode> Mode => _mode;
 
-        public ReactiveProperty<string> JoinPortView => _joinPortView;
-        public ReactiveProperty<string> JoinIpView => _joinIpView;
-        public ReactiveProperty<string> HostPortView => _hostPortView;
-        public ReactiveProperty<string> PlayerNameView => _playerNameView;
+        public IReactiveGetter<string> JoinPortView => _joinPortView;
+        public IReactiveGetter<string> JoinIpView => _joinIpView;
+        public IReactiveGetter<string> HostPortView => _hostPortView;
+        public IReactiveGetter<string> PlayerNameView => _playerNameView;
 
         private readonly ReactiveProperty<StartSceneMode> _mode = new();
 

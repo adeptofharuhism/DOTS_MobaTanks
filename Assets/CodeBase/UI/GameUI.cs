@@ -38,12 +38,6 @@ namespace Assets.CodeBase.UI
             SetupEndGamePanel(_blueWonPanelInstantiated);
             SetupEndGamePanel(_orangeWonPanelInstantiated);
             SetupMoneyPanel();
-
-            ConnectSystems();
-        }
-
-        private void OnDisable() {
-            DisconnectSystems();
         }
 
         private void InstantiatePanels() {
@@ -76,55 +70,6 @@ namespace Assets.CodeBase.UI
             _moneyPanelInstantiated
                 .Q<Button>("Constants.VisualElementNames.GameUI.MoneyPanel.ShopButton")
                 .RegisterCallback<ClickEvent>(OnClickShopButton);
-        }
-
-        private void ConnectSystems() {
-            World defaultWorld = World.DefaultGameObjectInjectionWorld;
-
-            if (defaultWorld == null)
-                return;
-
-            ClientEnterEndGameSystem endGameSystem =
-                defaultWorld.GetExistingSystemManaged<ClientEnterEndGameSystem>();
-            if (endGameSystem != null)
-                endGameSystem.OnEndGame += ShowEndGamePanel;
-
-            GameStartNotificationSystem inGameUiActivationSystem =
-                defaultWorld.GetExistingSystemManaged<GameStartNotificationSystem>();
-            if (inGameUiActivationSystem != null)
-                inGameUiActivationSystem.OnGameStart += ShowInGameUi;
-
-            ShopAvailabilityCheckSystem shopAvailabilityCheckSystem =
-                defaultWorld.GetExistingSystemManaged<ShopAvailabilityCheckSystem>();
-            if (shopAvailabilityCheckSystem != null)
-                shopAvailabilityCheckSystem.OnShopAvailabilityChanged += SetShopAvailability;
-        }
-
-        private void DisconnectSystems() {
-            World defaultWorld = World.DefaultGameObjectInjectionWorld;
-
-            if (defaultWorld == null)
-                return;
-
-            ClientEnterEndGameSystem endGameSystem =
-                defaultWorld.GetExistingSystemManaged<ClientEnterEndGameSystem>();
-            if (endGameSystem != null)
-                endGameSystem.OnEndGame -= ShowEndGamePanel;
-
-            GameStartNotificationSystem inGameUiActivationSystem =
-                defaultWorld.GetExistingSystemManaged<GameStartNotificationSystem>();
-            if (inGameUiActivationSystem != null)
-                inGameUiActivationSystem.OnGameStart -= ShowInGameUi;
-
-            ClientMoneyUpdateSystem moneyUpdateSystem =
-                defaultWorld.GetExistingSystemManaged<ClientMoneyUpdateSystem>();
-            if (moneyUpdateSystem != null)
-                moneyUpdateSystem.OnMoneyValueChanged -= UpdateMoneyAmount;
-
-            ShopAvailabilityCheckSystem shopAvailabilityCheckSystem =
-                defaultWorld.GetExistingSystemManaged<ShopAvailabilityCheckSystem>();
-            if (shopAvailabilityCheckSystem != null)
-                shopAvailabilityCheckSystem.OnShopAvailabilityChanged -= SetShopAvailability;
         }
 
         private VisualElement InstantiatePanel(VisualTreeAsset panel) {

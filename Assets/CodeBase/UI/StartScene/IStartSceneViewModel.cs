@@ -4,7 +4,7 @@ namespace Assets.CodeBase.UI.StartScene
 {
     public interface IConnectionVariantViewModel
     {
-        ReactiveProperty<string> PlayerNameView { get; }
+        IReactiveGetter<string> PlayerNameView { get; }
 
         void OnClickCancel();
         void OnFocusOutPlayerName(string name);
@@ -12,8 +12,8 @@ namespace Assets.CodeBase.UI.StartScene
 
     public interface IJoinVariantViewModel : IConnectionVariantViewModel
     {
-        ReactiveProperty<string> JoinPortView { get; }
-        ReactiveProperty<string> JoinIpView { get; }
+        IReactiveGetter<string> JoinPortView { get; }
+        IReactiveGetter<string> JoinIpView { get; }
 
         void OnClickJoinGame();
         void OnFocusOutIp(string ip);
@@ -22,7 +22,7 @@ namespace Assets.CodeBase.UI.StartScene
 
     public interface IHostVariantViewModel : IConnectionVariantViewModel
     {
-        ReactiveProperty<string> HostPortView { get; }
+        IReactiveGetter<string> HostPortView { get; }
 
         void OnClickHostGame();
         void OnFocusOutHostPort(string port);
@@ -37,6 +37,6 @@ namespace Assets.CodeBase.UI.StartScene
 
     public interface IStartSceneViewModel : IConnectionChoiceViewModel, IJoinVariantViewModel, IHostVariantViewModel
     {
-        ReactiveProperty<StartSceneMode> Mode { get; }
+        IReactiveGetter<StartSceneMode> Mode { get; }
     }
 }

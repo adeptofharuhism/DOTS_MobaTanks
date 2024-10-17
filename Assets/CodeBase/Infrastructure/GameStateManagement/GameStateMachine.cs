@@ -30,7 +30,7 @@ namespace Assets.CodeBase.Infrastructure.GameStateManagement
             ILoadingCurtain loadingCurtain,
             IMainSceneModeNotifier mainSceneModeNotifier) {
 
-            AddGameState(new BootstrapState(this));
+            AddGameState(new BootstrapState(this, sceneLoader, loadingCurtain));
 
             AddGameState(new LoadStartSceneState(this, sceneLoader, worldControlService, loadingCurtain));
             AddGameState(new StartSceneActiveState(this));

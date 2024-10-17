@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Assets.CodeBase.Utility;
 using Unity.Entities;
 
 namespace Assets.CodeBase.Finances
@@ -7,17 +7,9 @@ namespace Assets.CodeBase.Finances
     [UpdateInGroup(typeof(FinancesSystemGroup))]
     public partial class ClientMoneyUpdateSystem : SystemBase
     {
-        public Action<int> OnMoneyValueChanged;
+        public IReactiveGetter<int> Money => _money;
 
-        private int _moneyAmount;
-        private int MoneyAmount {
-            set {
-                if (value != _moneyAmount)
-                    OnMoneyValueChanged?.Invoke(value);
-
-                _moneyAmount = value;
-            }
-        }
+        private ReactivePropertyWithPassOnEquality<int> _money = new();
 
         protected override void OnCreate() {
             RequireForUpdate<MoneyAmount>();
@@ -26,7 +18,7 @@ namespace Assets.CodeBase.Finances
         protected override void OnUpdate() {
             foreach (var moneyAmount
                 in SystemAPI.Query<MoneyAmount>())
-                MoneyAmount = moneyAmount.Value;
+                _money.Value = moneyAmount.Value;
         }
     }
 }

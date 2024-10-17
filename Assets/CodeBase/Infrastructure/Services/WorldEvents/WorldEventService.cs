@@ -1,8 +1,10 @@
 ﻿using Assets.CodeBase.Finances;
 using Assets.CodeBase.GameStates.GameStart;
 using Assets.CodeBase.Infrastructure.Services.WorldAccess;
+using Assets.CodeBase.Shop;
 using Assets.CodeBase.Teams;
 using Assets.CodeBase.UI;
+using Assets.CodeBase.Utility;
 using System;
 
 namespace Assets.CodeBase.Infrastructure.Services.WorldEvents
@@ -12,7 +14,12 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldEvents
         public event Action OnLoadedSubScene;
         public event Action OnStartGame;
         public event Action<TeamType> OnEndGame;
-        public event Action<int> OnUpdateMoneyAmount;
+
+        public IReactiveGetter<bool> ShopAvailability => _shopAvailability;
+        public IReactiveGetter<int> MoneyAmount => _moneyAmount;
+
+        private ReactiveProperty<bool> _shopAvailability = new();
+        private ReactiveProperty<int> _moneyAmount = new();
 
         private readonly IWorldAccessService _worldAccess;
 
@@ -33,10 +40,13 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldEvents
                 .GetExistingSystemManaged<ClientEnterEndGameSystem>()
                 .OnEndGame += InvokeOnEndGame;
 
-
             _worldAccess.DefaultWorld
                 .GetExistingSystemManaged<ClientMoneyUpdateSystem>()
-                .OnMoneyValueChanged += InvokeUpdateMoneyAmount;
+                .Money.OnChanged += ChangeMoneyAmount;
+
+            _worldAccess.DefaultWorld
+                .GetExistingSystemManaged<ShopAvailabilityCheckSystem>()
+                .OnShopAvailabilityChanged += ChangeShopAvailability;
         }
 
         public void UnsubscribeFromWorldEvents() {
@@ -51,6 +61,14 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldEvents
             _worldAccess.DefaultWorld
                 .GetExistingSystemManaged<ClientEnterEndGameSystem>()
                 .OnEndGame -= InvokeOnEndGame;
+
+            _worldAccess.DefaultWorld
+                .GetExistingSystemManaged<ClientMoneyUpdateSystem>()
+                .Money.OnChanged -= ChangeMoneyAmount;
+
+            _worldAccess.DefaultWorld
+                .GetExistingSystemManaged<ShopAvailabilityCheckSystem>()
+                .OnShopAvailabilityChanged -= ChangeShopAvailability;
         }
 
         private void InvokeOnLoadedSubScene() =>
@@ -62,7 +80,10 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldEvents
         private void InvokeOnEndGame(TeamType type) =>
             OnEndGame?.Invoke(type);
 
-        private void InvokeUpdateMoneyAmount(int money) =>
-            OnUpdateMoneyAmount?.Invoke(money);
+        private void ChangeMoneyAmount(int money) =>
+            _moneyAmount.Value = money;
+
+        private void ChangeShopAvailability(bool availability) =>
+            _shopAvailability.Value = availability;
     }
 }

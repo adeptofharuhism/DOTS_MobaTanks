@@ -8,13 +8,13 @@ namespace Assets.CodeBase.Infrastructure.Services.ConnectionInfo
         private const string JoinPortHardcoded = "7979";
         private const string PlayerNameHardcoded = "Adept";
 
-        public ReactiveProperty<string> ConnectionIp => _connectionIp;
-        public ReactiveProperty<ushort> ConnectionPort => _connectionPort;
+        public IReactiveGetter<string> ConnectionIp => _connectionIp;
+        public IReactiveGetter<ushort> ConnectionPort => _connectionPort;
 
         public string LocalIp => LocalHostIp;
-        public ReactiveProperty<ushort> LocalPort => _localPort;
+        public IReactiveGetter<ushort> LocalPort => _localPort;
 
-        public ReactiveProperty<string> PlayerName => _playerName;
+        public IReactiveGetter<string> PlayerName => _playerName;
 
         private readonly ReactiveProperty<string> _connectionIp = new();
         private readonly ReactiveProperty<ushort> _connectionPort = new();

@@ -30,9 +30,11 @@ namespace Assets.CodeBase.UI.MainScene.Panels
         public override void Enable() {
             AddSubPanels();
             EnableSubPanels();
+            InitializeSubPanels();
         }
 
         public override void Disable() {
+            DisposeSubPanels();
             DisableSubPanels();
             RemoveSubPanels();
         }
@@ -43,6 +45,14 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 
         private void EnableSubPanels() {
             _shopPanel.Enable();
+        }
+
+        private void InitializeSubPanels() {
+            _shopPanel.Initialize();
+        }
+
+        private void DisposeSubPanels() {
+            _shopPanel.Dispose();
         }
 
         private void DisableSubPanels() {
@@ -88,19 +98,24 @@ namespace Assets.CodeBase.UI.MainScene.Panels
             _shopButton.UnregisterCallback<ClickEvent>(OnClickShop);
         }
 
+        protected override void ReadInitialViewModelData() {
+            ChangeMoneyValue(_shopViewModel.MoneyView.Value);
+        }
+
         protected override void BindData() {
-            _shopViewModel.MoneyView.OnChanged += OnChangedMoney;
-            _shopViewModel.ShopCanBeShown.OnChanged += OnChangedShopAvailabilityFlag;
+            _shopViewModel.MoneyView.OnChanged += ChangeMoneyValue;
+            _shopViewModel.ShopCanBeShown.OnChanged += ChangeAvailabilityFlag;
         }
 
         protected override void UnbindData() {
-            _shopViewModel.MoneyView.OnChanged -= OnChangedMoney;
+            _shopViewModel.MoneyView.OnChanged -= ChangeMoneyValue;
+            _shopViewModel.ShopCanBeShown.OnChanged -= ChangeAvailabilityFlag;
         }
 
-        private void OnChangedMoney(string money) =>
+        private void ChangeMoneyValue(string money) =>
             _moneyLabel.text = money;
 
-        private void OnChangedShopAvailabilityFlag(bool flag) {
+        private void ChangeAvailabilityFlag(bool flag) {
             _shopCanBeShown = flag;
 
             if (!_shopCanBeShown)

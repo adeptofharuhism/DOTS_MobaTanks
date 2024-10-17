@@ -9,8 +9,8 @@ namespace Assets.CodeBase.UI.MainScene
 {
     public interface IShopViewModel
     {
-        ReactiveProperty<bool> ShopCanBeShown { get; }
-        ReactiveProperty<string> MoneyView { get; }
+        IReactiveGetter<bool> ShopCanBeShown { get; }
+        IReactiveGetter<string> MoneyView { get; }
     }
 
     public interface IInGameModeViewModel : IShopViewModel { }
@@ -29,22 +29,22 @@ namespace Assets.CodeBase.UI.MainScene
 
     public interface IMainSceneViewModel : IPreparingModeViewModel, IInGameModeViewModel
     {
-        ReactiveProperty<MainSceneMode> Mode { get; }
+        IReactiveGetter<MainSceneMode> Mode { get; }
     }
 
     public class MainSceneViewModel : ViewModel, IMainSceneViewModel
     {
         public event Action OnReady;
 
-        public ReactiveProperty<MainSceneMode> Mode => _mode;
+        public IReactiveGetter<MainSceneMode> Mode => _mode;
 
-        public ReactiveProperty<string> MoneyView => _moneyView;
-        public ReactiveProperty<bool> ShopCanBeShown => _shopCanBeShown;
+        public IReactiveGetter<bool> ShopCanBeShown => _shopCanBeShown;
+        public IReactiveGetter<string> MoneyView => _moneyView;
 
         private readonly ReactiveProperty<MainSceneMode> _mode = new();
 
-        private readonly ReactiveProperty<string> _moneyView = new();
         private readonly ReactiveProperty<bool> _shopCanBeShown = new();
+        private readonly ReactiveProperty<string> _moneyView = new();
 
         private readonly IMainSceneModeNotifier _mainSceneModeNotifier;
         private readonly IWorldRpcSenderService _worldRpcSenderService;
@@ -68,15 +68,17 @@ namespace Assets.CodeBase.UI.MainScene
 
         protected override void GetModelValues() {
             _mode.Value = _mainSceneModeNotifier.Mode.Value;
+            _moneyView.Value = _worldEventBus.MoneyAmount.Value.ToString();
         }
 
         protected override void SubscribeToModel() {
             _mainSceneModeNotifier.Mode.OnChanged += ChangeMode;
-            _worldEventBus.OnUpdateMoneyAmount += UpdateMoneyView;
+            _worldEventBus.MoneyAmount.OnChanged += UpdateMoneyView;
         }
 
         protected override void UnsubscribeFromModel() {
             _mainSceneModeNotifier.Mode.OnChanged -= ChangeMode;
+            _worldEventBus.MoneyAmount.OnChanged -= UpdateMoneyView;
         }
 
         private void ChangeMode(MainSceneMode mode) =>

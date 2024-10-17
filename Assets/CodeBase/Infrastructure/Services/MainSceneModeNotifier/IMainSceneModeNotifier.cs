@@ -12,7 +12,7 @@ namespace Assets.CodeBase.Infrastructure.Services.MainSceneModeNotifier
 
     public interface IMainSceneModeNotifier
     {
-        ReactiveProperty<MainSceneMode> Mode { get; }
+        IReactiveGetter<MainSceneMode> Mode { get; }
 
         void SetMode(MainSceneMode mode);
     }

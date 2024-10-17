@@ -4,13 +4,13 @@ namespace Assets.CodeBase.Infrastructure.Services.ConnectionInfo
 {
     public interface IConnectionInfoService
     {
-        ReactiveProperty<string> ConnectionIp { get; }
-        ReactiveProperty<ushort> ConnectionPort { get; }
+        IReactiveGetter<string> ConnectionIp { get; }
+        IReactiveGetter<ushort> ConnectionPort { get; }
 
         string LocalIp { get; }
-        ReactiveProperty<ushort> LocalPort { get; }
+        IReactiveGetter<ushort> LocalPort { get; }
 
-        ReactiveProperty<string> PlayerName { get; }
+        IReactiveGetter<string> PlayerName { get; }
 
         void SetConnectionIp(string ip);
         void SetConnectionPort(ushort port);
