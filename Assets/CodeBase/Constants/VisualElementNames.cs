@@ -58,7 +58,11 @@
                 }
             }
 
-            public static class EndGamePanel { }
+            public static class EndGamePanel
+            {
+                public const string WinnerAssetContainer = "WinnerAssetContainer";
+                public const string DisconnectButton = "DiconnectButton";
+            }
         }
     }
 }

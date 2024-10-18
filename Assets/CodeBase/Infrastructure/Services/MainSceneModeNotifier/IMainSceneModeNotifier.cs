@@ -7,7 +7,7 @@ namespace Assets.CodeBase.Infrastructure.Services.MainSceneModeNotifier
         Loading,
         Preparing,
         InGame,
-        GameOver
+        EndGame
     }
 
     public interface IMainSceneModeNotifier

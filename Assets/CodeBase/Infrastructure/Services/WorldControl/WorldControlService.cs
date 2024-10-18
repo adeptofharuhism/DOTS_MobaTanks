@@ -30,7 +30,7 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldControl
             ClientServerBootstrap.CreateServerWorld(Constants.WorldNames.ServerWorld);
 
         public void CreateClientWorld() {
-            _worldAccess.DefaultWorld = 
+            _worldAccess.DefaultWorld =
                 ClientServerBootstrap.CreateClientWorld(Constants.WorldNames.ClientWorld);
 
             _worldEventSubscriptionControl.SubscribeToWorldEvents();
@@ -39,12 +39,21 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldControl
         public void StartWorlds() {
             bool isHost =
                 ClientServerBootstrap.ServerWorld != null;
-            
+
             if (isHost) {
                 StartServer();
                 StartClient(_connectionInfo.LocalIp);
             } else {
                 StartClient(_connectionInfo.ConnectionIp.Value);
+            }
+        }
+
+        public void DisconnectFromServerWorld() {
+            using (EntityQuery networkStreamQuery =
+                _worldAccess.DefaultWorld.EntityManager.CreateEntityQuery(typeof(NetworkStreamConnection))) {
+
+                if (networkStreamQuery.TryGetSingletonEntity<NetworkStreamConnection>(out var networkStream))
+                    _worldAccess.DefaultWorld.EntityManager.AddComponent<NetworkStreamRequestDisconnect>(networkStream);
             }
         }
 

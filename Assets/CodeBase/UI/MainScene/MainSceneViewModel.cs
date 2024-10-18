@@ -1,12 +1,22 @@
-﻿using Assets.CodeBase.Infrastructure.Services.MainSceneModeNotifier;
+﻿using Assets.CodeBase.Infrastructure.GameStateManagement;
+using Assets.CodeBase.Infrastructure.GameStateManagement.States;
+using Assets.CodeBase.Infrastructure.Services.MainSceneModeNotifier;
 using Assets.CodeBase.Infrastructure.Services.WorldCommandSender;
 using Assets.CodeBase.Infrastructure.Services.WorldEvents;
+using Assets.CodeBase.Teams;
 using Assets.CodeBase.Utility;
 using Assets.CodeBase.Utility.MVVM;
 using System;
 
 namespace Assets.CodeBase.UI.MainScene
 {
+    public interface IEndGameModeViewModel
+    {
+        event Action<TeamType> OnEndGame;
+
+        void OnClickDisconnect();
+    }
+
     public interface IShopViewModel
     {
         IReactiveGetter<bool> ShopCanBeShown { get; }
@@ -27,7 +37,7 @@ namespace Assets.CodeBase.UI.MainScene
 
     public interface IPreparingModeViewModel : IAskReadyViewModel, INotifyReadyViewModel { }
 
-    public interface IMainSceneViewModel : IPreparingModeViewModel, IInGameModeViewModel
+    public interface IMainSceneViewModel : IPreparingModeViewModel, IInGameModeViewModel, IEndGameModeViewModel
     {
         IReactiveGetter<MainSceneMode> Mode { get; }
     }
@@ -35,6 +45,7 @@ namespace Assets.CodeBase.UI.MainScene
     public class MainSceneViewModel : ViewModel, IMainSceneViewModel
     {
         public event Action OnReady;
+        public event Action<TeamType> OnEndGame;
 
         public IReactiveGetter<MainSceneMode> Mode => _mode;
 
@@ -46,24 +57,37 @@ namespace Assets.CodeBase.UI.MainScene
         private readonly ReactiveProperty<bool> _shopCanBeShown = new();
         private readonly ReactiveProperty<string> _moneyView = new();
 
+        private readonly IGameStateMachine _gameStateMachine;
         private readonly IMainSceneModeNotifier _mainSceneModeNotifier;
         private readonly IWorldRpcSenderService _worldRpcSenderService;
         private readonly IWorldEventBusService _worldEventBus;
 
         public MainSceneViewModel(
+            IGameStateMachine gameStateMachine,
             IMainSceneModeNotifier mainSceneModeNotifier,
             IWorldRpcSenderService worldRpcSenderService,
             IWorldEventBusService worldEventBusService) {
 
+            _gameStateMachine = gameStateMachine;
             _mainSceneModeNotifier = mainSceneModeNotifier;
             _worldRpcSenderService = worldRpcSenderService;
             _worldEventBus = worldEventBusService;
         }
 
         public void OnClickReady() {
+            if (_mode.Value != MainSceneMode.Preparing)
+                return;
+
             _worldRpcSenderService.SendReadyRpc();
 
             OnReady?.Invoke();
+        }
+
+        public void OnClickDisconnect() {
+            if (_mode.Value != MainSceneMode.EndGame)
+                return;
+
+            _gameStateMachine.EnterGameState<LoadStartSceneState>();    
         }
 
         protected override void GetModelValues() {
@@ -76,12 +100,14 @@ namespace Assets.CodeBase.UI.MainScene
             _mainSceneModeNotifier.Mode.OnChanged += ChangeMode;
             _worldEventBus.MoneyAmount.OnChanged += UpdateMoneyView;
             _worldEventBus.ShopAvailability.OnChanged += UpdateShopAvailability;
+            _worldEventBus.OnEndGame += InvokeOnEndGame;
         }
 
         protected override void UnsubscribeFromModel() {
             _mainSceneModeNotifier.Mode.OnChanged -= ChangeMode;
             _worldEventBus.MoneyAmount.OnChanged -= UpdateMoneyView;
             _worldEventBus.ShopAvailability.OnChanged -= UpdateShopAvailability;
+            _worldEventBus.OnEndGame -= InvokeOnEndGame;
         }
 
         private void ChangeMode(MainSceneMode mode) =>
@@ -92,5 +118,8 @@ namespace Assets.CodeBase.UI.MainScene
 
         private void UpdateShopAvailability(bool availability) =>
             _shopCanBeShown.Value = availability;
+
+        private void InvokeOnEndGame(TeamType type) =>
+            OnEndGame?.Invoke(type);
     }
 }

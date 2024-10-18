@@ -19,6 +19,8 @@ namespace Assets.CodeBase.UI.MainScene
         [SerializeField] private VisualTreeAsset _availableItemsPanel;
         [Header("End Game mode")]
         [SerializeField] private VisualTreeAsset _endGamePanel;
+        [SerializeField] private VisualTreeAsset _blueWinnerAsset;
+        [SerializeField] private VisualTreeAsset _orangeWinnerAsset;
 
         private IMainSceneViewModel _mainSceneViewModel;
 
@@ -28,10 +30,7 @@ namespace Assets.CodeBase.UI.MainScene
 
             AddPanel(new PreparingPanel(_preparingPanel, mainSceneViewModel, _askReadyPanel, _waitingPanel));
             AddPanel(new InGamePanel(_inGamePanel, mainSceneViewModel, _shopPanel, _availableItemsPanel));
-        }
-
-        public override void Initialize() {
-            base.Initialize();
+            AddPanel(new EndGamePanel(_endGamePanel, mainSceneViewModel, _blueWinnerAsset, _orangeWinnerAsset));
         }
 
         protected override void SubscribeToViewModel() {
@@ -54,7 +53,8 @@ namespace Assets.CodeBase.UI.MainScene
                 case MainSceneMode.InGame:
                     ActivatePanel<InGamePanel>();
                     break;
-                case MainSceneMode.GameOver:
+                case MainSceneMode.EndGame:
+                    ActivatePanel<EndGamePanel>();
                     break;
             }
         }

@@ -24,8 +24,8 @@ namespace Assets.CodeBase.Infrastructure.GameStateManagement
     {
         [Inject]
         public GameStateMachine(
-            ISceneLoader sceneLoader, 
-            IWorldControlService worldControlService, 
+            ISceneLoader sceneLoader,
+            IWorldControlService worldControlService,
             IWorldEventBusService worldEventBusService,
             ILoadingCurtain loadingCurtain,
             IMainSceneModeNotifier mainSceneModeNotifier) {
@@ -37,15 +37,15 @@ namespace Assets.CodeBase.Infrastructure.GameStateManagement
 
             AddGameState(
                 new LoadMainSceneState(
-                    this, 
-                    sceneLoader, 
-                    worldControlService, 
-                    worldEventBusService, 
-                    loadingCurtain, 
+                    this,
+                    sceneLoader,
+                    worldControlService,
+                    worldEventBusService,
+                    loadingCurtain,
                     mainSceneModeNotifier));
             AddGameState(new PrepareForGameState(this, mainSceneModeNotifier, worldEventBusService));
             AddGameState(new InGameState(this, mainSceneModeNotifier, worldEventBusService));
-            AddGameState(new GameOverState(this, mainSceneModeNotifier));
+            AddGameState(new EndGameState(mainSceneModeNotifier));
         }
 
         public void Initialize() =>
@@ -59,7 +59,7 @@ namespace Assets.CodeBase.Infrastructure.GameStateManagement
             where TState : class, IPayloadedState<TPayload>, IGameState =>
             Enter<TState, TPayload>(payload);
 
-        private void AddGameState<TState>(TState state) 
+        private void AddGameState<TState>(TState state)
             where TState : class, IExitableState, IGameState =>
             AddState(state);
     }

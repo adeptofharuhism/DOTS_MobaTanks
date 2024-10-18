@@ -29,13 +29,13 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 
         public override void Enable() {
             AddSubPanels();
-            EnableSubPanels();
             InitializeSubPanels();
+            EnableSubPanels();
         }
 
         public override void Disable() {
-            DisposeSubPanels();
             DisableSubPanels();
+            DisposeSubPanels();
             RemoveSubPanels();
         }
 

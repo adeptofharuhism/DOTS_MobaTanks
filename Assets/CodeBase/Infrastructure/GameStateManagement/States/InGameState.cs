@@ -37,6 +37,6 @@ namespace Assets.CodeBase.Infrastructure.GameStateManagement.States
             _worldEventBus.OnEndGame -= OnEndGame;
 
         private void OnEndGame(TeamType winner) => 
-            _gameStateMachine.EnterGameState<GameOverState>();
+            _gameStateMachine.EnterGameState<EndGameState>();
     }
 }

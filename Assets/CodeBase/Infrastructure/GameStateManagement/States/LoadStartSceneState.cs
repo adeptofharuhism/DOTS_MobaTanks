@@ -28,11 +28,17 @@ namespace Assets.CodeBase.Infrastructure.GameStateManagement.States
         public void Enter() {
             _loadingCurtain.Show();
 
-            _worldControlService.DisposeNetworkWorlds();
+            DisconnectFromServer();
+
             _sceneLoader.Load(Constants.SceneNames.StartSceneName, LoadSceneMode.Single, OnSceneLoaded);
         }
 
         public void Exit() { }
+
+        private void DisconnectFromServer() {
+            _worldControlService.DisconnectFromServerWorld();
+            _worldControlService.DisposeNetworkWorlds();
+        }
 
         private void OnSceneLoaded() {
             _loadingCurtain.Hide();

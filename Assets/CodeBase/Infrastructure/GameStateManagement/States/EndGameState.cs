@@ -3,18 +3,16 @@ using Assets.CodeBase.Utility.StateMachine;
 
 namespace Assets.CodeBase.Infrastructure.GameStateManagement.States
 {
-    public class GameOverState : IState, IGameState
+    public class EndGameState : IState, IGameState
     {
-        private readonly IGameStateMachine _gameStateMachine;
         private readonly IMainSceneModeNotifier _mainSceneModeNotifier;
 
-        public GameOverState(IGameStateMachine gameStateMachine, IMainSceneModeNotifier mainSceneModeNotifier) {
-            _gameStateMachine = gameStateMachine;
+        public EndGameState(IMainSceneModeNotifier mainSceneModeNotifier) {
             _mainSceneModeNotifier = mainSceneModeNotifier;
         }
 
         public void Enter() {
-            _mainSceneModeNotifier.SetMode(MainSceneMode.GameOver);
+            _mainSceneModeNotifier.SetMode(MainSceneMode.EndGame);
         }
 
         public void Exit() { }
