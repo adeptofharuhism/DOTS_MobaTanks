@@ -73,7 +73,7 @@ namespace Assets.CodeBase.UI.MainScene.Panels
         private bool _shopIsShown = false;
         private bool _shopCanBeShown;
 
-        private readonly IShopViewModel _shopViewModel;
+        private readonly IShopActivationViewModel _shopViewModel;
         private readonly AvailableItemsPanel _availableItemsPanel;
 
         public ShopPanel(VisualTreeAsset panelAsset, IInGameModeViewModel inGameModeViewModel, VisualTreeAsset availableItemsPanel)
@@ -81,7 +81,7 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 
             _shopViewModel = inGameModeViewModel;
 
-            _availableItemsPanel = new AvailableItemsPanel(availableItemsPanel);
+            _availableItemsPanel = new AvailableItemsPanel(availableItemsPanel, inGameModeViewModel);
         }
 
         protected override void CacheVisualElements() {
@@ -92,25 +92,46 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 
         public override void Enable() {
             _shopButton.RegisterCallback<ClickEvent>(OnClickShop);
+
+            EnableSubPanel();
         }
 
         public override void Disable() {
             _shopButton.UnregisterCallback<ClickEvent>(OnClickShop);
+
+            DisableSubPanel();
         }
 
         protected override void ReadInitialViewModelData() {
-            ChangeMoneyValue(_shopViewModel.MoneyView.Value);
+            ChangeMoneyValue(_shopViewModel.MoneyTextView.Value);
             ChangeAvailabilityFlag(_shopViewModel.ShopCanBeShown.Value);
         }
 
         protected override void BindData() {
-            _shopViewModel.MoneyView.OnChanged += ChangeMoneyValue;
+            _shopViewModel.MoneyTextView.OnChanged += ChangeMoneyValue;
             _shopViewModel.ShopCanBeShown.OnChanged += ChangeAvailabilityFlag;
         }
 
         protected override void UnbindData() {
-            _shopViewModel.MoneyView.OnChanged -= ChangeMoneyValue;
+            _shopViewModel.MoneyTextView.OnChanged -= ChangeMoneyValue;
             _shopViewModel.ShopCanBeShown.OnChanged -= ChangeAvailabilityFlag;
+        }
+
+        private void EnableSubPanel() {
+            _availableItemsPanel.Initialize();
+            _availableItemsPanel.Enable();
+        }
+
+        private void DisableSubPanel() {
+            _availableItemsPanel.Disable();
+            _availableItemsPanel.Dispose();
+        }
+
+        private void OnClickShop(ClickEvent evt) {
+            if (_shopIsShown)
+                HideItemsPanel();
+            else
+                ShowItemsPanel();
         }
 
         private void ChangeMoneyValue(string money) =>
@@ -121,13 +142,6 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 
             if (!_shopCanBeShown)
                 HideItemsPanel();
-        }
-
-        private void OnClickShop(ClickEvent evt) {
-            if (_shopIsShown)
-                HideItemsPanel();
-            else
-                ShowItemsPanel();
         }
 
         private void ShowItemsPanel() {
@@ -149,8 +163,45 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 
     public class AvailableItemsPanel : UiPanel
     {
-        public AvailableItemsPanel(VisualTreeAsset panelAsset)
+        private readonly IItemRequestViewModel _itemRequestViewModel;
+
+        private Button _testButton;
+
+        public AvailableItemsPanel(VisualTreeAsset panelAsset, IItemRequestViewModel itemRequestViewModel)
             : base(panelAsset) {
+
+            _itemRequestViewModel = itemRequestViewModel;
+        }
+
+        protected override void CacheVisualElements() {
+            _testButton = _panel.Q<Button>("Test");
+        }
+
+        public override void Enable() {
+            _testButton.RegisterCallback<ClickEvent>(OnClickTest);
+        }
+
+        public override void Disable() {
+            _testButton.UnregisterCallback<ClickEvent>(OnClickTest);
+        }
+
+        protected override void ReadInitialViewModelData() {
+            UpdateAvailableItems(_itemRequestViewModel.MoneyView.Value);
+        }
+
+        protected override void BindData() {
+            _itemRequestViewModel.MoneyView.OnChanged += UpdateAvailableItems;
+        }
+
+        protected override void UnbindData() {
+            _itemRequestViewModel.MoneyView.OnChanged -= UpdateAvailableItems;
+        }
+
+        private void OnClickTest(ClickEvent evt) {
+            _itemRequestViewModel.BuyItem(0);
+        }
+
+        private void UpdateAvailableItems(int money) {
 
         }
     }

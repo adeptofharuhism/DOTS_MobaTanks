@@ -7,8 +7,10 @@ namespace Assets.CodeBase.Vehicles
     public class VehicleAuthoring : MonoBehaviour
     {
         [SerializeField] private int _wheelAmount;
+        [SerializeField] private GameObject _itemSlot;
 
         public int WheelAmount { get => _wheelAmount; set => _wheelAmount = value; }
+        public GameObject ItemSlot => _itemSlot;
 
         public class VehicleBaker : Baker<VehicleAuthoring>
         {
@@ -28,6 +30,10 @@ namespace Assets.CodeBase.Vehicles
                         Index = i,
                         Value = 0
                     });
+
+                AddComponent(vehicle, new VehicleItemSlot {
+                    Value = GetEntity(authoring.ItemSlot, TransformUsageFlags.Dynamic)
+                });
 
                 AddComponent(vehicle, new PlayerName { Value = string.Empty });
             }

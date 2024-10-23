@@ -18,9 +18,9 @@ namespace Assets.CodeBase.Inventory
     public struct InventoryTag : IComponentData { }
 
     [GhostComponent(PrefabType = GhostPrefabType.Server)]
-    public struct ItemEntityCollection : ICleanupComponentData
+    public struct ItemSlotCollection : ICleanupComponentData
     {
-        public NativeArray<Entity> Items;
+        public NativeArray<InventorySlot> Slots;
     }
 
     [GhostComponent(PrefabType = GhostPrefabType.Server)]
@@ -29,9 +29,26 @@ namespace Assets.CodeBase.Inventory
         public Entity Value;
     }
 
-    //Rpcs
-    public struct AddItemToInventoryRpc : IRpcCommand
+    public struct InventorySlot
     {
-        
+        public int ItemId;
+        public Entity SpawnedItem;
+    }
+
+    //Rpcs
+    public struct BuyItemRpc : IRpcCommand
+    {
+        public int ItemId;
+    }
+
+    public struct RemoveItemFromInventoryRpc : IRpcCommand
+    {
+        public int Slot;
+    }
+
+    public struct SwapSlotsInsideInventoryRpc : IRpcCommand
+    {
+        public int FromSlot;
+        public int ToSlot;
     }
 }

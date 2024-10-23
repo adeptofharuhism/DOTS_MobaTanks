@@ -2,6 +2,7 @@
 {
     public interface IWorldRpcSenderService
     {
+        void SendBuyItemRpc(int itemId);
         void SendReadyRpc();
     }
 }

@@ -120,7 +120,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 100}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 176
+  controlID: 175
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -145,7 +145,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 100}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 36
+  controlID: 17
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -165,8 +165,8 @@ MonoBehaviour:
     y: 0
     width: 417
     height: 466
-  m_MinSize: {x: 201, y: 221}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 18}
   m_Panes:
   - {fileID: 18}
@@ -192,8 +192,8 @@ MonoBehaviour:
     y: 466
     width: 417
     height: 481
-  m_MinSize: {x: 101, y: 121}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 19}
   m_Panes:
   - {fileID: 19}
@@ -243,8 +243,8 @@ MonoBehaviour:
     y: 0
     width: 1058
     height: 631
-  m_MinSize: {x: 202, y: 221}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 20}
   m_Panes:
   - {fileID: 20}
@@ -348,8 +348,8 @@ MonoBehaviour:
     y: 0
     width: 445
     height: 947
-  m_MinSize: {x: 276, y: 71}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 24}
   m_Panes:
   - {fileID: 24}
@@ -562,9 +562,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 36870000
+      m_SelectedIDs: 4a880000
       m_LastClickedID: 0
-      m_ExpandedIDs: 0efbffff
+      m_ExpandedIDs: 0cfbffff0efbffff667b0000747b0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -993,9 +993,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -202.92459, y: 87.42231, z: -55.762558}
+    m_Target: {x: -53.519436, y: 24.867672, z: -2.452415}
     speed: 2
-    m_Value: {x: -202.92459, y: 87.42231, z: -55.762558}
+    m_Value: {x: -53.519436, y: 24.867672, z: -2.452415}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1041,13 +1041,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.030869698, y: -0.6868601, z: 0.028477041, w: -0.7257625}
+    m_Target: {x: -0.18365498, y: -0.75700945, z: 0.23884492, w: -0.58003104}
     speed: 2
-    m_Value: {x: -0.030865503, y: -0.68676674, z: 0.028473172, w: -0.72566384}
+    m_Value: {x: -0.18362969, y: -0.75690526, z: 0.23881203, w: -0.57995117}
   m_Size:
-    m_Target: 7.732847
+    m_Target: 1.0024968
     speed: 2
-    m_Value: 7.732847
+    m_Value: 1.0024968
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -1175,7 +1175,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Resources
+    - Assets/Resources/Items
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -1183,16 +1183,16 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Resources
+  - Assets/Resources/Items
   m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Unity\Projects\DOTS_MobaTanks
   m_LockTracker:
     m_IsLocked: 1
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 245}
-    m_SelectedIDs: 36870000
-    m_LastClickedID: 34614
-    m_ExpandedIDs: 00000000028700000487000006870000088700000a8700000c8700000e87000010870000128700001487000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 301}
+    m_SelectedIDs: 4a880000
+    m_LastClickedID: 34890
+    m_ExpandedIDs: 000000000e87000010870000128700001487000016870000188700001a8700001c8700001e870000208700004287000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1220,7 +1220,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000028700000487000006870000088700000a8700000c8700000e870000108700001287000014870000
+    m_ExpandedIDs: 000000000e87000010870000128700001487000016870000188700001a8700001c8700001e87000020870000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1322,7 +1322,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/UI Sheets/GameUI/EndGame
+    - Assets/Resources
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -1330,16 +1330,16 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/UI Sheets/GameUI/EndGame
+  - Assets/Resources
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Unity\Projects\DOTS_MobaTanks
   m_LockTracker:
     m_IsLocked: 1
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 305}
-    m_SelectedIDs: 88890000
-    m_LastClickedID: 35208
-    m_ExpandedIDs: 00000000028700000487000006870000088700000a8700000c8700000e870000108700001287000014870000468700008887000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 109}
+    m_SelectedIDs: 42870000
+    m_LastClickedID: 34626
+    m_ExpandedIDs: 000000000e87000010870000128700001487000016870000188700001a8700001c8700001e870000208700004287000094870000428900007889000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1367,7 +1367,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000028700000487000006870000088700000a8700000c8700000e870000108700001287000014870000
+    m_ExpandedIDs: 000000000e87000010870000128700001487000016870000188700001a8700001c8700001e87000020870000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

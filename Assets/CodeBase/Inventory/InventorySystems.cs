@@ -1,10 +1,14 @@
-﻿using Assets.CodeBase.Player;
+﻿using Assets.CodeBase.Inventory.Items;
+using Assets.CodeBase.Player;
+using Assets.CodeBase.Player.Respawn;
+using Assets.CodeBase.Vehicles;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.NetCode;
 
 namespace Assets.CodeBase.Inventory
 {
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(InventorySystemGroup))]
     [UpdateBefore(typeof(InventoryCleanUpSystem))]
     public partial struct InventoryInitializationSystem : ISystem
@@ -23,9 +27,13 @@ namespace Assets.CodeBase.Inventory
                 .WithAll<InventoryInitializationTag>()
                 .Build().ToEntityArray(Allocator.Temp)) {
 
-                ecb.AddComponent(entity, new ItemEntityCollection {
-                    Items = new NativeArray<Entity>(basicInventoryCapacity, Allocator.Persistent)
-                });
+                NativeArray<InventorySlot> inventory = new NativeArray<InventorySlot>(basicInventoryCapacity, Allocator.Persistent);
+                for (int i = 0; i < basicInventoryCapacity; i++)
+                    inventory[i] = new InventorySlot {
+                        ItemId = -1,
+                        SpawnedItem = Entity.Null
+                    };
+                ecb.AddComponent(entity, new ItemSlotCollection { Slots = inventory });
 
                 ecb.RemoveComponent<InventoryInitializationTag>(entity);
                 ecb.AddComponent<InventoryTag>(entity);
@@ -35,26 +43,26 @@ namespace Assets.CodeBase.Inventory
         }
     }
 
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(InventorySystemGroup))]
     [UpdateAfter(typeof(InventoryInitializationSystem))]
     public partial struct InventoryAddItemSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<BasicInventoryCapacity>();
+            state.RequireForUpdate<ItemCreationPrefab>();
         }
 
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            foreach (var (addItemData, requestSource, requestEntity)
-                in SystemAPI.Query<AddItemToInventoryRpc, ReceiveRpcCommandRequest>()
+            DynamicBuffer<ItemCreationPrefab> itemBuffer = SystemAPI.GetSingletonBuffer<ItemCreationPrefab>();
+
+            foreach (var (itemRpc, requestSource, requestEntity)
+                in SystemAPI.Query<BuyItemRpc, ReceiveRpcCommandRequest>()
                 .WithEntityAccess()) {
 
-                ItemEntityCollection itemEntityCollection =
-                    SystemAPI.GetComponent<ItemEntityCollection>(
-                        SystemAPI.GetComponent<PlayerEntity>(requestSource.SourceConnection).Value);
-
-
+                UnityEngine.Debug.Log($"Command to add item {itemRpc.ItemId}");
 
                 ecb.DestroyEntity(requestEntity);
             }
@@ -63,6 +71,7 @@ namespace Assets.CodeBase.Inventory
         }
     }
 
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(InventorySystemGroup))]
     [UpdateAfter(typeof(InventoryAddItemSystem))]
     public partial struct InventoryCleanUpSystem : ISystem
@@ -71,13 +80,13 @@ namespace Assets.CodeBase.Inventory
             EntityCommandBuffer ecb = new(Allocator.Temp);
 
             foreach (var (itemCollection, entity)
-                in SystemAPI.Query<ItemEntityCollection>()
+                in SystemAPI.Query<ItemSlotCollection>()
                 .WithNone<InventoryTag>()
                 .WithEntityAccess()) {
 
-                itemCollection.Items.Dispose();
+                itemCollection.Slots.Dispose();
 
-                ecb.RemoveComponent<ItemEntityCollection>(entity);
+                ecb.RemoveComponent<ItemSlotCollection>(entity);
             }
 
             ecb.Playback(state.EntityManager);

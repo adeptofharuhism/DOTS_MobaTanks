@@ -17,13 +17,19 @@ namespace Assets.CodeBase.UI.MainScene
         void OnClickDisconnect();
     }
 
-    public interface IShopViewModel
+    public interface IItemRequestViewModel
     {
-        IReactiveGetter<bool> ShopCanBeShown { get; }
-        IReactiveGetter<string> MoneyView { get; }
+        void BuyItem(int itemId);
+        IReactiveGetter<int> MoneyView { get; }
     }
 
-    public interface IInGameModeViewModel : IShopViewModel { }
+    public interface IShopActivationViewModel
+    {
+        IReactiveGetter<bool> ShopCanBeShown { get; }
+        IReactiveGetter<string> MoneyTextView { get; }
+    }
+
+    public interface IInGameModeViewModel : IShopActivationViewModel, IItemRequestViewModel { }
 
     public interface IAskReadyViewModel
     {
@@ -50,12 +56,14 @@ namespace Assets.CodeBase.UI.MainScene
         public IReactiveGetter<MainSceneMode> Mode => _mode;
 
         public IReactiveGetter<bool> ShopCanBeShown => _shopCanBeShown;
-        public IReactiveGetter<string> MoneyView => _moneyView;
+        public IReactiveGetter<int> MoneyView => _moneyView;
+        public IReactiveGetter<string> MoneyTextView => _moneyTextView;
 
         private readonly ReactiveProperty<MainSceneMode> _mode = new();
 
         private readonly ReactiveProperty<bool> _shopCanBeShown = new();
-        private readonly ReactiveProperty<string> _moneyView = new();
+        private readonly ReactiveProperty<int> _moneyView = new();
+        private readonly ReactiveProperty<string> _moneyTextView = new();
 
         private readonly IGameStateMachine _gameStateMachine;
         private readonly IMainSceneModeNotifier _mainSceneModeNotifier;
@@ -83,16 +91,19 @@ namespace Assets.CodeBase.UI.MainScene
             OnReady?.Invoke();
         }
 
+        public void BuyItem(int itemId) =>
+            _worldRpcSenderService.SendBuyItemRpc(itemId);
+
         public void OnClickDisconnect() {
             if (_mode.Value != MainSceneMode.EndGame)
                 return;
 
-            _gameStateMachine.EnterGameState<LoadStartSceneState>();    
+            _gameStateMachine.EnterGameState<LoadStartSceneState>();
         }
 
         protected override void GetModelValues() {
             _mode.Value = _mainSceneModeNotifier.Mode.Value;
-            _moneyView.Value = _worldEventBus.MoneyAmount.Value.ToString();
+            _moneyTextView.Value = _worldEventBus.MoneyAmount.Value.ToString();
             _shopCanBeShown.Value = _worldEventBus.ShopAvailability.Value;
         }
 
@@ -113,8 +124,10 @@ namespace Assets.CodeBase.UI.MainScene
         private void ChangeMode(MainSceneMode mode) =>
             _mode.Value = mode;
 
-        private void UpdateMoneyView(int money) =>
-            _moneyView.Value = money.ToString();
+        private void UpdateMoneyView(int money) {
+            _moneyView.Value = money;
+            _moneyTextView.Value = money.ToString();
+        }
 
         private void UpdateShopAvailability(bool availability) =>
             _shopCanBeShown.Value = availability;

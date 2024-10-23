@@ -26,7 +26,7 @@ namespace Assets.CodeBase.Inventory.Items
             int successfulEnumerations = 0;
             for (int i = 0; i < items.ItemDescriptions.Count; i++)
                 if (items.ItemDescriptions[i] != null)
-                    items.ItemDescriptions[i].ItemId = successfulEnumerations++;
+                    items.ItemDescriptions[i].Id = successfulEnumerations++;
 
             UnityEngine.Debug.Log($"Enumerated {successfulEnumerations} items inside Item Collection");
         }

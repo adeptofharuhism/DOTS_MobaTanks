@@ -24,4 +24,9 @@ namespace Assets.CodeBase.Vehicles
     {
         public int Value;
     }
+
+    public struct VehicleItemSlot : IComponentData
+    {
+        public Entity Value;
+    }
 }
