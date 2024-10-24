@@ -32,7 +32,7 @@ namespace Assets.CodeBase.UI.StartScene.Panels
             _ip.UnregisterCallback<FocusOutEvent>(OnFocusOutIp);
         }
 
-        protected override void CacheVisualElements() {
+        protected override void OnConstruction() {
             _joinButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.JoinGamePanel.JoinButton);
             _cancelButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.JoinGamePanel.CancelButton);
             _playerName = _panel.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.JoinGamePanel.PlayerName);

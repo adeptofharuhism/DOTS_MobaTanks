@@ -41,10 +41,11 @@ namespace Assets.CodeBase.Inventory.Items
                 Entity itemCreationEntity = CreateAdditionalEntity(TransformUsageFlags.None, entityName: item.Name + CreationSuffix);
 
                 AddComponent<Prefab>(itemCreationEntity);
+                AddComponent<ItemCommandTag>(itemCreationEntity);
                 AddComponent<ItemCreationTag>(itemCreationEntity);
 
                 if (item.IsWeapon) {
-                    AddComponent<SpawnableItemSlot>(itemCreationEntity);
+                    AddComponent<SpawnableItemSettings>(itemCreationEntity);
                     AddComponent(itemCreationEntity, new SpawnableItem {
                         Value = GetEntity(item.WeaponPrefab, TransformUsageFlags.Dynamic)
                     });
@@ -57,6 +58,7 @@ namespace Assets.CodeBase.Inventory.Items
                 Entity itemRemovalEntity = CreateAdditionalEntity(TransformUsageFlags.None, entityName: item.Name + RemovalSuffix);
 
                 AddComponent<Prefab>(itemRemovalEntity);
+                AddComponent<ItemCommandTag>(itemRemovalEntity);
                 AddComponent<ItemRemovalPrefab>(itemRemovalEntity);
 
                 return itemRemovalEntity;

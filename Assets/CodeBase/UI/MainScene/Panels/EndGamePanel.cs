@@ -27,7 +27,7 @@ namespace Assets.CodeBase.UI.MainScene.Panels
             _orangeWinnerText = orangeWinnerAsset.InstantiatePanel();
         }
 
-        protected override void CacheVisualElements() {
+        protected override void OnConstruction() {
             _disconnectButton = _panel.Q<Button>(Constants.VisualElementNames.GameUI.EndGamePanel.DisconnectButton);
             _winnerAssetContainer = _panel.Q<VisualElement>(Constants.VisualElementNames.GameUI.EndGamePanel.WinnerAssetContainer);
         }

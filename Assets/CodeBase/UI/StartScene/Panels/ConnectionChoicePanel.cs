@@ -29,7 +29,7 @@ namespace Assets.CodeBase.UI.StartScene.Panels
             _exitButton.UnregisterCallback<ClickEvent>(OnClickExitButton);
         }
 
-        protected override void CacheVisualElements() {
+        protected override void OnConstruction() {
             _hostButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.ConnectionChoicePanel.HostButton);
             _joinButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.ConnectionChoicePanel.JoinButton);
             _exitButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.ConnectionChoicePanel.ExitButton);

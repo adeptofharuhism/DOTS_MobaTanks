@@ -47,7 +47,7 @@ namespace Assets.CodeBase.UI.StartScene.Panels
             _hostVariantViewModel.HostPortView.OnChanged -= OnChangedHostPort;
         }
 
-        protected override void CacheVisualElements() {
+        protected override void OnConstruction() {
             _hostButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.HostButton);
             _cancelButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.CancelButton);
             _playerName = _panel.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.PlayerName);

@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: -2202345585521932185}
   - component: {fileID: -21244634944933220}
   - component: {fileID: -5051764128329047604}
+  - component: {fileID: -4244853786051795553}
   m_Layer: 0
   m_Name: PlayerEntity
   m_TagString: Untagged
@@ -133,3 +134,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f81a142e049d7d94e96e86752b6f9175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _inventorySlot: {fileID: 0}
+--- !u!114 &-4244853786051795553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3012323269097805245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9eb7c9bf9974e674ba0201ef58445f09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _teamType: 0

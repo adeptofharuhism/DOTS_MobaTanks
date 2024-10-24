@@ -86,8 +86,8 @@ namespace Assets.CodeBase.Player.Respawn
         public void OnUpdate(ref SystemState state) {
             EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            foreach (var (respawnParameters, playerEntity)
-                in SystemAPI.Query<VehicleRespawnParameters>()
+            foreach (var (respawnParameters, team, playerEntity)
+                in SystemAPI.Query<VehicleRespawnParameters, UnitTeam>()
                 .WithAll<ShouldRespawnTag>()
                 .WithEntityAccess()) {
 
@@ -98,7 +98,7 @@ namespace Assets.CodeBase.Player.Respawn
 
                 ecb.SetComponent(newVehicle, new GhostOwner { NetworkId = respawnParameters.ClientId });
 
-                ecb.SetComponent(newVehicle, new UnitTeam { Value = respawnParameters.Team });
+                ecb.SetComponent(newVehicle, new UnitTeam { Value = team.Value });
 
                 LocalTransform vehicleTransform = LocalTransform.FromPosition(respawnParameters.SpawnPosition);
                 ecb.SetComponent(newVehicle, vehicleTransform);

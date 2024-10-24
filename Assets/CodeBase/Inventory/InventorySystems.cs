@@ -1,11 +1,14 @@
 ﻿using Assets.CodeBase.Finances;
+using Assets.CodeBase.GameStates;
 using Assets.CodeBase.Inventory.Items;
 using Assets.CodeBase.Player;
 using Assets.CodeBase.Player.Respawn;
+using Assets.CodeBase.Teams;
 using Assets.CodeBase.Vehicles;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.NetCode;
+using Unity.Transforms;
 
 namespace Assets.CodeBase.Inventory
 {
@@ -50,7 +53,7 @@ namespace Assets.CodeBase.Inventory
     public partial struct BuyItemSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
-            state.RequireForUpdate<BasicInventoryCapacity>();
+            state.RequireForUpdate<InGameState>();
             state.RequireForUpdate<ItemCreationPrefab>();
         }
 
@@ -91,16 +94,24 @@ namespace Assets.CodeBase.Inventory
                     SpawnedItem = Entity.Null
                 };
 
-                Entity addItemCommand = ecb.Instantiate(itemBuffer[itemRpc.ItemId].Command);
+                Entity respawnedEntity = SystemAPI.GetComponent<RespawnedEntity>(playerEntity).Value;
 
-                if (!SystemAPI.HasComponent<SpawnableItemSlot>(itemBuffer[itemRpc.ItemId].Command))
+                if (respawnedEntity == Entity.Null)
                     continue;
 
 
-                ecb.SetComponent(addItemCommand, new SpawnableItemSlot {
+                Entity addItemCommand = ecb.Instantiate(itemBuffer[itemRpc.ItemId].Command);
+
+                if (!SystemAPI.HasComponent<SpawnableItemSettings>(itemBuffer[itemRpc.ItemId].Command))
+                    continue;
+
+
+                ecb.SetComponent(addItemCommand, new SpawnableItemSettings {
+                    PlayerEntity = playerEntity,
+                    Vehicle = respawnedEntity,
                     InventorySlot = freeSlot,
-                    SpawnParent = SystemAPI.GetComponent<VehicleItemSlot>(
-                        SystemAPI.GetComponent<RespawnedEntity>(playerEntity).Value).Value
+                    SpawnParent = SystemAPI.GetComponent<VehicleItemSlot>(respawnedEntity).Value,
+                    ItemTeam = SystemAPI.GetComponent<UnitTeam>(playerEntity).Value
                 });
             }
 
@@ -111,6 +122,99 @@ namespace Assets.CodeBase.Inventory
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(InventorySystemGroup))]
     [UpdateAfter(typeof(BuyItemSystem))]
+    public partial struct RecreateRespawnedVehicleItemsSystem : ISystem
+    {
+        public void OnCreate(ref SystemState state) {
+            state.RequireForUpdate<InGameState>();
+            state.RequireForUpdate<ShouldRespawnTag>();
+        }
+
+        public void OnUpdate(ref SystemState state) {
+            EntityCommandBuffer ecb = new(Allocator.Temp);
+
+            DynamicBuffer<ItemCreationPrefab> itemBuffer = SystemAPI.GetSingletonBuffer<ItemCreationPrefab>();
+
+            foreach (var (team, inventory, respawnedEntity, playerEntity)
+                in SystemAPI.Query<UnitTeam, ItemSlotCollection, RespawnedEntity>()
+                .WithAll<ShouldRespawnTag>()
+                .WithEntityAccess()) {
+
+                for (int i = 0; i < inventory.Slots.Length; i++) {
+                    if (inventory.Slots[i].ItemId == InventorySlot.UndefinedItem)
+                        continue;
+
+                    if (SystemAPI.HasComponent<SpawnableItem>(itemBuffer[inventory.Slots[i].ItemId].Command)) {
+                        Entity addItemCommand = ecb.Instantiate(itemBuffer[inventory.Slots[i].ItemId].Command);
+
+                        ecb.SetComponent(addItemCommand, new SpawnableItemSettings {
+                            PlayerEntity = playerEntity,
+                            Vehicle = respawnedEntity.Value,
+                            InventorySlot = i,
+                            SpawnParent = SystemAPI.GetComponent<VehicleItemSlot>(respawnedEntity.Value).Value,
+                            ItemTeam = team.Value
+                        });
+                    }
+                }
+            }
+
+            ecb.Playback(state.EntityManager);
+        }
+    }
+
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
+    [UpdateInGroup(typeof(InventorySystemGroup))]
+    [UpdateAfter(typeof(RecreateRespawnedVehicleItemsSystem))]
+    public partial struct SpawnItemSystem : ISystem
+    {
+        public void OnCreate(ref SystemState state) {
+            state.RequireForUpdate<InGameState>();
+        }
+
+        public void OnUpdate(ref SystemState state) {
+            EntityCommandBuffer ecb = new(Allocator.Temp);
+
+            foreach (var (item, settings)
+                in SystemAPI.Query<SpawnableItem, SpawnableItemSettings>()
+                .WithAll<ItemCreationTag>()) {
+
+                Entity instantiatedItem = ecb.Instantiate(item.Value);
+
+                ecb.AddComponent(instantiatedItem, new Parent { Value = settings.SpawnParent });
+                ecb.SetComponent(instantiatedItem, new UnitTeam { Value = settings.ItemTeam });
+                ecb.AppendToBuffer(settings.Vehicle, new LinkedEntityGroup { Value = instantiatedItem });
+
+                ItemSlotCollection inventory = SystemAPI.GetComponent<ItemSlotCollection>(settings.PlayerEntity);
+
+                inventory.Slots[settings.InventorySlot] = new InventorySlot {
+                    ItemId = inventory.Slots[settings.InventorySlot].ItemId,
+                    SpawnedItem = instantiatedItem,
+                };
+            }
+
+            ecb.Playback(state.EntityManager);
+        }
+    }
+
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
+    [UpdateInGroup(typeof(InventorySystemGroup))]
+    [UpdateAfter(typeof(SpawnItemSystem))]
+    public partial struct DestroyItemCommandEntitySystem : ISystem
+    {
+        public void OnCreate(ref SystemState state) {
+            state.RequireForUpdate<InGameState>();
+        }
+
+        public void OnUpdate(ref SystemState state) {
+            EntityQuery query = SystemAPI.QueryBuilder()
+                .WithAll<ItemCommandTag>().Build();
+
+            state.EntityManager.DestroyEntity(query);
+        }
+    }
+
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
+    [UpdateInGroup(typeof(InventorySystemGroup))]
+    [UpdateAfter(typeof(DestroyItemCommandEntitySystem))]
     public partial struct InventoryCleanUpSystem : ISystem
     {
         public void OnUpdate(ref SystemState state) {

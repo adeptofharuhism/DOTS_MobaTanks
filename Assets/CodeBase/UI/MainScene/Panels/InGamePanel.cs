@@ -21,7 +21,7 @@ namespace Assets.CodeBase.UI.MainScene.Panels
             _shopPanel = new ShopPanel(shopPanel, inGameModeViewModel, availableItemsPanel);
         }
 
-        protected override void CacheVisualElements() {
+        protected override void OnConstruction() {
             _leftPart = _panel.Q<VisualElement>(Constants.VisualElementNames.GameUI.InGamePanel.LeftPart);
             _centralPart = _panel.Q<VisualElement>(Constants.VisualElementNames.GameUI.InGamePanel.CentralPart);
             _rightPart = _panel.Q<VisualElement>(Constants.VisualElementNames.GameUI.InGamePanel.RightPart);
@@ -84,7 +84,7 @@ namespace Assets.CodeBase.UI.MainScene.Panels
             _availableItemsPanel = new AvailableItemsPanel(availableItemsPanel, inGameModeViewModel);
         }
 
-        protected override void CacheVisualElements() {
+        protected override void OnConstruction() {
             _shopPart = _panel.Q<VisualElement>(Constants.VisualElementNames.GameUI.InGamePanel.ShopPanel.ShopPart);
             _shopButton = _panel.Q<Button>(Constants.VisualElementNames.GameUI.InGamePanel.ShopPanel.ShopButton);
             _moneyLabel = _panel.Q<Label>(Constants.VisualElementNames.GameUI.InGamePanel.ShopPanel.MoneyLabel);
@@ -173,7 +173,7 @@ namespace Assets.CodeBase.UI.MainScene.Panels
             _itemRequestViewModel = itemRequestViewModel;
         }
 
-        protected override void CacheVisualElements() {
+        protected override void OnConstruction() {
             _testButton = _panel.Q<Button>("Test");
         }
 

@@ -1,4 +1,5 @@
-﻿using Assets.CodeBase.Finances;
+﻿using Assets.CodeBase.Combat.Health.UI;
+using Assets.CodeBase.Finances;
 using Assets.CodeBase.Infrastructure.PrefabInjection;
 using Assets.CodeBase.Player;
 using Assets.CodeBase.Player.PlayerCount;
@@ -74,12 +75,12 @@ namespace Assets.CodeBase.GameStates.PrepareForGame
                 Entity playerEntity = ecb.Instantiate(playerPrefab);
 
                 TeamType newPlayerTeam = GetNewPlayerTeam(playerCount.ValueRW.Value);
+                ecb.SetComponent(playerEntity, new UnitTeam { Value = newPlayerTeam });
 
                 ecb.SetComponent(playerEntity, new GhostOwner { NetworkId =  clientId });
 
                 ecb.SetComponent(playerEntity, new VehicleRespawnParameters {
                     ClientId = clientId,
-                    Team = newPlayerTeam,
                     VehiclePrefab = vehiclePrefab,
                     PlayerName = newPlayerData.PlayerName,
                     SpawnPosition = GetSpawnPosition(newPlayerTeam, playerCount.ValueRO.Value)

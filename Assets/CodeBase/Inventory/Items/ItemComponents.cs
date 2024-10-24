@@ -1,7 +1,9 @@
-﻿using Unity.Entities;
+﻿using Assets.CodeBase.Teams;
+using Unity.Entities;
 
 namespace Assets.CodeBase.Inventory.Items
 {
+    public struct ItemCommandTag : IComponentData { }
     public struct ItemCreationTag : IComponentData { }
     public struct ItemRemovalTag : IComponentData { }
 
@@ -22,9 +24,12 @@ namespace Assets.CodeBase.Inventory.Items
         public Entity Value;
     }
 
-    public struct SpawnableItemSlot : IComponentData
+    public struct SpawnableItemSettings : IComponentData
     {
         public int InventorySlot;
+        public TeamType ItemTeam;
+        public Entity PlayerEntity;
         public Entity SpawnParent;
+        public Entity Vehicle;
     }
 }

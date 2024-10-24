@@ -25,7 +25,7 @@ namespace Assets.CodeBase.UI.MainScene.Panels
             _waitingPanel = new WaitingPanel(waitingPanel);
         }
 
-        protected override void CacheVisualElements() {
+        protected override void OnConstruction() {
             _subContentPanel =
                 _panel.Q<VisualElement>(Constants.VisualElementNames.GameUI.PreparingPanel.SubContentPanel);
         }
@@ -73,7 +73,7 @@ namespace Assets.CodeBase.UI.MainScene.Panels
             _askReadyViewModel = askReadyViewModel;
         }
 
-        protected override void CacheVisualElements() {
+        protected override void OnConstruction() {
             _readyButton =
                 _panel.Q<Button>(Constants.VisualElementNames.GameUI.PreparingPanel.AskReadyPanel.ReadyButton);
         }

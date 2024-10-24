@@ -8,7 +8,6 @@ namespace Assets.CodeBase.Player.Respawn
     public struct VehicleRespawnParameters : IComponentData
     {
         public int ClientId;
-        public TeamType Team;
         public FixedString64Bytes PlayerName;
         public float3 SpawnPosition;
         public Entity VehiclePrefab;

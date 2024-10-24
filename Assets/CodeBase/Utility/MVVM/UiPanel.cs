@@ -11,7 +11,7 @@ namespace Assets.CodeBase.Utility.MVVM
         protected UiPanel(VisualTreeAsset panelAsset) {
             _panel = panelAsset.InstantiatePanel();
 
-            CacheVisualElements();
+            OnConstruction();
         }
 
         public virtual void Enable() { }
@@ -27,12 +27,12 @@ namespace Assets.CodeBase.Utility.MVVM
             UnbindData();
         }
 
+        protected virtual void OnConstruction() { }
+
         protected virtual void ReadInitialViewModelData() { }
 
         protected virtual void BindData() { }
 
         protected virtual void UnbindData() { }
-
-        protected virtual void CacheVisualElements() { }
     }
 }
