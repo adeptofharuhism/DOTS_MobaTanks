@@ -12239,6 +12239,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _itemCollection: {fileID: 11400000, guid: 579c23fb665d8bf42bc52e73f2d66cd9, type: 2}
+  _sellCostMultiplier: 0.5
 --- !u!4 &514524936
 Transform:
   m_ObjectHideFlags: 0

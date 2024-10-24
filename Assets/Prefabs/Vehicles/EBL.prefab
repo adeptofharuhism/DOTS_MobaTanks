@@ -405,7 +405,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2201529600122281834}
   m_Layer: 0
-  m_Name: TurretSlot
+  m_Name: TurretAndItemSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -767,6 +767,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _wheelAmount: 6
+  _itemSlot: {fileID: 2996415947426125788}
 --- !u!114 &8951157357490500991
 MonoBehaviour:
   m_ObjectHideFlags: 0

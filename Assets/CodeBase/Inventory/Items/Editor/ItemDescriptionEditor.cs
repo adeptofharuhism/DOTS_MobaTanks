@@ -19,17 +19,20 @@ namespace Assets.CodeBase.Inventory.Items
         public override void OnInspectorGUI() {
             ItemDescription target = (ItemDescription)this.target;
 
-            DrawItemName(target);
+            DrawCommonOptions(target);
             DrawWeaponSection(target);
 
             serializedObject.ApplyModifiedProperties();
         }
 
-        private void DrawItemName(ItemDescription target) {
+        private void DrawCommonOptions(ItemDescription target) {
             GUILayout.Label(nameof(target.Name));
 
             string updatedName = GUILayout.TextField(target.Name);
             target.Name = updatedName;
+
+            int updatedCost = EditorGUILayout.IntField(new GUIContent(nameof(target.Cost)), target.Cost);
+            target.Cost = updatedCost;
         }
 
         private void DrawWeaponSection(ItemDescription target) {

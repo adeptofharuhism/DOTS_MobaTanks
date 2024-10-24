@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Assets.CodeBase.Vehicles;
+using Unity.Entities;
 using UnityEngine;
 
 namespace Assets.CodeBase.Inventory.Items
@@ -6,7 +7,7 @@ namespace Assets.CodeBase.Inventory.Items
     public class ItemCollectionSettingsAuthoring : MonoBehaviour
     {
         [SerializeField] private ItemCollection _itemCollection;
-        [SerializeField, Range(0, 1)] 
+        [SerializeField, Range(0, 1)]
         private float _sellCostMultiplier = .5f;
 
         public ItemCollection ItemCollection => _itemCollection;
@@ -25,7 +26,7 @@ namespace Assets.CodeBase.Inventory.Items
 
                 foreach (ItemDescription item in authoring.ItemCollection.ItemDescriptions) {
                     creationBuffer.Add(new ItemCreationPrefab {
-                        Item = MakeItemCreationPrefab(item),
+                        Command = MakeItemCreationPrefab(item),
                         BuyCost = item.Cost
                     });
 
@@ -41,6 +42,13 @@ namespace Assets.CodeBase.Inventory.Items
 
                 AddComponent<Prefab>(itemCreationEntity);
                 AddComponent<ItemCreationTag>(itemCreationEntity);
+
+                if (item.IsWeapon) {
+                    AddComponent<SpawnableItemSlot>(itemCreationEntity);
+                    AddComponent(itemCreationEntity, new SpawnableItem {
+                        Value = GetEntity(item.WeaponPrefab, TransformUsageFlags.Dynamic)
+                    });
+                }
 
                 return itemCreationEntity;
             }

@@ -8,7 +8,7 @@ namespace Assets.CodeBase.Inventory.Items
     public struct ItemCreationPrefab : IBufferElementData
     {
         public int BuyCost;
-        public Entity Item;
+        public Entity Command;
     }
 
     public struct ItemRemovalPrefab : IBufferElementData
@@ -20,5 +20,11 @@ namespace Assets.CodeBase.Inventory.Items
     public struct SpawnableItem : IComponentData
     {
         public Entity Value;
+    }
+
+    public struct SpawnableItemSlot : IComponentData
+    {
+        public int InventorySlot;
+        public Entity SpawnParent;
     }
 }

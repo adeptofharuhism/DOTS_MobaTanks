@@ -1,4 +1,5 @@
-﻿using Assets.CodeBase.Inventory.Items;
+﻿using Assets.CodeBase.Finances;
+using Assets.CodeBase.Inventory.Items;
 using Assets.CodeBase.Player;
 using Assets.CodeBase.Player.Respawn;
 using Assets.CodeBase.Vehicles;
@@ -30,7 +31,7 @@ namespace Assets.CodeBase.Inventory
                 NativeArray<InventorySlot> inventory = new NativeArray<InventorySlot>(basicInventoryCapacity, Allocator.Persistent);
                 for (int i = 0; i < basicInventoryCapacity; i++)
                     inventory[i] = new InventorySlot {
-                        ItemId = -1,
+                        ItemId = InventorySlot.UndefinedItem,
                         SpawnedItem = Entity.Null
                     };
                 ecb.AddComponent(entity, new ItemSlotCollection { Slots = inventory });
@@ -46,7 +47,7 @@ namespace Assets.CodeBase.Inventory
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(InventorySystemGroup))]
     [UpdateAfter(typeof(InventoryInitializationSystem))]
-    public partial struct InventoryAddItemSystem : ISystem
+    public partial struct BuyItemSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
             state.RequireForUpdate<BasicInventoryCapacity>();
@@ -62,9 +63,45 @@ namespace Assets.CodeBase.Inventory
                 in SystemAPI.Query<BuyItemRpc, ReceiveRpcCommandRequest>()
                 .WithEntityAccess()) {
 
-                UnityEngine.Debug.Log($"Command to add item {itemRpc.ItemId}");
-
                 ecb.DestroyEntity(requestEntity);
+
+                Entity playerEntity = SystemAPI.GetComponent<PlayerEntity>(requestSource.SourceConnection).Value;
+
+                RefRW<MoneyAmount> playerMoney = SystemAPI.GetComponentRW<MoneyAmount>(playerEntity);
+
+                if (itemBuffer[itemRpc.ItemId].BuyCost > playerMoney.ValueRO.Value)
+                    continue;
+
+
+                ItemSlotCollection inventory = SystemAPI.GetComponent<ItemSlotCollection>(playerEntity);
+
+                int freeSlot = -1;
+                for (int i = 0; i < inventory.Slots.Length && freeSlot == -1; i++)
+                    if (inventory.Slots[i].ItemId == InventorySlot.UndefinedItem)
+                        freeSlot = i;
+
+                if (freeSlot == -1)
+                    continue;
+
+
+                playerMoney.ValueRW.Value -= itemBuffer[itemRpc.ItemId].BuyCost;
+
+                inventory.Slots[freeSlot] = new InventorySlot {
+                    ItemId = itemRpc.ItemId,
+                    SpawnedItem = Entity.Null
+                };
+
+                Entity addItemCommand = ecb.Instantiate(itemBuffer[itemRpc.ItemId].Command);
+
+                if (!SystemAPI.HasComponent<SpawnableItemSlot>(itemBuffer[itemRpc.ItemId].Command))
+                    continue;
+
+
+                ecb.SetComponent(addItemCommand, new SpawnableItemSlot {
+                    InventorySlot = freeSlot,
+                    SpawnParent = SystemAPI.GetComponent<VehicleItemSlot>(
+                        SystemAPI.GetComponent<RespawnedEntity>(playerEntity).Value).Value
+                });
             }
 
             ecb.Playback(state.EntityManager);
@@ -73,7 +110,7 @@ namespace Assets.CodeBase.Inventory
 
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(InventorySystemGroup))]
-    [UpdateAfter(typeof(InventoryAddItemSystem))]
+    [UpdateAfter(typeof(BuyItemSystem))]
     public partial struct InventoryCleanUpSystem : ISystem
     {
         public void OnUpdate(ref SystemState state) {

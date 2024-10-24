@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 778e338ea70e54d45bb8dad43fb93e67, type: 3}
   m_Name: MachineGun
   m_EditorClassIdentifier: 
-  ItemId: 0
+  Id: 0
+  Name: MachineGun
+  Cost: 100
   IsWeapon: 1
   WeaponPrefab: {fileID: 5503501951114558050, guid: a4d61f5d3ba003e429f2b0441e2624ad,
     type: 3}

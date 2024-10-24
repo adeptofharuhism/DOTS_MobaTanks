@@ -31,6 +31,8 @@ namespace Assets.CodeBase.Inventory
 
     public struct InventorySlot
     {
+        public const int UndefinedItem = -1;
+
         public int ItemId;
         public Entity SpawnedItem;
     }
