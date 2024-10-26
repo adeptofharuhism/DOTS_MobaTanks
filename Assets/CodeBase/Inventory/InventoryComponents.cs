@@ -4,53 +4,56 @@ using Unity.NetCode;
 
 namespace Assets.CodeBase.Inventory
 {
-    //Settings
-    public struct BasicInventoryCapacity : IComponentData
-    {
-        public int Value;
-    }
+	//Settings
+	public struct BasicInventoryCapacity : IComponentData
+	{
+		public int Value;
+	}
 
-    //Inventory components
-    [GhostComponent(PrefabType = GhostPrefabType.Server)]
-    public struct InventoryInitializationTag : IComponentData { }
+	//Inventory components
+	[GhostComponent(PrefabType = GhostPrefabType.Server)]
+	public struct InventoryInitializationTag : IComponentData
+	{ }
 
-    [GhostComponent(PrefabType = GhostPrefabType.Server)]
-    public struct InventoryTag : IComponentData { }
+	[GhostComponent(PrefabType = GhostPrefabType.Server)]
+	public struct InventoryTag : IComponentData
+	{ }
 
-    [GhostComponent(PrefabType = GhostPrefabType.Server)]
-    public struct ItemSlotCollection : ICleanupComponentData
-    {
-        public NativeArray<InventorySlot> Slots;
-    }
+	[GhostComponent(PrefabType = GhostPrefabType.Server)]
+	public struct ItemSlotCollection : ICleanupComponentData
+	{
+		public NativeArray<InventorySlot> Slots;
+	}
 
-    [GhostComponent(PrefabType = GhostPrefabType.Server)]
-    public struct InventorySlotEntity : IComponentData
-    {
-        public Entity Value;
-    }
+	[GhostComponent(PrefabType = GhostPrefabType.Server)]
+	public struct InventorySlotEntity : IComponentData
+	{
+		public Entity Value;
+	}
 
-    public struct InventorySlot
-    {
-        public const int UndefinedItem = -1;
+	public struct InventorySlot
+	{
+		public const int UndefinedItem = -1;
 
-        public int ItemId;
-        public Entity SpawnedItem;
-    }
+		public int ItemId;
+		public bool IsSpawnable;
+		public Entity SpawnedItem;
+	}
 
-    //Rpcs
-    public struct BuyItemRpc : IRpcCommand
-    {
-        public int ItemId;
-    }
+	//Rpcs
+	public struct BuyItemRpc : IRpcCommand
+	{
+		public int ItemId;
+	}
 
-    public struct RemoveItemFromInventoryRpc : IRpcCommand
-    {
-        public int Slot;
-    }
+	public struct SellItemRpc : IRpcCommand
+	{
+		public int Slot;
+	}
 
-    public struct SwapSlotsInsideInventoryRpc : IRpcCommand
-    {
-        public int FromSlot;
-        public int ToSlot;
-    }
+	public struct SwapSlotsRpc : IRpcCommand
+	{
+		public int FromSlot;
+		public int ToSlot;
+	}
 }

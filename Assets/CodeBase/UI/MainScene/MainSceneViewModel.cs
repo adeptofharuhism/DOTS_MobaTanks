@@ -20,6 +20,7 @@ namespace Assets.CodeBase.UI.MainScene
     public interface IItemRequestViewModel
     {
         void BuyItem(int itemId);
+        void SellItem(int slot);
         IReactiveGetter<int> MoneyView { get; }
     }
 
@@ -94,6 +95,9 @@ namespace Assets.CodeBase.UI.MainScene
         public void BuyItem(int itemId) =>
             _worldRpcSenderService.SendBuyItemRpc(itemId);
 
+        public void SellItem(int slot) =>
+            _worldRpcSenderService.SendSellItemRpc(slot);
+        
         public void OnClickDisconnect() {
             if (_mode.Value != MainSceneMode.EndGame)
                 return;

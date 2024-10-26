@@ -25,5 +25,13 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldCommandSender
             _worldAccess.DefaultWorld.EntityManager
                 .AddComponentData(rpc, new BuyItemRpc { ItemId = itemId });
         }
+
+        public void SendSellItemRpc(int slot) {
+            Entity rpc = _worldAccess.DefaultWorld.EntityManager
+                .CreateEntity(typeof(SendRpcCommandRequest));
+
+            _worldAccess.DefaultWorld.EntityManager
+                .AddComponentData(rpc, new SellItemRpc { Slot = slot });
+        }
     }
 }

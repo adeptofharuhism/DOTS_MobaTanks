@@ -70,7 +70,7 @@ namespace Assets.CodeBase.UI.MainScene.Panels
         private Button _shopButton;
         private Label _moneyLabel;
 
-        private bool _shopIsShown = false;
+        private bool _shopIsShown ;
         private bool _shopCanBeShown;
 
         private readonly IShopActivationViewModel _shopViewModel;
@@ -166,6 +166,7 @@ namespace Assets.CodeBase.UI.MainScene.Panels
         private readonly IItemRequestViewModel _itemRequestViewModel;
 
         private Button _testButton;
+        private Button _removalButton;
 
         public AvailableItemsPanel(VisualTreeAsset panelAsset, IItemRequestViewModel itemRequestViewModel)
             : base(panelAsset) {
@@ -175,14 +176,17 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 
         protected override void OnConstruction() {
             _testButton = _panel.Q<Button>("Test");
+            _removalButton = _panel.Q<Button>("Removal");
         }
 
         public override void Enable() {
             _testButton.RegisterCallback<ClickEvent>(OnClickTest);
+            _removalButton.RegisterCallback<ClickEvent>(OnClickRemoval);
         }
 
         public override void Disable() {
             _testButton.UnregisterCallback<ClickEvent>(OnClickTest);
+            _removalButton.UnregisterCallback<ClickEvent>(OnClickRemoval);
         }
 
         protected override void ReadInitialViewModelData() {
@@ -199,6 +203,10 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 
         private void OnClickTest(ClickEvent evt) {
             _itemRequestViewModel.BuyItem(0);
+        }
+
+        private void OnClickRemoval(ClickEvent evt) {
+            _itemRequestViewModel.SellItem(0);
         }
 
         private void UpdateAvailableItems(int money) {

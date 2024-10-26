@@ -1,7 +1,8 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <ui:VisualElement name="AvailableItemsPanel" style="flex-grow: 1;">
         <ui:VisualElement name="AvailableItemsPart" class="blackBackground bordersHighlightWhite" style="flex-grow: 1; height: 85%; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px;">
-            <ui:Button text="Button" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Test" />
+            <ui:Button text="Add" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Test" />
+            <ui:Button text="Remove" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Removal" />
         </ui:VisualElement>
         <ui:VisualElement name="InventoryPart" class="bordersHighlightWhite blackBackground" style="flex-direction: row; justify-content: space-around; align-items: center; flex-grow: 1; height: 12%; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px;">
             <Assets.UI_Sheets.Controls.SquaredVisualElement name="SquaredVisualElement" class="bordersHighlightWhite shopSlot" />
