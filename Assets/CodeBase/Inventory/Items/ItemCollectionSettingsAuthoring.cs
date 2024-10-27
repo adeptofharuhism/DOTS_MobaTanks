@@ -17,6 +17,8 @@ namespace Assets.CodeBase.Inventory.Items
 			public override void Bake(ItemCollectionSettingsAuthoring authoring) {
 				Entity settings = GetEntity(TransformUsageFlags.None);
 
+				AddComponent(settings, new EmptyItemCommand() { Command = CreateEmptyItemCommand() });
+				
 				DynamicBuffer<ItemCreationPrefab> creationBuffer = AddBuffer<ItemCreationPrefab>(settings);
 				DynamicBuffer<ItemRemovalPrefab> removalBuffer = AddBuffer<ItemRemovalPrefab>(settings);
 
@@ -31,6 +33,15 @@ namespace Assets.CodeBase.Inventory.Items
 						SellCost = (int)(item.Cost * authoring.ItemCollection.SellMultiplier)
 					});
 				}
+			}
+
+			private Entity CreateEmptyItemCommand() {
+				Entity emptyItemCommand = CreateAdditionalEntity(TransformUsageFlags.None);
+
+				AddComponent<Prefab>(emptyItemCommand);
+				AddComponent<ItemCommandTag>(emptyItemCommand);
+
+				return emptyItemCommand;
 			}
 
 			private Entity MakeItemCreationPrefab(ItemDescription item) {

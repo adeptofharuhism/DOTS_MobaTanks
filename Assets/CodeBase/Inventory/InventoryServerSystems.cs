@@ -290,6 +290,52 @@ namespace Assets.CodeBase.Inventory
 	[WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
 	[UpdateInGroup(typeof(InventorySystemGroup))]
 	[UpdateAfter(typeof(SpawnItemSystem))]
+	public partial struct SwapSlotsSystem : ISystem
+	{
+		public void OnCreate(ref SystemState state) {
+			state.RequireForUpdate<InGameState>();
+			state.RequireForUpdate<EmptyItemCommand>();
+		}
+
+		public void OnUpdate(ref SystemState state) {
+			EntityCommandBuffer ecb = new(Allocator.Temp);
+
+			foreach (var (swapRpc, requestSource, requestEntity)
+				in SystemAPI.Query<SwapSlotsRpc, ReceiveRpcCommandRequest>()
+					.WithEntityAccess()) {
+
+				ecb.DestroyEntity(requestEntity);
+
+				if (swapRpc.FromSlot == swapRpc.ToSlot)
+					continue;
+
+
+				Entity playerEntity = SystemAPI.GetComponent<PlayerEntity>(requestSource.SourceConnection).Value;
+
+				ItemSlotCollection inventory = SystemAPI.GetComponent<ItemSlotCollection>(playerEntity);
+
+				if (swapRpc.FromSlot < 0 ||
+				    swapRpc.FromSlot >= inventory.Slots.Length ||
+				    swapRpc.ToSlot < 0 ||
+				    swapRpc.ToSlot >= inventory.Slots.Length)
+					continue;
+
+				
+				(inventory.Slots[swapRpc.ToSlot], inventory.Slots[swapRpc.FromSlot]) =
+					(inventory.Slots[swapRpc.FromSlot], inventory.Slots[swapRpc.ToSlot]);
+
+				Entity emptyCommand = SystemAPI.GetSingleton<EmptyItemCommand>().Command;
+
+				ecb.Instantiate(emptyCommand);
+			}
+
+			ecb.Playback(state.EntityManager);
+		}
+	}
+
+	[WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
+	[UpdateInGroup(typeof(InventorySystemGroup))]
+	[UpdateAfter(typeof(SwapSlotsSystem))]
 	public partial struct UpdateGhostInventorySystem : ISystem
 	{
 		public void OnCreate(ref SystemState state) {
@@ -303,7 +349,7 @@ namespace Assets.CodeBase.Inventory
 
 				ghostInventory.Clear();
 
-				for (int i = 0; i < inventory.Slots.Length; i++) 
+				for (int i = 0; i < inventory.Slots.Length; i++)
 					ghostInventory.Add(new GhostInventorySlot() { ItemId = inventory.Slots[i].ItemId });
 			}
 		}

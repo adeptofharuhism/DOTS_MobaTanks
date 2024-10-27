@@ -5,5 +5,6 @@
         void SendBuyItemRpc(int itemId);
         void SendReadyRpc();
         void SendSellItemRpc(int slot);
+        void SendSwapSlotsRpc(int slotFrom, int slotTo);
     }
 }

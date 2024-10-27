@@ -7,7 +7,7 @@ using Zenject;
 
 namespace Assets.CodeBase.Infrastructure.Services.Inventory
 {
-	public class InventoryService : IInventoryService, IInitializable, IDisposable
+	public class InventoryService : IInventoryService, IInitializable
 	{
 		public event Action<int, int> OnChangedItem;
 
@@ -25,24 +25,13 @@ namespace Assets.CodeBase.Infrastructure.Services.Inventory
 			SubscribeToInventoryChanges();
 		}
 
-		public void Dispose() {
-			UnsubscribeFromInventoryChanges();
-		}
-
 		private void SubscribeToInventoryChanges() {
 			UpdateClientInventorySystem inventorySystem =
 				_worldAccessService.DefaultWorld.GetExistingSystemManaged<UpdateClientInventorySystem>();
 
+			
 			inventorySystem.InventorySize.OnChanged += UpdateInventorySize;
 			inventorySystem.OnChangedItem += UpdateItem;
-		}
-
-		private void UnsubscribeFromInventoryChanges() {
-			UpdateClientInventorySystem inventorySystem =
-				_worldAccessService.DefaultWorld.GetExistingSystemManaged<UpdateClientInventorySystem>();
-
-			inventorySystem.InventorySize.OnChanged -= UpdateInventorySize;
-			inventorySystem.OnChangedItem -= UpdateItem;
 		}
 
 		private void UpdateInventorySize(int size) =>

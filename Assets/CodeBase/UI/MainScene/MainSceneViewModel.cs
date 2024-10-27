@@ -22,6 +22,7 @@ namespace Assets.CodeBase.UI.MainScene
 	{
 		void BuyItem(int itemId);
 		void SellItem(int slot);
+		void SwapItems(int slotFrom, int slotTo);
 		IReactiveGetter<int> MoneyView { get; }
 	}
 
@@ -58,6 +59,7 @@ namespace Assets.CodeBase.UI.MainScene
 		public IReactiveGetter<MainSceneMode> Mode => _mode;
 
 		public IReactiveGetter<bool> ShopCanBeShown => _shopCanBeShown;
+
 		public IReactiveGetter<int> MoneyView => _moneyView;
 		public IReactiveGetter<string> MoneyTextView => _moneyTextView;
 		public IReactiveGetter<int> InventorySizeView => _inventorySizeView;
@@ -104,6 +106,10 @@ namespace Assets.CodeBase.UI.MainScene
 
 		public void SellItem(int slot) =>
 			_worldRpcSenderService.SendSellItemRpc(slot);
+		
+		public void SwapItems(int slotFrom, int slotTo) {
+			_worldRpcSenderService.SendSwapSlotsRpc(slotFrom, slotTo);
+		}
 
 		public void OnClickDisconnect() {
 			if (_mode.Value != MainSceneMode.EndGame)

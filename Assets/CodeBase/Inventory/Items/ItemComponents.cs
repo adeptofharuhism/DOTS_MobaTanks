@@ -56,4 +56,10 @@ namespace Assets.CodeBase.Inventory.Items
 		public int SellCost;
 		public Entity Item;
 	}
+
+	[GhostComponent(PrefabType = GhostPrefabType.Server)]
+	public struct EmptyItemCommand : IComponentData
+	{
+		public Entity Command;
+	}
 }
