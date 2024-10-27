@@ -14,7 +14,7 @@ namespace Assets.CodeBase.Vehicles
         [GhostField(Quantization = 0)] public float2 Value;
     }
 
-    public partial struct VehicleSpringLengthCompressedBuffer : IBufferElementData
+    public struct VehicleSpringLengthCompressedBuffer : IBufferElementData
     {
         [GhostField(Quantization = 0)] public float Value;
         [GhostField] public int Index;

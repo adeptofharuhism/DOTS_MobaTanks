@@ -9,9 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3040242e07a06b4a9c159d658810d9b, type: 3}
-  m_Name: Collection
+  m_Script: {fileID: 11500000, guid: 52301db73ded4388821b771b14015676, type: 3}
+  m_Name: InventorySettings
   m_EditorClassIdentifier: 
-  SellMultiplier: 0.5
-  ItemDescriptions:
-  - {fileID: 11400000, guid: 31170b0d080961243a0986251e094f9e, type: 2}
+  InventorySize: 6

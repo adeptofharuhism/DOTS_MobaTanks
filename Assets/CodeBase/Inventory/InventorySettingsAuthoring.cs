@@ -1,13 +1,14 @@
-﻿using Unity.Entities;
+﻿using Assets.CodeBase.Inventory.Items;
+using Unity.Entities;
 using UnityEngine;
 
 namespace Assets.CodeBase.Inventory
 {
     public class InventorySettingsAuthoring : MonoBehaviour
     {
-        [SerializeField] private int _basicInventoryCapacity;
+        [SerializeField] private InventorySettings _inventorySettings;
 
-        public int BasicInventoryCapacity => _basicInventoryCapacity;
+        public int BasicInventoryCapacity => _inventorySettings.InventorySize;
 
         public class InventorySettingsBaker : Baker<InventorySettingsAuthoring>
         {

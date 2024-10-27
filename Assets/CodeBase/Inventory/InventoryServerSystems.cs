@@ -10,7 +10,6 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.NetCode;
 using Unity.Transforms;
-using UnityEditor;
 
 namespace Assets.CodeBase.Inventory
 {
@@ -35,12 +34,15 @@ namespace Assets.CodeBase.Inventory
 
 				NativeArray<InventorySlot> inventory = new(basicInventoryCapacity, Allocator.Persistent);
 
-				for (int i = 0; i < basicInventoryCapacity; i++)
+				for (int i = 0; i < basicInventoryCapacity; i++) {
+					ecb.AppendToBuffer(entity, new GhostInventorySlot() { ItemId = InventorySlot.UndefinedItem });
+
 					inventory[i] = new InventorySlot {
 						ItemId = InventorySlot.UndefinedItem,
 						IsSpawnable = false,
 						SpawnedItem = Entity.Null
 					};
+				}
 
 				ecb.AddComponent(entity, new ItemSlotCollection { Slots = inventory });
 
@@ -99,9 +101,6 @@ namespace Assets.CodeBase.Inventory
 				RefRW<MoneyAmount> moneyAmount = SystemAPI.GetComponentRW<MoneyAmount>(playerEntity);
 				moneyAmount.ValueRW.Value -= removalPrefabs[soldItemId].SellCost;
 
-				if (state.EntityManager.Exists(spawnedItem))
-					ecb.AddComponent<DestroyEntityTag>(spawnedItem);
-
 				RespawnedEntity respawnedEntity = SystemAPI.GetComponent<RespawnedEntity>(playerEntity);
 
 				if (!state.EntityManager.Exists(respawnedEntity.Value))
@@ -111,6 +110,9 @@ namespace Assets.CodeBase.Inventory
 				Entity removeItemCommand = ecb.Instantiate(removalPrefabs[soldItemId].Item);
 
 				ecb.SetComponent(removeItemCommand, new VehicleWithItem() { Value = respawnedEntity.Value });
+
+				if (state.EntityManager.Exists(spawnedItem))
+					ecb.AddComponent<DestroyEntityTag>(spawnedItem);
 			}
 
 			ecb.Playback(state.EntityManager);
@@ -266,7 +268,6 @@ namespace Assets.CodeBase.Inventory
 				ecb.AppendToBuffer(vehicle.Value, new LinkedEntityGroup() { Value = instantiatedItem });
 
 				ecb.SetComponent(spawnCommand, new InstantiatedItem() { Value = instantiatedItem });
-
 			}
 
 			ecb.Playback(state.EntityManager);
@@ -289,6 +290,28 @@ namespace Assets.CodeBase.Inventory
 	[WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
 	[UpdateInGroup(typeof(InventorySystemGroup))]
 	[UpdateAfter(typeof(SpawnItemSystem))]
+	public partial struct UpdateGhostInventorySystem : ISystem
+	{
+		public void OnCreate(ref SystemState state) {
+			state.RequireForUpdate<InGameState>();
+			state.RequireForUpdate<ItemCommandTag>();
+		}
+
+		public void OnUpdate(ref SystemState state) {
+			foreach (var (inventory, ghostInventory)
+				in SystemAPI.Query<ItemSlotCollection, DynamicBuffer<GhostInventorySlot>>()) {
+
+				ghostInventory.Clear();
+
+				for (int i = 0; i < inventory.Slots.Length; i++) 
+					ghostInventory.Add(new GhostInventorySlot() { ItemId = inventory.Slots[i].ItemId });
+			}
+		}
+	}
+
+	[WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
+	[UpdateInGroup(typeof(InventorySystemGroup))]
+	[UpdateAfter(typeof(UpdateGhostInventorySystem))]
 	public partial struct DestroyItemCommandEntitySystem : ISystem
 	{
 		public void OnCreate(ref SystemState state) {

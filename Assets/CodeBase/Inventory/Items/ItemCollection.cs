@@ -6,6 +6,8 @@ namespace Assets.CodeBase.Inventory.Items
     [CreateAssetMenu(menuName = Constants.ScriptableObjectsNames.ItemCollection)]
     public class ItemCollection : ScriptableObject
     {
+        [Range(0, 1)] public float SellMultiplier;
+        
         public List<ItemDescription> ItemDescriptions;
     }
 }

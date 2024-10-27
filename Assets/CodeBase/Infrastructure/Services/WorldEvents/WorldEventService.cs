@@ -18,8 +18,8 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldEvents
         public IReactiveGetter<bool> ShopAvailability => _shopAvailability;
         public IReactiveGetter<int> MoneyAmount => _moneyAmount;
 
-        private ReactiveProperty<bool> _shopAvailability = new();
-        private ReactiveProperty<int> _moneyAmount = new();
+        private readonly ReactiveProperty<bool> _shopAvailability = new();
+        private readonly ReactiveProperty<int> _moneyAmount = new();
 
         private readonly IWorldAccessService _worldAccess;
 

@@ -12,12 +12,10 @@ namespace Assets.CodeBase.Inventory
 
 	//Inventory components
 	[GhostComponent(PrefabType = GhostPrefabType.Server)]
-	public struct InventoryInitializationTag : IComponentData
-	{ }
+	public struct InventoryInitializationTag : IComponentData { }
 
 	[GhostComponent(PrefabType = GhostPrefabType.Server)]
-	public struct InventoryTag : IComponentData
-	{ }
+	public struct InventoryTag : IComponentData { }
 
 	[GhostComponent(PrefabType = GhostPrefabType.Server)]
 	public struct ItemSlotCollection : ICleanupComponentData
@@ -38,6 +36,11 @@ namespace Assets.CodeBase.Inventory
 		public int ItemId;
 		public bool IsSpawnable;
 		public Entity SpawnedItem;
+	}
+
+	public struct GhostInventorySlot : IBufferElementData
+	{
+		[GhostField] public int ItemId;
 	}
 
 	//Rpcs

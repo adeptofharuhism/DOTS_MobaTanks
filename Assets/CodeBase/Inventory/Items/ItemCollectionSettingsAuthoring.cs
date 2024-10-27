@@ -6,10 +6,8 @@ namespace Assets.CodeBase.Inventory.Items
 	public class ItemCollectionSettingsAuthoring : MonoBehaviour
 	{
 		[SerializeField] private ItemCollection _itemCollection;
-		[SerializeField, Range(0, 1)] private float _sellCostMultiplier = .5f;
 
 		public ItemCollection ItemCollection => _itemCollection;
-		public float SellCostMultiplier => _sellCostMultiplier;
 
 		public class ItemCollectionSettingsBaker : Baker<ItemCollectionSettingsAuthoring>
 		{
@@ -30,7 +28,7 @@ namespace Assets.CodeBase.Inventory.Items
 
 					removalBuffer.Add(new ItemRemovalPrefab {
 						Item = MakeItemRemovalPrefab(item),
-						SellCost = (int)(item.Cost * authoring.SellCostMultiplier)
+						SellCost = (int)(item.Cost * authoring.ItemCollection.SellMultiplier)
 					});
 				}
 			}

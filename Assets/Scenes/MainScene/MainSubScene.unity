@@ -5224,7 +5224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be3a726bddfdcff4f8d0d23a874ad14a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _basicInventoryCapacity: 6
+  _inventorySettings: {fileID: 11400000, guid: 8d2ff264809d10f41bc519a639bd61bf, type: 2}
 --- !u!4 &196223916
 Transform:
   m_ObjectHideFlags: 0
@@ -12239,7 +12239,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _itemCollection: {fileID: 11400000, guid: 579c23fb665d8bf42bc52e73f2d66cd9, type: 2}
-  _sellCostMultiplier: 0.5
 --- !u!4 &514524936
 Transform:
   m_ObjectHideFlags: 0

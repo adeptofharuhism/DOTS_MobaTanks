@@ -32,7 +32,7 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldControl
         public void CreateClientWorld() {
             _worldAccess.DefaultWorld =
                 ClientServerBootstrap.CreateClientWorld(Constants.WorldNames.ClientWorld);
-
+            
             _worldEventSubscriptionControl.SubscribeToWorldEvents();
         }
 

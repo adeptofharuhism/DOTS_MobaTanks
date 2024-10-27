@@ -7,5 +7,6 @@
 
         public const string ItemCollection = "Custom Scriptable Objects/Item Collection";
         public const string ItemDescription = "Custom Scriptable Objects/Item Description";
+        public const string InventorySettings = "Custom Scriptable Objects/Inventory Settings";
     }
 }
