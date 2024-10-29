@@ -1,3 +1,6 @@
+![Скриншоты](Screenshots/screen1.png)
+![Обожаю скриншоты](Screenshots/screen2.png)
+
 Ниже есть описание на русском
 
 # What is this
