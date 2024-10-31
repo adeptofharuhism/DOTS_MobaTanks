@@ -106,7 +106,7 @@ namespace Assets.CodeBase.UI.MainScene
 
 		public void SellItem(int slot) =>
 			_worldRpcSenderService.SendSellItemRpc(slot);
-		
+
 		public void SwapItems(int slotFrom, int slotTo) {
 			_worldRpcSenderService.SendSwapSlotsRpc(slotFrom, slotTo);
 		}
@@ -130,7 +130,7 @@ namespace Assets.CodeBase.UI.MainScene
 			_worldEventBus.MoneyAmount.OnChanged += UpdateMoneyView;
 			_worldEventBus.ShopAvailability.OnChanged += UpdateShopAvailability;
 			_worldEventBus.OnEndGame += InvokeOnEndGame;
-			
+
 			_inventoryService.InventorySize.OnChanged += UpdateInventorySize;
 			_inventoryService.OnChangedItem += UpdateItem;
 		}
@@ -140,7 +140,7 @@ namespace Assets.CodeBase.UI.MainScene
 			_worldEventBus.MoneyAmount.OnChanged -= UpdateMoneyView;
 			_worldEventBus.ShopAvailability.OnChanged -= UpdateShopAvailability;
 			_worldEventBus.OnEndGame -= InvokeOnEndGame;
-			
+
 			_inventoryService.InventorySize.OnChanged -= UpdateInventorySize;
 			_inventoryService.OnChangedItem -= UpdateItem;
 		}

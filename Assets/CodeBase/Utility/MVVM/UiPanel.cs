@@ -2,37 +2,51 @@
 
 namespace Assets.CodeBase.Utility.MVVM
 {
-    public abstract class UiPanel
-    {
-        public VisualElement Panel => _panel;
+	public abstract class UiPanel
+	{
+		public VisualElement Panel => _panel;
 
-        protected readonly VisualElement _panel;
+		protected readonly VisualElement _panel;
 
-        protected UiPanel(VisualTreeAsset panelAsset) {
-            _panel = panelAsset.InstantiatePanel();
+		protected UiPanel(VisualTreeAsset panelAsset) {
+			_panel = panelAsset.InstantiatePanel();
+		}
 
-            OnConstruction();
-        }
+		public void Enable() {
+			_panel.SetEnabled(true);
+		}
 
-        public virtual void Enable() { }
+		public void Disable() {
+			_panel.SetEnabled(false);
+		}
 
-        public virtual void Disable() { }
+		public void Initialize() {
+			CacheVisualElements();
+			InitializeSubPanels();
+			ReadInitialViewModelData();
+			BindData();
+			RegisterCallbacks();
+		}
 
-        public void Initialize() {
-            ReadInitialViewModelData();
-            BindData();
-        }
+		public void Dispose() {
+			UnregisterCallbacks();
+			UnbindData();
+			DisposeSubPanels();
+		}
 
-        public void Dispose() {
-            UnbindData();
-        }
+		protected virtual void CacheVisualElements() { }
+		
+		protected virtual void InitializeSubPanels(){}
 
-        protected virtual void OnConstruction() { }
+		protected virtual void ReadInitialViewModelData() { }
 
-        protected virtual void ReadInitialViewModelData() { }
+		protected virtual void RegisterCallbacks() { }
+		protected virtual void UnregisterCallbacks() { }
 
-        protected virtual void BindData() { }
+		protected virtual void BindData() { }
 
-        protected virtual void UnbindData() { }
-    }
+		protected virtual void UnbindData() { }
+		
+		protected virtual void DisposeSubPanels(){}
+	}
 }

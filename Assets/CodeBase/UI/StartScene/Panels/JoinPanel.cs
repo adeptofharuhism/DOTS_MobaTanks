@@ -16,28 +16,28 @@ namespace Assets.CodeBase.UI.StartScene.Panels
             _joinVariantViewModel = joinVariantViewModel;
         }
 
-        public override void Enable() {
-            base.Enable();
+        protected override void CacheVisualElements() {
+            _joinButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.JoinGamePanel.JoinButton);
+            _cancelButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.JoinGamePanel.CancelButton);
+            _playerName = _panel.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.JoinGamePanel.PlayerName);
+            _joinPort = _panel.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.JoinGamePanel.JoinPort);
+            _ip = _panel.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.JoinGamePanel.JoinIP);
+        }
+        
+        protected override void RegisterCallbacks(){
+            base.RegisterCallbacks();
 
             _joinButton.RegisterCallback<ClickEvent>(OnClickJoinButton);
             _joinPort.RegisterCallback<FocusOutEvent>(OnFocusOutJoinPort);
             _ip.RegisterCallback<FocusOutEvent>(OnFocusOutIp);
         }
 
-        public override void Disable() {
-            base.Disable();
+        protected override void UnregisterCallbacks() {
+            base.UnregisterCallbacks();
 
             _joinButton.UnregisterCallback<ClickEvent>(OnClickJoinButton);
             _joinPort.UnregisterCallback<FocusOutEvent>(OnFocusOutJoinPort);
             _ip.UnregisterCallback<FocusOutEvent>(OnFocusOutIp);
-        }
-
-        protected override void OnConstruction() {
-            _joinButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.JoinGamePanel.JoinButton);
-            _cancelButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.JoinGamePanel.CancelButton);
-            _playerName = _panel.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.JoinGamePanel.PlayerName);
-            _joinPort = _panel.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.JoinGamePanel.JoinPort);
-            _ip = _panel.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.JoinGamePanel.JoinIP);
         }
 
         protected override void ReadInitialViewModelData() {

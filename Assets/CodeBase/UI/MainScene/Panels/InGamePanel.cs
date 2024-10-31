@@ -22,45 +22,19 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 			_shopPanel = new ShopPanel(shopPanel, inGameModeViewModel, availableItemsPanel);
 		}
 
-		protected override void OnConstruction() {
+		protected override void CacheVisualElements() {
 			_leftPart = _panel.Q<VisualElement>(Constants.VisualElementNames.GameUI.InGamePanel.LeftPart);
 			_centralPart = _panel.Q<VisualElement>(Constants.VisualElementNames.GameUI.InGamePanel.CentralPart);
 			_rightPart = _panel.Q<VisualElement>(Constants.VisualElementNames.GameUI.InGamePanel.RightPart);
 		}
 
-		public override void Enable() {
-			AddSubPanels();
-			InitializeSubPanels();
-			EnableSubPanels();
-		}
-
-		public override void Disable() {
-			DisableSubPanels();
-			DisposeSubPanels();
-			RemoveSubPanels();
-		}
-
-		private void AddSubPanels() {
+		protected override void InitializeSubPanels() {
 			_rightPart.AddUiPanel(_shopPanel);
-		}
-
-		private void EnableSubPanels() {
-			_shopPanel.Enable();
-		}
-
-		private void InitializeSubPanels() {
 			_shopPanel.Initialize();
 		}
 
-		private void DisposeSubPanels() {
+		protected override void DisposeSubPanels() {
 			_shopPanel.Dispose();
-		}
-
-		private void DisableSubPanels() {
-			_shopPanel.Disable();
-		}
-
-		private void RemoveSubPanels() {
 			_rightPart.RemoveUiPanel(_shopPanel);
 		}
 	}
@@ -86,22 +60,18 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 			_availableItemsPanel = new AvailableItemsPanel(availableItemsPanel, inGameModeViewModel);
 		}
 
-		protected override void OnConstruction() {
+		protected override void CacheVisualElements() {
 			_shopPart = _panel.Q<VisualElement>(Constants.VisualElementNames.GameUI.InGamePanel.ShopPanel.ShopPart);
 			_shopButton = _panel.Q<Button>(Constants.VisualElementNames.GameUI.InGamePanel.ShopPanel.ShopButton);
 			_moneyLabel = _panel.Q<Label>(Constants.VisualElementNames.GameUI.InGamePanel.ShopPanel.MoneyLabel);
 		}
 
-		public override void Enable() {
+		protected override void RegisterCallbacks() {
 			_shopButton.RegisterCallback<ClickEvent>(OnClickShop);
-
-			EnableSubPanel();
 		}
 
-		public override void Disable() {
+		protected override void UnregisterCallbacks() {
 			_shopButton.UnregisterCallback<ClickEvent>(OnClickShop);
-
-			DisableSubPanel();
 		}
 
 		protected override void ReadInitialViewModelData() {
@@ -119,13 +89,11 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 			_shopViewModel.ShopCanBeShown.OnChanged -= ChangeAvailabilityFlag;
 		}
 
-		private void EnableSubPanel() {
+		protected override void InitializeSubPanels() {
 			_availableItemsPanel.Initialize();
-			_availableItemsPanel.Enable();
 		}
 
-		private void DisableSubPanel() {
-			_availableItemsPanel.Disable();
+		protected override void DisposeSubPanels() {
 			_availableItemsPanel.Dispose();
 		}
 
@@ -183,19 +151,19 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 			_itemRequestViewModel = itemRequestViewModel;
 		}
 
-		protected override void OnConstruction() {
+		protected override void CacheVisualElements() {
 			_testButton = _panel.Q<Button>("Test");
 			_removalButton = _panel.Q<Button>("Removal");
 			_swapButton = _panel.Q<Button>("Swap");
 		}
 
-		public override void Enable() {
+		protected override void RegisterCallbacks() {
 			_testButton.RegisterCallback<ClickEvent>(OnClickTest);
 			_removalButton.RegisterCallback<ClickEvent>(OnClickRemoval);
 			_swapButton.RegisterCallback<ClickEvent>(OnClickSwap);
 		}
 
-		public override void Disable() {
+		protected override void UnregisterCallbacks() {
 			_testButton.UnregisterCallback<ClickEvent>(OnClickTest);
 			_removalButton.UnregisterCallback<ClickEvent>(OnClickRemoval);
 			_swapButton.UnregisterCallback<ClickEvent>(OnClickSwap);

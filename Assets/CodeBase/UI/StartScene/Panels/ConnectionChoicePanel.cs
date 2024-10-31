@@ -17,22 +17,22 @@ namespace Assets.CodeBase.UI.StartScene.Panels
             _connectionChoiceViewModel = connectionChoiceViewModel;
         }
 
-        public override void Enable() {
+        protected override void CacheVisualElements() {
+            _hostButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.ConnectionChoicePanel.HostButton);
+            _joinButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.ConnectionChoicePanel.JoinButton);
+            _exitButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.ConnectionChoicePanel.ExitButton);
+        }
+
+        protected override void RegisterCallbacks() {
             _hostButton.RegisterCallback<ClickEvent>(OnClickHostButton);
             _joinButton.RegisterCallback<ClickEvent>(OnClickJoinButton);
             _exitButton.RegisterCallback<ClickEvent>(OnClickExitButton);
         }
 
-        public override void Disable() {
+        protected override void UnregisterCallbacks() {
             _hostButton.UnregisterCallback<ClickEvent>(OnClickHostButton);
             _joinButton.UnregisterCallback<ClickEvent>(OnClickJoinButton);
             _exitButton.UnregisterCallback<ClickEvent>(OnClickExitButton);
-        }
-
-        protected override void OnConstruction() {
-            _hostButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.ConnectionChoicePanel.HostButton);
-            _joinButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.ConnectionChoicePanel.JoinButton);
-            _exitButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.ConnectionChoicePanel.ExitButton);
         }
 
         private void OnClickHostButton(ClickEvent evt) =>

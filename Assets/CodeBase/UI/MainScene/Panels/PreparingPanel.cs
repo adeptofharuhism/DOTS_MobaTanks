@@ -3,96 +3,100 @@ using UnityEngine.UIElements;
 
 namespace Assets.CodeBase.UI.MainScene.Panels
 {
-    public class PreparingPanel : UiPanel
-    {
-        private AskReadyPanel _askReadyPanel;
-        private WaitingPanel _waitingPanel;
+	public class PreparingPanel : UiPanel
+	{
+		private VisualElement _subContentPanel;
 
-        private VisualElement _subContentPanel;
+		private readonly AskReadyPanel _askReadyPanel;
+		private readonly WaitingPanel _waitingPanel;
 
-        private readonly INotifyReadyViewModel _notifyReadyViewModel;
+		private readonly INotifyReadyViewModel _notifyReadyViewModel;
 
-        public PreparingPanel(
-            VisualTreeAsset preparingPanel,
-            IPreparingModeViewModel preparingModeViewModel,
-            VisualTreeAsset askReadyPanel,
-            VisualTreeAsset waitingPanel)
-            : base(preparingPanel) {
+		public PreparingPanel(
+			VisualTreeAsset preparingPanel,
+			IPreparingModeViewModel preparingModeViewModel,
+			VisualTreeAsset askReadyPanel,
+			VisualTreeAsset waitingPanel)
+			: base(preparingPanel) {
 
-            _notifyReadyViewModel = preparingModeViewModel;
+			_notifyReadyViewModel = preparingModeViewModel;
 
-            _askReadyPanel = new AskReadyPanel(askReadyPanel, preparingModeViewModel);
-            _waitingPanel = new WaitingPanel(waitingPanel);
-        }
+			_askReadyPanel = new AskReadyPanel(askReadyPanel, preparingModeViewModel);
+			_waitingPanel = new WaitingPanel(waitingPanel);
+		}
 
-        protected override void OnConstruction() {
-            _subContentPanel =
-                _panel.Q<VisualElement>(Constants.VisualElementNames.GameUI.PreparingPanel.SubContentPanel);
-        }
+		protected override void CacheVisualElements() {
+			_subContentPanel =
+				_panel.Q<VisualElement>(Constants.VisualElementNames.GameUI.PreparingPanel.SubContentPanel);
+		}
 
-        public override void Enable() {
-            AddPanelToSubContent(_askReadyPanel);
-        }
+		protected override void InitializeSubPanels() {
+			_askReadyPanel.Initialize();
+			
+			AddPanelToSubContent(_askReadyPanel);
+		}
+		
+		protected override void DisposeSubPanels() {
+			RemovePanelFromSubContent(_waitingPanel);
+			
+			_askReadyPanel.Dispose();
+		}
 
-        public override void Disable() {
-            RemovePanelFromSubContent(_waitingPanel);
-        }
+		protected override void BindData() {
+			_notifyReadyViewModel.OnReady += OnReady;
+		}
 
-        protected override void BindData() {
-            _notifyReadyViewModel.OnReady += OnReady;
-        }
+		protected override void UnbindData() {
+			_notifyReadyViewModel.OnReady -= OnReady;
+		}
 
-        protected override void UnbindData() {
-            _notifyReadyViewModel.OnReady -= OnReady;
-        }
+		private void AddPanelToSubContent(UiPanel panel) =>
+			_subContentPanel.AddUiPanel(panel);
 
-        private void AddPanelToSubContent(UiPanel panel) =>
-            _subContentPanel.AddUiPanel(panel);
+		private void RemovePanelFromSubContent(UiPanel panel) =>
+			_subContentPanel.RemoveUiPanel(panel);
 
-        private void RemovePanelFromSubContent(UiPanel panel) =>
-            _subContentPanel.RemoveUiPanel(panel);
+		private void OnReady() =>
+			SwitchPanels();
 
-        private void OnReady() =>
-            SwitchPanels();
+		private void SwitchPanels() {
+			RemovePanelFromSubContent(_askReadyPanel);
+			AddPanelToSubContent(_waitingPanel);
+		}
+	}
 
-        private void SwitchPanels() {
-            RemovePanelFromSubContent(_askReadyPanel);
-            AddPanelToSubContent(_waitingPanel);
-        }
-    }
+	public class AskReadyPanel : UiPanel
+	{
+		private Button _readyButton;
 
-    public class AskReadyPanel : UiPanel
-    {
-        private Button _readyButton;
+		private readonly IAskReadyViewModel _askReadyViewModel;
 
-        private readonly IAskReadyViewModel _askReadyViewModel;
+		public AskReadyPanel(VisualTreeAsset panelAsset, IAskReadyViewModel askReadyViewModel)
+			: base(panelAsset) {
 
-        public AskReadyPanel(VisualTreeAsset panelAsset, IAskReadyViewModel askReadyViewModel)
-            : base(panelAsset) {
+			_askReadyViewModel = askReadyViewModel;
+		}
 
-            _askReadyViewModel = askReadyViewModel;
-        }
+		protected override void CacheVisualElements() {
+			_readyButton =
+				_panel.Q<Button>(Constants.VisualElementNames.GameUI.PreparingPanel.AskReadyPanel.ReadyButton);
+		}
 
-        protected override void OnConstruction() {
-            _readyButton =
-                _panel.Q<Button>(Constants.VisualElementNames.GameUI.PreparingPanel.AskReadyPanel.ReadyButton);
-        }
+		protected override void RegisterCallbacks() {
+			_readyButton.RegisterCallback<ClickEvent>(OnClickReady);
+		}
 
-        public override void Enable() {
-            _readyButton.RegisterCallback<ClickEvent>(OnClickReady);
-        }
+		protected override void UnregisterCallbacks() {
+			_readyButton.UnregisterCallback<ClickEvent>(OnClickReady);
+		}
 
-        public override void Disable() {
-            _readyButton.UnregisterCallback<ClickEvent>(OnClickReady);
-        }
+		private void OnClickReady(ClickEvent evt) =>
+			_askReadyViewModel.OnClickReady();
+	}
 
-        private void OnClickReady(ClickEvent evt) =>
-            _askReadyViewModel.OnClickReady();
-    }
-
-    public class WaitingPanel : UiPanel
-    {
-        public WaitingPanel(VisualTreeAsset panelAsset)
-            : base(panelAsset) { }
-    }
+	public class WaitingPanel : UiPanel
+	{
+		public WaitingPanel(VisualTreeAsset panelAsset)
+			: base(panelAsset) { }
+	}
 }

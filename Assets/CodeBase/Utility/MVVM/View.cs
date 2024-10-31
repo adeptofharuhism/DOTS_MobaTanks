@@ -10,19 +10,19 @@ namespace Assets.CodeBase.Utility.MVVM
     {
         [SerializeField] private UIDocument _uiDocument;
 
-        private Dictionary<Type, UiPanel> _panels = new Dictionary<Type, UiPanel>();
-        private UiPanel _activePanel;
+        private UiPanel _currentPanel;
+        private readonly Dictionary<Type, UiPanel> _panels = new Dictionary<Type, UiPanel>();
 
         private VisualElement _contentPanel;
 
         public virtual void Initialize() {
-            InitializePanels();
             CacheContentPanel();
+            InitializePanels();
             SubscribeToViewModel();
         }
 
         public virtual void Dispose() {
-            DeactivateActivePanel();
+            DeactivateCurrentPanel();
             UnsubscribeFromViewModel();
             DisposePanels();
         }
@@ -36,14 +36,14 @@ namespace Assets.CodeBase.Utility.MVVM
         }
 
         protected void ActivatePanel<TPanel>() where TPanel : UiPanel {
-            DeactivateActivePanel();
+            DeactivateCurrentPanel();
             EnablePanel<TPanel>();
-            ShowActivePanel();
+            ShowCurrentPanel();
         }
 
-        protected void DeactivateActivePanel() {
-            HideActivePanel();
-            DisableActivePanel();
+        protected void DeactivateCurrentPanel() {
+            HideCurrentPanel();
+            DisableCurrentPanel();
         }
 
         private void CacheContentPanel() =>
@@ -61,23 +61,23 @@ namespace Assets.CodeBase.Utility.MVVM
         }
 
         private void EnablePanel<TPanel>() where TPanel : UiPanel {
-            _activePanel = _panels[typeof(TPanel)];
-            _activePanel.Enable();
+            _currentPanel = _panels[typeof(TPanel)];
+            _currentPanel.Enable();
         }
 
-        private void DisableActivePanel() {
-            if (_activePanel == null)
+        private void DisableCurrentPanel() {
+            if (_currentPanel == null)
                 return;
 
-            _activePanel.Disable();
-            _activePanel = null;
+            _currentPanel.Disable();
+            _currentPanel = null;
         }
 
-        private void ShowActivePanel() {
-            _contentPanel.Add(_activePanel.Panel);
+        private void ShowCurrentPanel() {
+            _contentPanel.Add(_currentPanel.Panel);
         }
 
-        private void HideActivePanel() {
+        private void HideCurrentPanel() {
             if (_contentPanel.childCount > 0)
                 _contentPanel.RemoveAt(0);
         }

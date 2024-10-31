@@ -16,12 +16,12 @@ namespace Assets.CodeBase.UI.StartScene.Panels
             _connectionVariantViewModel = connectionVariantViewModel;
         }
 
-        public override void Enable() {
+        protected override void RegisterCallbacks() {
             _cancelButton.RegisterCallback<ClickEvent>(OnClickCancelButton);
             _playerName.RegisterCallback<FocusOutEvent>(OnFocusOutPlayerName);
         }
 
-        public override void Disable() {
+        protected override void UnregisterCallbacks() {
             _cancelButton.UnregisterCallback<ClickEvent>(OnClickCancelButton);
             _playerName.UnregisterCallback<FocusOutEvent>(OnFocusOutPlayerName);
         }

@@ -45,7 +45,7 @@ namespace Assets.CodeBase.UI.MainScene
             switch (mode) {
                 default:
                 case MainSceneMode.Loading:
-                    DeactivateActivePanel();
+                    DeactivateCurrentPanel();
                     break;
                 case MainSceneMode.Preparing:
                     ActivatePanel<PreparingPanel>();

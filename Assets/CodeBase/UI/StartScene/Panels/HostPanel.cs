@@ -15,15 +15,22 @@ namespace Assets.CodeBase.UI.StartScene.Panels
             _hostVariantViewModel = hostVariantViewModel;
         }
 
-        public override void Enable() {
-            base.Enable();
+        protected override void CacheVisualElements() {
+            _hostButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.HostButton);
+            _cancelButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.CancelButton);
+            _playerName = _panel.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.PlayerName);
+            _hostPort = _panel.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.JoinPort);
+        }
+        
+        protected override void RegisterCallbacks() {
+            base.RegisterCallbacks();
 
             _hostButton.RegisterCallback<ClickEvent>(OnClickHostButton);
             _hostPort.RegisterCallback<FocusOutEvent>(OnFocusOutHostPort);
         }
 
-        public override void Disable() {
-            base.Disable();
+        protected override void UnregisterCallbacks() {
+            base.UnregisterCallbacks();
 
             _hostButton.UnregisterCallback<ClickEvent>(OnClickHostButton);
             _hostPort.UnregisterCallback<FocusOutEvent>(OnFocusOutHostPort);
@@ -45,13 +52,6 @@ namespace Assets.CodeBase.UI.StartScene.Panels
             base.UnbindData();
 
             _hostVariantViewModel.HostPortView.OnChanged -= OnChangedHostPort;
-        }
-
-        protected override void OnConstruction() {
-            _hostButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.HostButton);
-            _cancelButton = _panel.Q<Button>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.CancelButton);
-            _playerName = _panel.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.PlayerName);
-            _hostPort = _panel.Q<TextField>(Constants.VisualElementNames.ConnectionMenu.HostGamePanel.JoinPort);
         }
 
         private void OnClickHostButton(ClickEvent evt) =>
