@@ -22,7 +22,7 @@ namespace Assets.CodeBase.Utility.MVVM
 
 		public void Initialize() {
 			CacheVisualElements();
-			InitializeSubPanels();
+			InitializeSubParts();
 			ReadInitialViewModelData();
 			BindData();
 			RegisterCallbacks();
@@ -31,22 +31,20 @@ namespace Assets.CodeBase.Utility.MVVM
 		public void Dispose() {
 			UnregisterCallbacks();
 			UnbindData();
-			DisposeSubPanels();
+			DisposeSubParts();
 		}
 
 		protected virtual void CacheVisualElements() { }
-		
-		protected virtual void InitializeSubPanels(){}
 
-		protected virtual void ReadInitialViewModelData() { }
+		protected virtual void InitializeSubParts() { }
+		protected virtual void DisposeSubParts() { }
 
 		protected virtual void RegisterCallbacks() { }
 		protected virtual void UnregisterCallbacks() { }
 
-		protected virtual void BindData() { }
-
-		protected virtual void UnbindData() { }
+		protected virtual void ReadInitialViewModelData() { }
 		
-		protected virtual void DisposeSubPanels(){}
+		protected virtual void BindData() { }
+		protected virtual void UnbindData() { }
 	}
 }

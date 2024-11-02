@@ -6,193 +6,136 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 {
 	public class InGamePanel : UiPanel
 	{
-		private readonly ShopPanel _shopPanel;
-
-		private VisualElement _leftPart;
-		private VisualElement _centralPart;
-		private VisualElement _rightPart;
+		private readonly MoneyDisplayPart _moneyDisplayPart;
+		private readonly ShopPart _shopPart;
 
 		public InGamePanel(
 			VisualTreeAsset inGamePanel,
-			IInGameModeViewModel inGameModeViewModel,
-			VisualTreeAsset shopPanel,
-			VisualTreeAsset availableItemsPanel)
+			IInGameModeViewModel inGameModeViewModel)
 			: base(inGamePanel) {
 
-			_shopPanel = new ShopPanel(shopPanel, inGameModeViewModel, availableItemsPanel);
+			_moneyDisplayPart = new MoneyDisplayPart(_panel, inGameModeViewModel);
+			_shopPart = new ShopPart(_panel, inGameModeViewModel);
 		}
 
-		protected override void CacheVisualElements() {
-			_leftPart = _panel.Q<VisualElement>(Constants.VisualElementNames.GameUI.InGamePanel.LeftPart);
-			_centralPart = _panel.Q<VisualElement>(Constants.VisualElementNames.GameUI.InGamePanel.CentralPart);
-			_rightPart = _panel.Q<VisualElement>(Constants.VisualElementNames.GameUI.InGamePanel.RightPart);
+		protected override void InitializeSubParts() {
+			_moneyDisplayPart.Initialize();
+			_shopPart.Initialize();
 		}
 
-		protected override void InitializeSubPanels() {
-			_rightPart.AddUiPanel(_shopPanel);
-			_shopPanel.Initialize();
-		}
-
-		protected override void DisposeSubPanels() {
-			_shopPanel.Dispose();
-			_rightPart.RemoveUiPanel(_shopPanel);
+		protected override void DisposeSubParts() {
+			_moneyDisplayPart.Dispose();
+			_shopPart.Dispose();
 		}
 	}
 
-	public class ShopPanel : UiPanel
+	public class ShopPart
 	{
-		private VisualElement _shopPart;
-		private Button _shopButton;
+		private VisualElement _itemGroupContainer;
+
+		private readonly VisualElement _parent;
+		private readonly IShopViewModel _shopViewModel;
+
+		public ShopPart(VisualElement parent, IShopViewModel shopViewModel) {
+			_parent = parent;
+			_shopViewModel = shopViewModel;
+		}
+
+		public void Initialize() {
+			CacheVisualElements();
+			ReadInitialViewModelData();
+			BindData();
+			RegisterCallbacks();
+		}
+
+		public void Dispose() {
+			UnregisterCallbacks();
+			UnbindData();
+		}
+
+		private void CacheVisualElements() {
+			_itemGroupContainer =
+				_parent.Q<VisualElement>(Constants.VisualElementNames.GameUI.InGamePanel.ItemGroupContainer);
+		}
+
+		private void ReadInitialViewModelData() {
+			UpdateItemGroupContainerVisibility(_shopViewModel.ShopIsVisible.Value);
+		}
+
+		private void BindData() {
+			_shopViewModel.ShopIsVisible.OnChanged += UpdateItemGroupContainerVisibility;
+		}
+
+		private void RegisterCallbacks() { }
+
+		private void UnregisterCallbacks() { }
+
+		private void UnbindData() {
+			_shopViewModel.ShopIsVisible.OnChanged -= UpdateItemGroupContainerVisibility;
+		}
+
+		private void UpdateItemGroupContainerVisibility(bool isVisible) {
+			_itemGroupContainer.style.display = isVisible ? DisplayStyle.Flex : DisplayStyle.None;
+			_itemGroupContainer.SetEnabled(isVisible);
+		}
+	}
+
+	public class MoneyDisplayPart
+	{
 		private Label _moneyLabel;
+		private Button _shopButton;
 
-		private bool _shopIsShown;
-		private bool _shopCanBeShown;
+		private readonly VisualElement _parent;
+		private readonly IMoneyDisplayViewModel _moneyDisplayViewModel;
 
-		private readonly IShopActivationViewModel _shopViewModel;
-		private readonly AvailableItemsPanel _availableItemsPanel;
-
-		public ShopPanel(VisualTreeAsset panelAsset, IInGameModeViewModel inGameModeViewModel,
-			VisualTreeAsset availableItemsPanel)
-			: base(panelAsset) {
-
-			_shopViewModel = inGameModeViewModel;
-
-			_availableItemsPanel = new AvailableItemsPanel(availableItemsPanel, inGameModeViewModel);
+		public MoneyDisplayPart(VisualElement parent, IMoneyDisplayViewModel moneyDisplayViewModel) {
+			_parent = parent;
+			_moneyDisplayViewModel = moneyDisplayViewModel;
 		}
 
-		protected override void CacheVisualElements() {
-			_shopPart = _panel.Q<VisualElement>(Constants.VisualElementNames.GameUI.InGamePanel.ShopPanel.ShopPart);
-			_shopButton = _panel.Q<Button>(Constants.VisualElementNames.GameUI.InGamePanel.ShopPanel.ShopButton);
-			_moneyLabel = _panel.Q<Label>(Constants.VisualElementNames.GameUI.InGamePanel.ShopPanel.MoneyLabel);
+		public void Initialize() {
+			CacheVisualElements();
+			ReadInitialViewModelData();
+			BindData();
+			RegisterCallbacks();
 		}
 
-		protected override void RegisterCallbacks() {
+		public void Dispose() {
+			UnregisterCallbacks();
+			UnbindData();
+		}
+
+		private void CacheVisualElements() {
+			_moneyLabel = _parent.Q<Label>(Constants.VisualElementNames.GameUI.InGamePanel.MoneyLabel);
+			_shopButton = _parent.Q<Button>(Constants.VisualElementNames.GameUI.InGamePanel.ShopButton);
+		}
+
+		private void ReadInitialViewModelData() {
+			UpdateMoneyValue(_moneyDisplayViewModel.MoneyTextView.Value);
+		}
+
+		private void BindData() {
+			_moneyDisplayViewModel.MoneyTextView.OnChanged += UpdateMoneyValue;
+
+		}
+
+		private void RegisterCallbacks() {
 			_shopButton.RegisterCallback<ClickEvent>(OnClickShop);
 		}
 
-		protected override void UnregisterCallbacks() {
+		private void UnregisterCallbacks() {
 			_shopButton.UnregisterCallback<ClickEvent>(OnClickShop);
 		}
 
-		protected override void ReadInitialViewModelData() {
-			ChangeMoneyValue(_shopViewModel.MoneyTextView.Value);
-			ChangeAvailabilityFlag(_shopViewModel.ShopCanBeShown.Value);
+		private void UnbindData() {
+			_moneyDisplayViewModel.MoneyTextView.OnChanged -= UpdateMoneyValue;
 		}
 
-		protected override void BindData() {
-			_shopViewModel.MoneyTextView.OnChanged += ChangeMoneyValue;
-			_shopViewModel.ShopCanBeShown.OnChanged += ChangeAvailabilityFlag;
-		}
-
-		protected override void UnbindData() {
-			_shopViewModel.MoneyTextView.OnChanged -= ChangeMoneyValue;
-			_shopViewModel.ShopCanBeShown.OnChanged -= ChangeAvailabilityFlag;
-		}
-
-		protected override void InitializeSubPanels() {
-			_availableItemsPanel.Initialize();
-		}
-
-		protected override void DisposeSubPanels() {
-			_availableItemsPanel.Dispose();
-		}
+		private void UpdateMoneyValue(string moneyText) =>
+			_moneyLabel.text = moneyText;
 
 		private void OnClickShop(ClickEvent evt) {
-			if (_shopIsShown)
-				HideItemsPanel();
-			else
-				ShowItemsPanel();
+			_moneyDisplayViewModel.OnClickShop();
 		}
-
-		private void ChangeMoneyValue(string money) =>
-			_moneyLabel.text = money;
-
-		private void ChangeAvailabilityFlag(bool flag) {
-			_shopCanBeShown = flag;
-
-			if (!_shopCanBeShown)
-				HideItemsPanel();
-		}
-
-		private void ShowItemsPanel() {
-			if (!_shopCanBeShown)
-				return;
-
-
-			_shopIsShown = true;
-			_shopPart.AddUiPanel(_availableItemsPanel);
-		}
-
-		private void HideItemsPanel() {
-			if (!_shopIsShown)
-				return;
-
-
-			_shopIsShown = false;
-			_shopPart.RemoveUiPanel(_availableItemsPanel);
-		}
-	}
-
-	public class AvailableItemsPanel : UiPanel
-	{
-		private int RandomFrom0To5 => _random.Next(0, 6);
-
-		private readonly Random _random;
-		private readonly IItemRequestViewModel _itemRequestViewModel;
-
-		private Button _testButton;
-		private Button _removalButton;
-		private Button _swapButton;
-
-		public AvailableItemsPanel(VisualTreeAsset panelAsset, IItemRequestViewModel itemRequestViewModel)
-			: base(panelAsset) {
-
-			_random = new Random(42);
-			_itemRequestViewModel = itemRequestViewModel;
-		}
-
-		protected override void CacheVisualElements() {
-			_testButton = _panel.Q<Button>("Test");
-			_removalButton = _panel.Q<Button>("Removal");
-			_swapButton = _panel.Q<Button>("Swap");
-		}
-
-		protected override void RegisterCallbacks() {
-			_testButton.RegisterCallback<ClickEvent>(OnClickTest);
-			_removalButton.RegisterCallback<ClickEvent>(OnClickRemoval);
-			_swapButton.RegisterCallback<ClickEvent>(OnClickSwap);
-		}
-
-		protected override void UnregisterCallbacks() {
-			_testButton.UnregisterCallback<ClickEvent>(OnClickTest);
-			_removalButton.UnregisterCallback<ClickEvent>(OnClickRemoval);
-			_swapButton.UnregisterCallback<ClickEvent>(OnClickSwap);
-		}
-
-		protected override void ReadInitialViewModelData() {
-			UpdateAvailableItems(_itemRequestViewModel.MoneyView.Value);
-		}
-
-		protected override void BindData() {
-			_itemRequestViewModel.MoneyView.OnChanged += UpdateAvailableItems;
-		}
-
-		protected override void UnbindData() {
-			_itemRequestViewModel.MoneyView.OnChanged -= UpdateAvailableItems;
-		}
-
-		private void OnClickTest(ClickEvent evt) {
-			_itemRequestViewModel.BuyItem(0);
-		}
-
-		private void OnClickRemoval(ClickEvent evt) {
-			_itemRequestViewModel.SellItem(RandomFrom0To5);
-		}
-
-		private void OnClickSwap(ClickEvent evt) {
-			_itemRequestViewModel.SwapItems(RandomFrom0To5, RandomFrom0To5);
-		}
-
-		private void UpdateAvailableItems(int money) { }
 	}
 }

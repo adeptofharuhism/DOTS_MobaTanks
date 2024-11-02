@@ -30,13 +30,13 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 				_panel.Q<VisualElement>(Constants.VisualElementNames.GameUI.PreparingPanel.SubContentPanel);
 		}
 
-		protected override void InitializeSubPanels() {
+		protected override void InitializeSubParts() {
 			_askReadyPanel.Initialize();
 			
 			AddPanelToSubContent(_askReadyPanel);
 		}
 		
-		protected override void DisposeSubPanels() {
+		protected override void DisposeSubParts() {
 			RemovePanelFromSubContent(_waitingPanel);
 			
 			_askReadyPanel.Dispose();
@@ -51,10 +51,10 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 		}
 
 		private void AddPanelToSubContent(UiPanel panel) =>
-			_subContentPanel.AddUiPanel(panel);
+			_subContentPanel.Add(panel.Panel);
 
 		private void RemovePanelFromSubContent(UiPanel panel) =>
-			_subContentPanel.RemoveUiPanel(panel);
+			_subContentPanel.Remove(panel.Panel);
 
 		private void OnReady() =>
 			SwitchPanels();
@@ -90,8 +90,8 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 			_readyButton.UnregisterCallback<ClickEvent>(OnClickReady);
 		}
 
-		private void OnClickReady(ClickEvent evt) =>
-			_askReadyViewModel.OnClickReady();
+		private void OnClickReady(ClickEvent evt) => 
+			_askReadyViewModel.SendReadyRpc();
 	}
 
 	public class WaitingPanel : UiPanel

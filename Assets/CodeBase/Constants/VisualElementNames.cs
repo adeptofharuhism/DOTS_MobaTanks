@@ -46,16 +46,12 @@
 
             public static class InGamePanel
             {
-                public const string LeftPart = "LeftPart";
-                public const string CentralPart = "CentralPart";
-                public const string RightPart = "RightPart";
+                public const string MoneyLabel = "MoneyLabel";
+                public const string ShopButton = "ShopButton";
 
-                public static class ShopPanel
-                {
-                    public const string ShopPart = "ShopPart";
-                    public const string ShopButton = "ShopButton";
-                    public const string MoneyLabel = "MoneyLabel";
-                }
+                public const string ItemGroupContainer = "ItemGroupContainer";
+
+                public const string Inventory = "Inventory";
             }
 
             public static class EndGamePanel

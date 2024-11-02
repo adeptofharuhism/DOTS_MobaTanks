@@ -15,28 +15,35 @@ namespace Assets.CodeBase.UI.MainScene
 	{
 		event Action<TeamType> OnEndGame;
 
-		void OnClickDisconnect();
+		void Disconnect();
 	}
 
-	public interface IItemRequestViewModel
+	public interface IShopViewModel
 	{
 		void BuyItem(int itemId);
-		void SellItem(int slot);
-		void SwapItems(int slotFrom, int slotTo);
+
 		IReactiveGetter<int> MoneyView { get; }
+		IReactiveGetter<bool> ShopIsVisible { get; }
 	}
 
-	public interface IShopActivationViewModel
+	public interface IInventoryViewModel
 	{
-		IReactiveGetter<bool> ShopCanBeShown { get; }
+		void SellItem(int slot);
+		void SwapItems(int slotFrom, int slotTo);
+	}
+
+	public interface IMoneyDisplayViewModel
+	{
+		void OnClickShop();
+
 		IReactiveGetter<string> MoneyTextView { get; }
 	}
 
-	public interface IInGameModeViewModel : IShopActivationViewModel, IItemRequestViewModel { }
+	public interface IInGameModeViewModel : IMoneyDisplayViewModel, IInventoryViewModel, IShopViewModel { }
 
 	public interface IAskReadyViewModel
 	{
-		void OnClickReady();
+		void SendReadyRpc();
 	}
 
 	public interface INotifyReadyViewModel
@@ -58,18 +65,17 @@ namespace Assets.CodeBase.UI.MainScene
 
 		public IReactiveGetter<MainSceneMode> Mode => _mode;
 
-		public IReactiveGetter<bool> ShopCanBeShown => _shopCanBeShown;
-
-		public IReactiveGetter<int> MoneyView => _moneyView;
+		public IReactiveGetter<bool> ShopIsVisible => _shopIsVisible;
 		public IReactiveGetter<string> MoneyTextView => _moneyTextView;
-		public IReactiveGetter<int> InventorySizeView => _inventorySizeView;
+		public IReactiveGetter<int> MoneyView => _moneyView;
+
+		private bool _shopIsAvailable;
 
 		private readonly ReactiveProperty<MainSceneMode> _mode = new();
 
-		private readonly ReactiveProperty<bool> _shopCanBeShown = new();
+		private readonly ReactiveProperty<bool> _shopIsVisible = new();
 		private readonly ReactiveProperty<int> _moneyView = new();
 		private readonly ReactiveProperty<string> _moneyTextView = new();
-		private readonly ReactiveProperty<int> _inventorySizeView = new();
 
 		private readonly IGameStateMachine _gameStateMachine;
 		private readonly IMainSceneModeNotifier _mainSceneModeNotifier;
@@ -91,7 +97,7 @@ namespace Assets.CodeBase.UI.MainScene
 			_inventoryService = inventoryService;
 		}
 
-		public void OnClickReady() {
+		public void SendReadyRpc() {
 			if (_mode.Value != MainSceneMode.Preparing)
 				return;
 
@@ -111,7 +117,7 @@ namespace Assets.CodeBase.UI.MainScene
 			_worldRpcSenderService.SendSwapSlotsRpc(slotFrom, slotTo);
 		}
 
-		public void OnClickDisconnect() {
+		public void Disconnect() {
 			if (_mode.Value != MainSceneMode.EndGame)
 				return;
 
@@ -119,10 +125,18 @@ namespace Assets.CodeBase.UI.MainScene
 			_gameStateMachine.EnterGameState<LoadStartSceneState>();
 		}
 
+		public void OnClickShop() {
+			if (_mode.Value != MainSceneMode.InGame)
+				return;
+
+
+			UpdateShowVisibility();
+		}
+
 		protected override void GetModelValues() {
-			_mode.Value = _mainSceneModeNotifier.Mode.Value;
-			_moneyTextView.Value = _worldEventBus.MoneyAmount.Value.ToString();
-			_shopCanBeShown.Value = _worldEventBus.ShopAvailability.Value;
+			ChangeMode(_mainSceneModeNotifier.Mode.Value);
+			UpdateMoneyView(_worldEventBus.MoneyAmount.Value);
+			UpdateShopAvailability(_worldEventBus.ShopAvailability.Value);
 		}
 
 		protected override void SubscribeToModel() {
@@ -153,9 +167,6 @@ namespace Assets.CodeBase.UI.MainScene
 			_moneyTextView.Value = money.ToString();
 		}
 
-		private void UpdateShopAvailability(bool availability) =>
-			_shopCanBeShown.Value = availability;
-
 		private void InvokeOnEndGame(TeamType type) =>
 			OnEndGame?.Invoke(type);
 
@@ -165,6 +176,20 @@ namespace Assets.CodeBase.UI.MainScene
 
 		private void UpdateItem(int slotId, int itemId) {
 			UnityEngine.Debug.Log($"Update of slot {slotId}: value is {itemId}");
+		}
+
+		private void UpdateShopAvailability(bool availability) {
+			_shopIsAvailable = availability;
+			UpdateShowVisibility();
+		}
+
+		private void UpdateShowVisibility() {
+			if (_shopIsAvailable) {
+				if (!_shopIsVisible.Value)
+					_shopIsVisible.Value = false;
+			}
+
+			_shopIsVisible.Value = !_shopIsVisible.Value;
 		}
 	}
 }

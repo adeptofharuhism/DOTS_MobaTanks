@@ -1,47 +1,4 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI%20Sheets/Styles.uss?fileID=7433441132597879392&amp;guid=7f3401d2eec7b714cb1ee61023de67e1&amp;type=3#Styles" />
-    <ui:VisualElement name="ContentPanel" style="flex-grow: 1; flex-direction: row;">
-        <ui:VisualElement name="InGamePanel" style="flex-grow: 1; flex-direction: row;">
-            <ui:VisualElement name="LeftPart" style="flex-grow: 3; width: 30%;" />
-            <ui:VisualElement name="CentralPart" style="flex-grow: 4; width: 40%;" />
-            <ui:VisualElement name="RightPart" style="flex-grow: 4; width: 30%;">
-                <ui:VisualElement name="ShopPanel" style="flex-grow: 1; flex-direction: column-reverse;">
-                    <ui:VisualElement name="MoneyPart" style="flex-grow: 1; flex-direction: row; height: 12%; justify-content: flex-end; margin-right: 2%;">
-                        <ui:Label tabindex="-1" text="999999" parse-escape-sequences="true" display-tooltip-when-elided="true" name="MoneyLabel" class="headerText textHighlightWhite font" style="width: 45%; -unity-text-align: middle-right;" />
-                        <ui:Button text="Shop" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ShopButton" class="gameButton font" style="width: 45%;" />
-                    </ui:VisualElement>
-                    <ui:VisualElement name="ShopPart" style="flex-grow: 1; height: 88%;">
-                        <ui:VisualElement name="AvailableItemsPanel" style="flex-grow: 1;">
-                            <ui:VisualElement name="AvailableItemsPart" class="blackBackground bordersHighlightWhite" style="flex-grow: 1; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px; align-items: stretch;">
-                                <ui:VisualElement style="align-items: flex-end;">
-                                    <ui:Label tabindex="-1" text="Item Type label" parse-escape-sequences="true" display-tooltip-when-elided="true" class="font" style="font-size: 30px; color: rgb(255, 255, 255);" />
-                                    <ui:VisualElement style="flex-grow: 1; flex-wrap: wrap; flex-direction: row-reverse; justify-content: flex-start;">
-                                        <ui:Button enable-rich-text="false" class="itemButton" />
-                                        <ui:Button enable-rich-text="false" class="itemButton" />
-                                        <ui:Button enable-rich-text="false" class="itemButton" />
-                                    </ui:VisualElement>
-                                </ui:VisualElement>
-                                <ui:VisualElement style="align-items: flex-end;">
-                                    <ui:Label tabindex="-1" text="Item Type label" parse-escape-sequences="true" display-tooltip-when-elided="true" class="font" style="font-size: 30px; color: rgb(255, 255, 255);" />
-                                    <ui:VisualElement style="flex-grow: 1; flex-wrap: wrap; flex-direction: row-reverse; justify-content: flex-start;">
-                                        <ui:Button enable-rich-text="false" class="itemButton" />
-                                        <ui:Button enable-rich-text="false" class="itemButton" />
-                                        <ui:Button enable-rich-text="false" class="itemButton" />
-                                    </ui:VisualElement>
-                                </ui:VisualElement>
-                            </ui:VisualElement>
-                            <ui:VisualElement name="InventoryPart" class="bordersHighlightWhite blackBackground" style="justify-content: space-around; align-items: center; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px; flex-direction: row; padding-top: 10px; padding-bottom: 10px;">
-                                <ui:Button enable-rich-text="false" class="itemButton" />
-                                <ui:Button enable-rich-text="false" class="itemButton" />
-                                <ui:Button enable-rich-text="false" class="itemButton" />
-                                <ui:Button enable-rich-text="false" class="itemButton" />
-                                <ui:Button enable-rich-text="false" class="itemButton" />
-                                <ui:Button enable-rich-text="false" class="itemButton" />
-                            </ui:VisualElement>
-                        </ui:VisualElement>
-                    </ui:VisualElement>
-                </ui:VisualElement>
-            </ui:VisualElement>
-        </ui:VisualElement>
-    </ui:VisualElement>
+    <ui:VisualElement name="ContentPanel" style="flex-grow: 1; flex-direction: row;" />
 </ui:UXML>

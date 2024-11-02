@@ -2,6 +2,13 @@
     <ui:VisualElement name="InGamePanel" style="flex-grow: 1; flex-direction: row;">
         <ui:VisualElement name="LeftPart" style="flex-grow: 3; width: 30%;" />
         <ui:VisualElement name="CentralPart" style="flex-grow: 4; width: 40%;" />
-        <ui:VisualElement name="RightPart" style="flex-grow: 1; width: 30%;" />
+        <ui:VisualElement name="RightPart" style="flex-grow: 4; width: 30%; justify-content: flex-end;">
+            <ui:VisualElement name="ItemGroupContainer" class="blackBackground bordersHighlightWhite" style="flex-grow: 1; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px; align-items: stretch; display: none;" />
+            <ui:VisualElement name="MoneyDisplay" style="flex-direction: row; justify-content: flex-end; margin-right: 2%;">
+                <ui:Label tabindex="-1" text="999999" parse-escape-sequences="true" display-tooltip-when-elided="true" name="MoneyLabel" class="headerText textHighlightWhite font" style="width: 45%; -unity-text-align: middle-right;" />
+                <ui:Button text="Shop" parse-escape-sequences="false" display-tooltip-when-elided="false" name="ShopButton" class="gameButton font" style="width: 45%;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Inventory" class="bordersHighlightWhite blackBackground" style="align-items: center; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px; flex-direction: row; padding-top: 10px; padding-bottom: 10px; justify-content: space-around;" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

@@ -51,7 +51,7 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 		}
 
 		private void OnClickDisconnect(ClickEvent evt) {
-			_endGameModeViewModel.OnClickDisconnect();
+			_endGameModeViewModel.Disconnect();
 		}
 
 		private void ShowWinnerText(TeamType type) {

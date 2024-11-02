@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement style="align-items: flex-end;">
+        <ui:Label tabindex="-1" text="Item Type label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ItemGroupName" class="font" style="font-size: 30px; color: rgb(255, 255, 255);" />
+        <ui:VisualElement name="ItemContainer" style="flex-grow: 1; flex-wrap: wrap; flex-direction: row-reverse; justify-content: flex-start;" />
+    </ui:VisualElement>
+</ui:UXML>

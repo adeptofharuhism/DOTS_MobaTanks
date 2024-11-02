@@ -15,8 +15,7 @@ namespace Assets.CodeBase.UI.MainScene
         [SerializeField] private VisualTreeAsset _waitingPanel;
         [Header("In Game mode")]
         [SerializeField] private VisualTreeAsset _inGamePanel;
-        [SerializeField] private VisualTreeAsset _shopPanel;
-        [SerializeField] private VisualTreeAsset _availableItemsPanel;
+        [SerializeField] private VisualTreeAsset _itemGroup;
         [Header("End Game mode")]
         [SerializeField] private VisualTreeAsset _endGamePanel;
         [SerializeField] private VisualTreeAsset _blueWinnerAsset;
@@ -29,7 +28,7 @@ namespace Assets.CodeBase.UI.MainScene
             _mainSceneViewModel = mainSceneViewModel;
 
             AddPanel(new PreparingPanel(_preparingPanel, mainSceneViewModel, _askReadyPanel, _waitingPanel));
-            AddPanel(new InGamePanel(_inGamePanel, mainSceneViewModel, _shopPanel, _availableItemsPanel));
+            AddPanel(new InGamePanel(_inGamePanel, mainSceneViewModel));
             AddPanel(new EndGamePanel(_endGamePanel, mainSceneViewModel, _blueWinnerAsset, _orangeWinnerAsset));
         }
 

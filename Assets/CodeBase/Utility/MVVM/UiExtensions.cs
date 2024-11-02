@@ -10,13 +10,5 @@ namespace Assets.CodeBase.Utility.MVVM
 
             return newPanel;
         }
-
-        public static void AddUiPanel(this VisualElement element, UiPanel panel) {
-            element.Add(panel.Panel);
-        }
-
-        public static void RemoveUiPanel(this VisualElement element, UiPanel panel) {
-            element.Remove(panel.Panel);
-        }
     }
 }
