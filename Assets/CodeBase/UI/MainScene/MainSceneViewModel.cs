@@ -8,6 +8,7 @@ using Assets.CodeBase.Teams;
 using Assets.CodeBase.Utility;
 using Assets.CodeBase.Utility.MVVM;
 using System;
+using UnityEngine;
 
 namespace Assets.CodeBase.UI.MainScene
 {
@@ -28,13 +29,16 @@ namespace Assets.CodeBase.UI.MainScene
 
 	public interface IInventoryViewModel
 	{
+		event Action<int, int, Texture2D> OnChangedItem;
+
 		void SellItem(int slot);
 		void SwapItems(int slotFrom, int slotTo);
+		IReactiveGetter<int> InventorySizeView { get; }
 	}
 
 	public interface IMoneyDisplayViewModel
 	{
-		void OnClickShop();
+		void ClickShop();
 
 		IReactiveGetter<string> MoneyTextView { get; }
 	}
@@ -62,12 +66,14 @@ namespace Assets.CodeBase.UI.MainScene
 	{
 		public event Action OnReady;
 		public event Action<TeamType> OnEndGame;
+		public event Action<int, int, Texture2D> OnChangedItem;
 
 		public IReactiveGetter<MainSceneMode> Mode => _mode;
 
 		public IReactiveGetter<bool> ShopIsVisible => _shopIsVisible;
 		public IReactiveGetter<string> MoneyTextView => _moneyTextView;
 		public IReactiveGetter<int> MoneyView => _moneyView;
+		public IReactiveGetter<int> InventorySizeView => _inventorySizeView;
 
 		private bool _shopIsAvailable;
 
@@ -76,6 +82,7 @@ namespace Assets.CodeBase.UI.MainScene
 		private readonly ReactiveProperty<bool> _shopIsVisible = new();
 		private readonly ReactiveProperty<int> _moneyView = new();
 		private readonly ReactiveProperty<string> _moneyTextView = new();
+		private readonly ReactiveProperty<int> _inventorySizeView = new();
 
 		private readonly IGameStateMachine _gameStateMachine;
 		private readonly IMainSceneModeNotifier _mainSceneModeNotifier;
@@ -125,12 +132,13 @@ namespace Assets.CodeBase.UI.MainScene
 			_gameStateMachine.EnterGameState<LoadStartSceneState>();
 		}
 
-		public void OnClickShop() {
+		public void ClickShop() {
 			if (_mode.Value != MainSceneMode.InGame)
 				return;
 
 
-			UpdateShowVisibility();
+			if (_shopIsAvailable)
+				UpdateShopVisibility();
 		}
 
 		protected override void GetModelValues() {
@@ -171,24 +179,21 @@ namespace Assets.CodeBase.UI.MainScene
 			OnEndGame?.Invoke(type);
 
 		private void UpdateInventorySize(int size) {
-			UnityEngine.Debug.Log($"Set inventory size as {size}");
+			_inventorySizeView.Value = size;
 		}
 
-		private void UpdateItem(int slotId, int itemId) {
-			UnityEngine.Debug.Log($"Update of slot {slotId}: value is {itemId}");
+		private void UpdateItem(int slotId, int itemId, Texture2D image) {
+			OnChangedItem?.Invoke(slotId, itemId, image);
 		}
 
 		private void UpdateShopAvailability(bool availability) {
 			_shopIsAvailable = availability;
-			UpdateShowVisibility();
+
+			if (!_shopIsAvailable && _shopIsVisible.Value)
+				UpdateShopVisibility();
 		}
 
-		private void UpdateShowVisibility() {
-			if (_shopIsAvailable) {
-				if (!_shopIsVisible.Value)
-					_shopIsVisible.Value = false;
-			}
-
+		private void UpdateShopVisibility() {
 			_shopIsVisible.Value = !_shopIsVisible.Value;
 		}
 	}

@@ -1,76 +1,117 @@
 ﻿using Assets.CodeBase.Utility.MVVM;
 using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
+using Button = UnityEngine.UIElements.Button;
 
 namespace Assets.CodeBase.UI.MainScene.Panels
 {
 	public class InGamePanel : UiPanel
 	{
-		private readonly MoneyDisplayPart _moneyDisplayPart;
-		private readonly ShopPart _shopPart;
+		private readonly List<UiPart> _uiParts = new();
 
 		public InGamePanel(
 			VisualTreeAsset inGamePanel,
 			IInGameModeViewModel inGameModeViewModel)
 			: base(inGamePanel) {
 
-			_moneyDisplayPart = new MoneyDisplayPart(_panel, inGameModeViewModel);
-			_shopPart = new ShopPart(_panel, inGameModeViewModel);
+			_uiParts.Add(new ShopPart(_panel, inGameModeViewModel));
+			_uiParts.Add(new MoneyDisplayPart(_panel, inGameModeViewModel));
+			_uiParts.Add(new InventoryPart(_panel, inGameModeViewModel));
 		}
 
 		protected override void InitializeSubParts() {
-			_moneyDisplayPart.Initialize();
-			_shopPart.Initialize();
+			foreach (UiPart uiPart in _uiParts)
+				uiPart.Initialize();
 		}
 
 		protected override void DisposeSubParts() {
-			_moneyDisplayPart.Dispose();
-			_shopPart.Dispose();
+			foreach (UiPart uiPart in _uiParts)
+				uiPart.Dispose();
 		}
 	}
 
-	public class ShopPart
+	public class InventoryPart : UiPart
+	{
+		private VisualElement _inventory;
+
+		private readonly List<InventoryButton> _inventorySlots = new();
+		private readonly IInventoryViewModel _inventoryViewModel;
+
+		public InventoryPart(VisualElement parent, IInventoryViewModel inventoryViewModel)
+			: base(parent) {
+
+			_inventoryViewModel = inventoryViewModel;
+		}
+
+		protected override void CacheVisualElements() {
+			_inventory = _parent.Q<VisualElement>(Constants.VisualElementNames.GameUI.InGamePanel.Inventory);
+		}
+
+		protected override void BindData() {
+			_inventoryViewModel.InventorySizeView.OnChanged += CreateInventorySlots;
+			_inventoryViewModel.OnChangedItem += ChangeItem;
+		}
+
+		protected override void UnbindData() {
+			_inventoryViewModel.InventorySizeView.OnChanged -= CreateInventorySlots;
+			_inventoryViewModel.OnChangedItem -= ChangeItem;
+		}
+
+		private void CreateInventorySlots(int size) {
+			for (int i = 0; i < size; i++) {
+				InventoryButton button = new();
+
+				_inventorySlots.Add(button);
+				_inventory.Add(button.VisualElement);
+			}
+		}
+
+		private void ChangeItem(int slotId, int itemId, Texture2D image) {
+			_inventorySlots[slotId].ChangeItem(itemId, image);
+		}
+
+		private void OnInventoryButtonClicked(int itemId) {
+			
+		}
+	}
+
+	public class ShopPart : UiPart
 	{
 		private VisualElement _itemGroupContainer;
 
-		private readonly VisualElement _parent;
 		private readonly IShopViewModel _shopViewModel;
 
-		public ShopPart(VisualElement parent, IShopViewModel shopViewModel) {
-			_parent = parent;
+		public ShopPart(VisualElement parent, IShopViewModel shopViewModel)
+			: base(parent) {
+
 			_shopViewModel = shopViewModel;
 		}
 
-		public void Initialize() {
-			CacheVisualElements();
-			ReadInitialViewModelData();
-			BindData();
-			RegisterCallbacks();
-		}
-
-		public void Dispose() {
-			UnregisterCallbacks();
-			UnbindData();
-		}
-
-		private void CacheVisualElements() {
+		protected override void CacheVisualElements() {
 			_itemGroupContainer =
 				_parent.Q<VisualElement>(Constants.VisualElementNames.GameUI.InGamePanel.ItemGroupContainer);
+
+			InventoryButton button = new();
+			button.Button.RegisterCallback<ClickEvent>(_=>_shopViewModel.BuyItem(0));
+			_itemGroupContainer.Add(button.VisualElement);
 		}
 
-		private void ReadInitialViewModelData() {
+		protected override void ReadInitialViewModelData() {
 			UpdateItemGroupContainerVisibility(_shopViewModel.ShopIsVisible.Value);
 		}
 
-		private void BindData() {
+		protected override void BindData() {
 			_shopViewModel.ShopIsVisible.OnChanged += UpdateItemGroupContainerVisibility;
 		}
 
-		private void RegisterCallbacks() { }
+		protected override void RegisterCallbacks() { }
 
-		private void UnregisterCallbacks() { }
+		protected override void UnregisterCallbacks() { }
 
-		private void UnbindData() {
+		protected override void UnbindData() {
 			_shopViewModel.ShopIsVisible.OnChanged -= UpdateItemGroupContainerVisibility;
 		}
 
@@ -80,54 +121,42 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 		}
 	}
 
-	public class MoneyDisplayPart
+	public class MoneyDisplayPart : UiPart
 	{
 		private Label _moneyLabel;
 		private Button _shopButton;
 
-		private readonly VisualElement _parent;
 		private readonly IMoneyDisplayViewModel _moneyDisplayViewModel;
 
-		public MoneyDisplayPart(VisualElement parent, IMoneyDisplayViewModel moneyDisplayViewModel) {
-			_parent = parent;
+		public MoneyDisplayPart(VisualElement parent, IMoneyDisplayViewModel moneyDisplayViewModel)
+			: base(parent) {
+
 			_moneyDisplayViewModel = moneyDisplayViewModel;
 		}
 
-		public void Initialize() {
-			CacheVisualElements();
-			ReadInitialViewModelData();
-			BindData();
-			RegisterCallbacks();
-		}
-
-		public void Dispose() {
-			UnregisterCallbacks();
-			UnbindData();
-		}
-
-		private void CacheVisualElements() {
+		protected override void CacheVisualElements() {
 			_moneyLabel = _parent.Q<Label>(Constants.VisualElementNames.GameUI.InGamePanel.MoneyLabel);
 			_shopButton = _parent.Q<Button>(Constants.VisualElementNames.GameUI.InGamePanel.ShopButton);
 		}
 
-		private void ReadInitialViewModelData() {
+		protected override void ReadInitialViewModelData() {
 			UpdateMoneyValue(_moneyDisplayViewModel.MoneyTextView.Value);
 		}
 
-		private void BindData() {
+		protected override void BindData() {
 			_moneyDisplayViewModel.MoneyTextView.OnChanged += UpdateMoneyValue;
 
 		}
 
-		private void RegisterCallbacks() {
+		protected override void RegisterCallbacks() {
 			_shopButton.RegisterCallback<ClickEvent>(OnClickShop);
 		}
 
-		private void UnregisterCallbacks() {
+		protected override void UnregisterCallbacks() {
 			_shopButton.UnregisterCallback<ClickEvent>(OnClickShop);
 		}
 
-		private void UnbindData() {
+		protected override void UnbindData() {
 			_moneyDisplayViewModel.MoneyTextView.OnChanged -= UpdateMoneyValue;
 		}
 
@@ -135,7 +164,7 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 			_moneyLabel.text = moneyText;
 
 		private void OnClickShop(ClickEvent evt) {
-			_moneyDisplayViewModel.OnClickShop();
+			_moneyDisplayViewModel.ClickShop();
 		}
 	}
 }

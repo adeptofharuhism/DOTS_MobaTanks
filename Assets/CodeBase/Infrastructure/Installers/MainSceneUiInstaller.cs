@@ -1,4 +1,5 @@
 ﻿using Assets.CodeBase.Infrastructure.Services.Inventory;
+using Assets.CodeBase.Inventory.Items;
 using Assets.CodeBase.UI.MainScene;
 using UnityEngine;
 using Zenject;
@@ -8,6 +9,7 @@ namespace Assets.CodeBase.Infrastructure.Installers
     public class MainSceneUiInstaller : MonoInstaller
     {
         [SerializeField] private MainSceneView _mainSceneView;
+        [SerializeField] private ItemCollection _itemCollection;
 
         public override void InstallBindings() {
             RegisterInventoryService();
@@ -16,12 +18,14 @@ namespace Assets.CodeBase.Infrastructure.Installers
             RegisterMainSceneView();
         }
 
-        private void RegisterInventoryService() =>
+        private void RegisterInventoryService() {
             Container
                 .BindInterfacesTo<InventoryService>()
                 .FromNew()
                 .AsSingle()
+                .WithArguments(_itemCollection)
                 .NonLazy();
+        }
 
         private void RegisterMainSceneViewModel() => 
             Container

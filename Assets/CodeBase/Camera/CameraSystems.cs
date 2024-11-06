@@ -20,11 +20,7 @@ namespace Assets.CodeBase.Camera
 
             RefRO<LocalToWorld> ownedEntityTransform = SystemAPI.GetComponentRO<LocalToWorld>(ownedEntity);
 
-            float3 forward = ownedEntityTransform.ValueRO.Forward;
-            float3 cameraLookOffset = forward * CameraAdvanceMultiplier;
-            cameraLookOffset.y = 0;
-
-            CameraSingleton.Instance.TargetPosition = ownedEntityTransform.ValueRO.Position + cameraLookOffset;
+            CameraSingleton.Instance.TargetPosition = ownedEntityTransform.ValueRO.Position;
         }
     }
 }

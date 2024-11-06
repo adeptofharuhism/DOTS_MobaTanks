@@ -15,6 +15,7 @@ MonoBehaviour:
   Id: 0
   Name: MachineGun
   Cost: 100
+  Image: {fileID: -1087164816274819069, guid: 394e15ca3dae4ba4eb20db2735700e88, type: 3}
   IsWeapon: 1
   WeaponPrefab: {fileID: 5503501951114558050, guid: a4d61f5d3ba003e429f2b0441e2624ad,
     type: 3}

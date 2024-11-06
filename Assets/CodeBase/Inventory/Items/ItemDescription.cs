@@ -9,6 +9,7 @@ namespace Assets.CodeBase.Inventory.Items
 
 		public string Name;
 		public int Cost;
+		public Texture2D Image;
 
 		public bool IsWeapon;
 		public GameObject WeaponPrefab;

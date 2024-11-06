@@ -1,16 +1,15 @@
 ﻿using Assets.CodeBase.Infrastructure.GameStateManagement;
 using Assets.CodeBase.Infrastructure.Services;
 using Assets.CodeBase.Infrastructure.Services.ConnectionInfo;
-using Assets.CodeBase.Infrastructure.Services.ItemCollectionAccess;
 using Assets.CodeBase.Infrastructure.Services.MainSceneModeNotifier;
 using Assets.CodeBase.Infrastructure.Services.SceneLoader;
 using Assets.CodeBase.Infrastructure.Services.WorldAccess;
 using Assets.CodeBase.Infrastructure.Services.WorldCommandSender;
 using Assets.CodeBase.Infrastructure.Services.WorldControl;
 using Assets.CodeBase.Infrastructure.Services.WorldEvents;
-using Assets.CodeBase.Inventory.Items;
 using Assets.CodeBase.UI.Curtain;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Zenject;
 
 namespace Assets.CodeBase.Infrastructure.Installers
@@ -18,15 +17,12 @@ namespace Assets.CodeBase.Infrastructure.Installers
     public class BootstrapInstaller : MonoInstaller, ICoroutineRunner
     {
         [SerializeField] private LoadingCurtain _loadingCurtain;
-        [SerializeField] private ItemCollection _itemCollection;
 
         public override void InstallBindings() {
 #if UNITY_EDITOR
-            UnityEngine.SceneManagement.SceneManager.LoadScene(0);
-            UnityEngine.Debug.Log("Installing dependencies");
+            SceneManager.LoadScene(0);
+            Debug.Log("Installing dependencies");
 #endif
-            RegisterItemCollection();
-
             RegisterMainSceneModeNotifier();
             RegisterConnectionInfo();
 
@@ -39,17 +35,6 @@ namespace Assets.CodeBase.Infrastructure.Installers
             RegisterLoadingCurtain();
             RegisterSceneLoader();
             RegisterStateMachine();
-        }
-
-        private void RegisterItemCollection() {
-            ItemCollectionAccessService itemCollectionAccessService =
-                new ItemCollectionAccessService(_itemCollection);
-
-            Container
-                .Bind<IItemContainerAccess>()
-                .FromInstance(itemCollectionAccessService)
-                .AsSingle()
-                .NonLazy();
         }
 
         private void RegisterWorldRpcSenderService() =>

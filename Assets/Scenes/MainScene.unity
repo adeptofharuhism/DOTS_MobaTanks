@@ -210,8 +210,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _lookOffset:
     x: 0
-    y: 40
-    z: -45
+    y: 35
+    z: -35
   _smoothTime: 0.35
 --- !u!1001 &252877693
 PrefabInstance:
@@ -615,6 +615,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mainSceneView: {fileID: 1253407838}
+  _itemCollection: {fileID: 11400000, guid: 579c23fb665d8bf42bc52e73f2d66cd9, type: 2}
 --- !u!1 &1252991803
 GameObject:
   m_ObjectHideFlags: 0
@@ -739,10 +740,7 @@ MonoBehaviour:
     type: 3}
   _inGamePanel: {fileID: 9197481963319205126, guid: 4875fe3de2285944fa72692489462b5c,
     type: 3}
-  _shopPanel: {fileID: 9197481963319205126, guid: 45901ccc2bc864e4cb74274b82c0b7cf,
-    type: 3}
-  _availableItemsPanel: {fileID: 9197481963319205126, guid: 0e3d7d02e3d0fea418c42e808978d99a,
-    type: 3}
+  _itemGroup: {fileID: 0}
   _endGamePanel: {fileID: 9197481963319205126, guid: 569ed4134c90ec9438bef6fc4146187e,
     type: 3}
   _blueWinnerAsset: {fileID: 9197481963319205126, guid: 1f86e55699d652e4388a87d3304f2f1a,

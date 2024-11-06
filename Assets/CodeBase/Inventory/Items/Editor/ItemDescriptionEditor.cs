@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using Cinemachine.Editor;
+using UnityEditor;
 using UnityEngine;
 
 namespace Assets.CodeBase.Inventory.Items
@@ -6,13 +7,16 @@ namespace Assets.CodeBase.Inventory.Items
     [CustomEditor(typeof(ItemDescription))]
     public class ItemDescriptionEditor : Editor
     {
+        private const int SpacePixels = 6;
         private const string WeaponSettingsLabelText = "Weapon Settings";
 
+        private SerializedProperty _itemImage;
         private SerializedProperty _weaponPrefab;
 
         private void OnEnable() {
             ItemDescription target = (ItemDescription)this.target;
 
+            _itemImage = serializedObject.FindProperty(nameof(target.Image));
             _weaponPrefab = serializedObject.FindProperty(nameof(target.WeaponPrefab));
         }
 
@@ -33,9 +37,12 @@ namespace Assets.CodeBase.Inventory.Items
 
             int updatedCost = EditorGUILayout.IntField(new GUIContent(nameof(target.Cost)), target.Cost);
             target.Cost = updatedCost;
+
+            EditorGUILayout.PropertyField(_itemImage, new GUIContent(nameof(target.Image)));
         }
 
         private void DrawWeaponSection(ItemDescription target) {
+            GUILayout.Space(SpacePixels);
             GUILayout.Label(WeaponSettingsLabelText);
 
             bool isWeaponFlag = GUILayout.Toggle(target.IsWeapon, nameof(target.IsWeapon));

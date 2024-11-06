@@ -1,4 +1,5 @@
-﻿using Assets.CodeBase.UI.StartScene;
+﻿using Assets.CodeBase.Inventory.Items;
+using Assets.CodeBase.UI.StartScene;
 using UnityEngine;
 using Zenject;
 
