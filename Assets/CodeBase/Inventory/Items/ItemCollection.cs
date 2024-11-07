@@ -7,6 +7,8 @@ namespace Assets.CodeBase.Inventory.Items
     public class ItemCollection : ScriptableObject
     {
         [Range(0, 1)] public float SellMultiplier;
+
+        public ItemType[] ItemTypes;
         
         public List<ItemDescription> ItemDescriptions;
     }

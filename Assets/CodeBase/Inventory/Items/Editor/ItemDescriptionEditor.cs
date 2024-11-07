@@ -1,55 +1,67 @@
 ﻿using Cinemachine.Editor;
+using System;
 using UnityEditor;
 using UnityEngine;
 
 namespace Assets.CodeBase.Inventory.Items
 {
-    [CustomEditor(typeof(ItemDescription))]
-    public class ItemDescriptionEditor : Editor
-    {
-        private const int SpacePixels = 6;
-        private const string WeaponSettingsLabelText = "Weapon Settings";
+	[CustomEditor(typeof(ItemDescription))]
+	public class ItemDescriptionEditor : Editor
+	{
+		private const int SpacePixels = 6;
+		private const string WeaponSettingsLabelText = "Weapon Settings";
 
-        private SerializedProperty _itemImage;
-        private SerializedProperty _weaponPrefab;
+		private SerializedProperty _itemImage;
+		private SerializedProperty _weaponPrefab;
+		private SerializedProperty _itemType;
 
-        private void OnEnable() {
-            ItemDescription target = (ItemDescription)this.target;
+		private void OnEnable() {
+			ItemDescription target = (ItemDescription)this.target;
 
-            _itemImage = serializedObject.FindProperty(nameof(target.Image));
-            _weaponPrefab = serializedObject.FindProperty(nameof(target.WeaponPrefab));
-        }
+			_itemImage = serializedObject.FindProperty(nameof(target.Image));
+			_weaponPrefab = serializedObject.FindProperty(nameof(target.WeaponPrefab));
+			_itemType = serializedObject.FindProperty(nameof(target.ItemType));
+		}
 
-        public override void OnInspectorGUI() {
-            ItemDescription target = (ItemDescription)this.target;
+		public override void OnInspectorGUI() {
+			ItemDescription target = (ItemDescription)this.target;
 
-            DrawCommonOptions(target);
-            DrawWeaponSection(target);
+			DrawCommonOptions(target);
 
-            serializedObject.ApplyModifiedProperties();
-        }
+			switch (target.ItemType) {
+				case ItemType.VehicleVitality:
+					break;
+				case ItemType.Weapon:
+					DrawWeaponSection(target);
+					break;
+				case ItemType.SpawnableUnit:
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
 
-        private void DrawCommonOptions(ItemDescription target) {
-            GUILayout.Label(nameof(target.Name));
+			serializedObject.ApplyModifiedProperties();
+		}
 
-            string updatedName = GUILayout.TextField(target.Name);
-            target.Name = updatedName;
+		private void DrawCommonOptions(ItemDescription target) {
+			GUILayout.Label(nameof(target.Name));
 
-            int updatedCost = EditorGUILayout.IntField(new GUIContent(nameof(target.Cost)), target.Cost);
-            target.Cost = updatedCost;
+			string updatedName = GUILayout.TextField(target.Name);
+			target.Name = updatedName;
 
-            EditorGUILayout.PropertyField(_itemImage, new GUIContent(nameof(target.Image)));
-        }
+			int updatedCost = EditorGUILayout.IntField(new GUIContent(nameof(target.Cost)), target.Cost);
+			target.Cost = updatedCost;
 
-        private void DrawWeaponSection(ItemDescription target) {
-            GUILayout.Space(SpacePixels);
-            GUILayout.Label(WeaponSettingsLabelText);
+			EditorGUILayout.PropertyField(_itemImage, new GUIContent(nameof(target.Image)));
 
-            bool isWeaponFlag = GUILayout.Toggle(target.IsWeapon, nameof(target.IsWeapon));
-            target.IsWeapon = isWeaponFlag;
+			EditorGUILayout.PropertyField(_itemType, new GUIContent(nameof(target.ItemType)));
+		}
 
-            if (isWeaponFlag)
-                EditorGUILayout.PropertyField(_weaponPrefab, new GUIContent(nameof(target.WeaponPrefab)));
-        }
-    }
+		private void DrawWeaponSection(ItemDescription target) {
+			GUILayout.Space(SpacePixels);
+			GUILayout.Label(WeaponSettingsLabelText);
+
+			EditorGUILayout.PropertyField(_weaponPrefab, new GUIContent(nameof(target.WeaponPrefab)));
+		}
+	}
 }

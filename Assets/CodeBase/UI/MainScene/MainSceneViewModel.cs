@@ -29,7 +29,7 @@ namespace Assets.CodeBase.UI.MainScene
 
 	public interface IInventoryViewModel
 	{
-		event Action<int, int, Texture2D> OnChangedItem;
+		event Action<int, int> OnChangedItem;
 
 		void SellItem(int slot);
 		void SwapItems(int slotFrom, int slotTo);
@@ -66,7 +66,7 @@ namespace Assets.CodeBase.UI.MainScene
 	{
 		public event Action OnReady;
 		public event Action<TeamType> OnEndGame;
-		public event Action<int, int, Texture2D> OnChangedItem;
+		public event Action<int, int> OnChangedItem;
 
 		public IReactiveGetter<MainSceneMode> Mode => _mode;
 
@@ -182,8 +182,8 @@ namespace Assets.CodeBase.UI.MainScene
 			_inventorySizeView.Value = size;
 		}
 
-		private void UpdateItem(int slotId, int itemId, Texture2D image) {
-			OnChangedItem?.Invoke(slotId, itemId, image);
+		private void UpdateItem(int slotId, int itemId) {
+			OnChangedItem?.Invoke(slotId, itemId);
 		}
 
 		private void UpdateShopAvailability(bool availability) {

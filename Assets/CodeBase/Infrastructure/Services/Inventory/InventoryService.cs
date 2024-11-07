@@ -11,18 +11,16 @@ namespace Assets.CodeBase.Infrastructure.Services.Inventory
 {
 	public class InventoryService : IInventoryService, IInitializable
 	{
-		public event Action<int, int, Texture2D> OnChangedItem;
+		public event Action<int, int> OnChangedItem;
 
 		public IReactiveGetter<int> InventorySize => _inventorySize;
 
 		private readonly ReactiveProperty<int> _inventorySize = new();
 
 		private readonly IWorldAccessService _worldAccessService;
-		private readonly ItemCollection _itemCollection;
 
-		public InventoryService(IWorldAccessService worldAccessService, ItemCollection itemCollection) {
+		public InventoryService(IWorldAccessService worldAccessService) {
 			_worldAccessService = worldAccessService;
-			_itemCollection = itemCollection;
 		}
 
 		public void Initialize() {
@@ -42,6 +40,6 @@ namespace Assets.CodeBase.Infrastructure.Services.Inventory
 			_inventorySize.Value = size;
 
 		private void UpdateItem(int slotIndex, int itemId) =>
-			OnChangedItem?.Invoke(slotIndex, itemId, _itemCollection.ItemDescriptions[itemId].Image);
+			OnChangedItem?.Invoke(slotIndex, itemId);
 	}
 }

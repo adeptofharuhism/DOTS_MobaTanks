@@ -10,8 +10,15 @@ namespace Assets.CodeBase.Inventory.Items
 		public string Name;
 		public int Cost;
 		public Texture2D Image;
+		public ItemType ItemType;
 
-		public bool IsWeapon;
 		public GameObject WeaponPrefab;
+	}
+
+	public enum ItemType
+	{
+		VehicleVitality,
+		Weapon,
+		SpawnableUnit
 	}
 }

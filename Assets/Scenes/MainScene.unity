@@ -616,6 +616,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mainSceneView: {fileID: 1253407838}
   _itemCollection: {fileID: 11400000, guid: 579c23fb665d8bf42bc52e73f2d66cd9, type: 2}
+  _itemGroup: {fileID: 9197481963319205126, guid: 3f286aa6a873f3842bd452c5adf2f7b1,
+    type: 3}
 --- !u!1 &1252991803
 GameObject:
   m_ObjectHideFlags: 0

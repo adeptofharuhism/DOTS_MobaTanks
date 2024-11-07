@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using System;
+using Unity.Entities;
 using UnityEngine;
 
 namespace Assets.CodeBase.Inventory.Items
@@ -53,13 +54,21 @@ namespace Assets.CodeBase.Inventory.Items
 				AddComponent<ItemCreationTag>(itemCreationEntity);
 				AddComponent<InstantiatedItem>(itemCreationEntity);
 
-				if (item.IsWeapon) {
-					AddComponent<SpawnableItemSettings>(itemCreationEntity);
-					AddComponent(itemCreationEntity, new SpawnableItem {
-						Value = GetEntity(item.WeaponPrefab, TransformUsageFlags.Dynamic)
-					});
+				switch (item.ItemType) {
+					case ItemType.VehicleVitality:
+						break;
+					case ItemType.Weapon:
+						AddComponent<SpawnableItemSettings>(itemCreationEntity);
+						AddComponent(itemCreationEntity, new SpawnableItem {
+							Value = GetEntity(item.WeaponPrefab, TransformUsageFlags.Dynamic)
+						});
+						break;
+					case ItemType.SpawnableUnit:
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
 				}
-
+				
 				return itemCreationEntity;
 			}
 

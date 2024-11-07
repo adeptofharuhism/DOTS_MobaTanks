@@ -1,4 +1,5 @@
 ﻿using Assets.CodeBase.Infrastructure.Services.MainSceneModeNotifier;
+using Assets.CodeBase.Infrastructure.Services.UiFactories;
 using Assets.CodeBase.UI.MainScene.Panels;
 using Assets.CodeBase.Utility.MVVM;
 using UnityEngine;
@@ -24,11 +25,15 @@ namespace Assets.CodeBase.UI.MainScene
         private IMainSceneViewModel _mainSceneViewModel;
 
         [Inject]
-        public void Construct(IMainSceneViewModel mainSceneViewModel) {
+        public void Construct(
+            IMainSceneViewModel mainSceneViewModel,
+            IInventoryButtonFactory inventoryButtonFactory,
+            IShopButtonFactory shopButtonFactory) {
+            
             _mainSceneViewModel = mainSceneViewModel;
 
             AddPanel(new PreparingPanel(_preparingPanel, mainSceneViewModel, _askReadyPanel, _waitingPanel));
-            AddPanel(new InGamePanel(_inGamePanel, mainSceneViewModel));
+            AddPanel(new InGamePanel(_inGamePanel, mainSceneViewModel, inventoryButtonFactory, shopButtonFactory));
             AddPanel(new EndGamePanel(_endGamePanel, mainSceneViewModel, _blueWinnerAsset, _orangeWinnerAsset));
         }
 

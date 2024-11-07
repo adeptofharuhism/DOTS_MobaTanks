@@ -1,8 +1,7 @@
-﻿using Assets.CodeBase.Utility.MVVM;
-using System;
+﻿using Assets.CodeBase.Constants;
+using Assets.CodeBase.Infrastructure.Services.UiFactories;
+using Assets.CodeBase.Utility.MVVM;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UIElements.Button;
 
@@ -14,12 +13,14 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 
 		public InGamePanel(
 			VisualTreeAsset inGamePanel,
-			IInGameModeViewModel inGameModeViewModel)
+			IInGameModeViewModel inGameModeViewModel,
+			IInventoryButtonFactory inventoryButtonFactory,
+			IShopButtonFactory shopButtonFactory)
 			: base(inGamePanel) {
 
-			_uiParts.Add(new ShopPart(_panel, inGameModeViewModel));
+			_uiParts.Add(new ShopPart(_panel, inGameModeViewModel, shopButtonFactory));
 			_uiParts.Add(new MoneyDisplayPart(_panel, inGameModeViewModel));
-			_uiParts.Add(new InventoryPart(_panel, inGameModeViewModel));
+			_uiParts.Add(new InventoryPart(_panel, inGameModeViewModel, inventoryButtonFactory));
 		}
 
 		protected override void InitializeSubParts() {
@@ -39,15 +40,20 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 
 		private readonly List<InventoryButton> _inventorySlots = new();
 		private readonly IInventoryViewModel _inventoryViewModel;
+		private readonly IInventoryButtonFactory _inventoryButtonFactory;
 
-		public InventoryPart(VisualElement parent, IInventoryViewModel inventoryViewModel)
+		public InventoryPart(
+			VisualElement parent, 
+			IInventoryViewModel inventoryViewModel,
+			IInventoryButtonFactory inventoryButtonFactory)
 			: base(parent) {
 
 			_inventoryViewModel = inventoryViewModel;
+			_inventoryButtonFactory = inventoryButtonFactory;
 		}
 
 		protected override void CacheVisualElements() {
-			_inventory = _parent.Q<VisualElement>(Constants.VisualElementNames.GameUI.InGamePanel.Inventory);
+			_inventory = _parent.Q<VisualElement>(VisualElementNames.GameUI.InGamePanel.Inventory);
 		}
 
 		protected override void BindData() {
@@ -62,20 +68,18 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 
 		private void CreateInventorySlots(int size) {
 			for (int i = 0; i < size; i++) {
-				InventoryButton button = new();
+				InventoryButton button = _inventoryButtonFactory.CreateButton(OnInventoryButtonClicked, i);
 
 				_inventorySlots.Add(button);
 				_inventory.Add(button.VisualElement);
 			}
 		}
 
-		private void ChangeItem(int slotId, int itemId, Texture2D image) {
-			_inventorySlots[slotId].ChangeItem(itemId, image);
+		private void ChangeItem(int slotId, int itemId) {
+			_inventorySlots[slotId].ItemId = itemId;
 		}
 
-		private void OnInventoryButtonClicked(int itemId) {
-			
-		}
+		private void OnInventoryButtonClicked(int slotId) { }
 	}
 
 	public class ShopPart : UiPart
@@ -83,20 +87,18 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 		private VisualElement _itemGroupContainer;
 
 		private readonly IShopViewModel _shopViewModel;
+		private readonly IShopButtonFactory _shopButtonFactory;
 
-		public ShopPart(VisualElement parent, IShopViewModel shopViewModel)
+		public ShopPart(VisualElement parent, IShopViewModel shopViewModel, IShopButtonFactory shopButtonFactory)
 			: base(parent) {
 
 			_shopViewModel = shopViewModel;
+			_shopButtonFactory = shopButtonFactory;
 		}
 
 		protected override void CacheVisualElements() {
 			_itemGroupContainer =
-				_parent.Q<VisualElement>(Constants.VisualElementNames.GameUI.InGamePanel.ItemGroupContainer);
-
-			InventoryButton button = new();
-			button.Button.RegisterCallback<ClickEvent>(_=>_shopViewModel.BuyItem(0));
-			_itemGroupContainer.Add(button.VisualElement);
+				_parent.Q<VisualElement>(VisualElementNames.GameUI.InGamePanel.ItemGroupContainer);
 		}
 
 		protected override void ReadInitialViewModelData() {
@@ -135,8 +137,8 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 		}
 
 		protected override void CacheVisualElements() {
-			_moneyLabel = _parent.Q<Label>(Constants.VisualElementNames.GameUI.InGamePanel.MoneyLabel);
-			_shopButton = _parent.Q<Button>(Constants.VisualElementNames.GameUI.InGamePanel.ShopButton);
+			_moneyLabel = _parent.Q<Label>(VisualElementNames.GameUI.InGamePanel.MoneyLabel);
+			_shopButton = _parent.Q<Button>(VisualElementNames.GameUI.InGamePanel.ShopButton);
 		}
 
 		protected override void ReadInitialViewModelData() {

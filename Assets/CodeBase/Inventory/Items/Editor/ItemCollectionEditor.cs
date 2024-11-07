@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace Assets.CodeBase.Inventory.Items
@@ -29,6 +30,10 @@ namespace Assets.CodeBase.Inventory.Items
                     items.ItemDescriptions[i].Id = successfulEnumerations++;
 
             UnityEngine.Debug.Log($"Enumerated {successfulEnumerations} items inside Item Collection");
+
+            items.ItemTypes = (ItemType[])Enum.GetValues(typeof(ItemType));
+            
+            UnityEngine.Debug.Log($"Parsed {items.ItemTypes.Length} different item types");
         }
     }
 }
