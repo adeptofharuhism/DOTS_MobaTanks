@@ -13,5 +13,26 @@ MonoBehaviour:
   m_Name: Collection
   m_EditorClassIdentifier: 
   SellMultiplier: 0.5
+  GroupedByTypeItemDescriptions:
+  - ItemType: 0
+    ItemTypeName: VehicleVitality
+    ItemDescriptions:
+    - {fileID: 11400000, guid: 19038c03b050ae246923c91af3748f2a, type: 2}
+    - {fileID: 11400000, guid: d11e2a643404a2840b6e16b2a57a3af0, type: 2}
+    - {fileID: 11400000, guid: 779fafcd2b9fdee49b026328e5b01983, type: 2}
+    - {fileID: 11400000, guid: 084e3d4d2e78f7f4a9bc5df81b48215f, type: 2}
+  - ItemType: 1
+    ItemTypeName: Weapon
+    ItemDescriptions:
+    - {fileID: 11400000, guid: 31170b0d080961243a0986251e094f9e, type: 2}
+  - ItemType: 2
+    ItemTypeName: SpawnableUnit
+    ItemDescriptions:
+    - {fileID: 11400000, guid: a7cec62d633ac84419e49f60462b21a4, type: 2}
   ItemDescriptions:
   - {fileID: 11400000, guid: 31170b0d080961243a0986251e094f9e, type: 2}
+  - {fileID: 11400000, guid: 19038c03b050ae246923c91af3748f2a, type: 2}
+  - {fileID: 11400000, guid: d11e2a643404a2840b6e16b2a57a3af0, type: 2}
+  - {fileID: 11400000, guid: 779fafcd2b9fdee49b026328e5b01983, type: 2}
+  - {fileID: 11400000, guid: 084e3d4d2e78f7f4a9bc5df81b48215f, type: 2}
+  - {fileID: 11400000, guid: a7cec62d633ac84419e49f60462b21a4, type: 2}

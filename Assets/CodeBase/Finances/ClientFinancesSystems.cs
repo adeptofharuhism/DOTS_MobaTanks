@@ -9,7 +9,7 @@ namespace Assets.CodeBase.Finances
     {
         public IReactiveGetter<int> Money => _money;
 
-        private ReactivePropertyWithPassOnEquality<int> _money = new();
+        private ReactiveProperty<int> _money = new(true);
 
         protected override void OnCreate() {
             RequireForUpdate<MoneyAmount>();

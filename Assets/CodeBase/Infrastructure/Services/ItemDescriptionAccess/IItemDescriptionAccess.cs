@@ -6,9 +6,9 @@ namespace Assets.CodeBase.Infrastructure.Services.ItemDescriptionAccess
 {
 	public interface IItemDescriptionAccess
 	{
+		List<ItemDescription> Items { get; }
+		List<GroupedByTypeItemDescriptions> GroupedItemDescriptions { get; }
+		int TotalItemAmount { get; }
 		Texture2D GetImageForItem(int itemId);
-		ItemDescription GetItem(int itemId);
-		ItemType[] GetItemTypes();
-		List<ItemDescription> GetItems();
 	}
 }

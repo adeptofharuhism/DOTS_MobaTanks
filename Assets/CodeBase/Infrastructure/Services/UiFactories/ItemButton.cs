@@ -62,6 +62,8 @@ namespace Assets.CodeBase.Infrastructure.Services.UiFactories
 
 	public class ShopButton : ItemButton
 	{
+		public int ItemCost => _itemCost;
+		
 		private readonly int _itemCost;
 		
 		public ShopButton(Action<int> onClick, int itemId, ItemDescription itemDescription)
@@ -69,6 +71,14 @@ namespace Assets.CodeBase.Infrastructure.Services.UiFactories
 
 			_itemCost = itemDescription.Cost;
 			ButtonStyle.backgroundImage = itemDescription.Image;
+		}
+
+		public void Enable() {
+			VisualElement.SetEnabled(true);
+		}
+
+		public void Disable() {
+			VisualElement.SetEnabled(false);
 		}
 	}
 }

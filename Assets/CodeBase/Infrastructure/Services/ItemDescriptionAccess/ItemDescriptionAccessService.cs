@@ -6,6 +6,11 @@ namespace Assets.CodeBase.Infrastructure.Services.ItemDescriptionAccess
 {
 	public class ItemDescriptionAccessService : IItemDescriptionAccess
 	{
+		public int TotalItemAmount => _itemCollection.ItemDescriptions.Count;
+		public List<ItemDescription> Items => _itemCollection.ItemDescriptions;
+		public List<GroupedByTypeItemDescriptions> GroupedItemDescriptions =>
+			_itemCollection.GroupedByTypeItemDescriptions;
+		
 		private readonly ItemCollection _itemCollection;
 
 		public ItemDescriptionAccessService(ItemCollection itemCollection) {
@@ -14,14 +19,5 @@ namespace Assets.CodeBase.Infrastructure.Services.ItemDescriptionAccess
 
 		public Texture2D GetImageForItem(int itemId) =>
 			_itemCollection.ItemDescriptions[itemId].Image;
-
-		public ItemDescription GetItem(int itemId) =>
-			_itemCollection.ItemDescriptions[itemId];
-
-		public ItemType[] GetItemTypes() =>
-			_itemCollection.ItemTypes;
-
-		public List<ItemDescription> GetItems() =>
-			_itemCollection.ItemDescriptions;
 	}
 }

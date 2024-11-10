@@ -119,7 +119,7 @@ namespace Assets.CodeBase.Shop
     {
         public IReactiveGetter<bool> ShopAvailability => _shopAvailability;
 
-        private ReactivePropertyWithPassOnEquality<bool> _shopAvailability = new();
+        private ReactiveProperty<bool> _shopAvailability = new(true);
 
         protected override void OnCreate() {
             RequireForUpdate<InGameState>();

@@ -2,6 +2,7 @@
 using Assets.CodeBase.Infrastructure.Services.UiFactories;
 using Assets.CodeBase.Utility.MVVM;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UIElements;
 using Button = UnityEngine.UIElements.Button;
 
@@ -43,7 +44,7 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 		private readonly IInventoryButtonFactory _inventoryButtonFactory;
 
 		public InventoryPart(
-			VisualElement parent, 
+			VisualElement parent,
 			IInventoryViewModel inventoryViewModel,
 			IInventoryButtonFactory inventoryButtonFactory)
 			: base(parent) {
@@ -68,7 +69,7 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 
 		private void CreateInventorySlots(int size) {
 			for (int i = 0; i < size; i++) {
-				InventoryButton button = _inventoryButtonFactory.CreateButton(OnInventoryButtonClicked, i);
+				InventoryButton button = _inventoryButtonFactory.CreateButton(OnClickInventoryButton, i);
 
 				_inventorySlots.Add(button);
 				_inventory.Add(button.VisualElement);
@@ -79,12 +80,17 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 			_inventorySlots[slotId].ItemId = itemId;
 		}
 
-		private void OnInventoryButtonClicked(int slotId) { }
+		private void OnClickInventoryButton(int slotId) {
+			Debug.Log($"Clicked on {slotId} slot");
+		}
 	}
 
 	public class ShopPart : UiPart
 	{
 		private VisualElement _itemGroupContainer;
+		private ShopButton[] _sortedShopButtons;
+		private int _leastExpensiveDisabledButtonIndex;
+		private int _lastMoneyUpdate;
 
 		private readonly IShopViewModel _shopViewModel;
 		private readonly IShopButtonFactory _shopButtonFactory;
@@ -99,14 +105,21 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 		protected override void CacheVisualElements() {
 			_itemGroupContainer =
 				_parent.Q<VisualElement>(VisualElementNames.GameUI.InGamePanel.ItemGroupContainer);
+
+			VisualElement[] itemGroups = _shopButtonFactory.CreateItemGroups(OnClickShopButton, out _sortedShopButtons);
+
+			foreach (VisualElement itemGroup in itemGroups)
+				_itemGroupContainer.Add(itemGroup);
 		}
 
 		protected override void ReadInitialViewModelData() {
 			UpdateItemGroupContainerVisibility(_shopViewModel.ShopIsVisible.Value);
+			UpdateActiveButtons(_shopViewModel.MoneyView.Value);
 		}
 
 		protected override void BindData() {
 			_shopViewModel.ShopIsVisible.OnChanged += UpdateItemGroupContainerVisibility;
+			_shopViewModel.MoneyView.OnChanged += UpdateActiveButtons;
 		}
 
 		protected override void RegisterCallbacks() { }
@@ -115,11 +128,43 @@ namespace Assets.CodeBase.UI.MainScene.Panels
 
 		protected override void UnbindData() {
 			_shopViewModel.ShopIsVisible.OnChanged -= UpdateItemGroupContainerVisibility;
+			_shopViewModel.MoneyView.OnChanged -= UpdateActiveButtons;
 		}
 
 		private void UpdateItemGroupContainerVisibility(bool isVisible) {
 			_itemGroupContainer.style.display = isVisible ? DisplayStyle.Flex : DisplayStyle.None;
 			_itemGroupContainer.SetEnabled(isVisible);
+		}
+
+		private void OnClickShopButton(int itemId) =>
+			_shopViewModel.BuyItem(itemId);
+
+		private void UpdateActiveButtons(int money) {
+			if (money > _lastMoneyUpdate)
+				ActivateAffordableButtons(money);
+			else
+				DeactivateExpensiveButtons(money);
+
+			_lastMoneyUpdate = money;
+		}
+
+		private void ActivateAffordableButtons(int money) {
+			while (_leastExpensiveDisabledButtonIndex<_sortedShopButtons.Length) {
+				if (money < _sortedShopButtons[_leastExpensiveDisabledButtonIndex].ItemCost)
+					return;
+				
+				_sortedShopButtons[_leastExpensiveDisabledButtonIndex++].Enable();
+			}
+		}
+
+		private void DeactivateExpensiveButtons(int money) {
+			while (_leastExpensiveDisabledButtonIndex>0) {
+				if (money >= _sortedShopButtons[_leastExpensiveDisabledButtonIndex-1].ItemCost)
+					return;
+				
+				_sortedShopButtons[_leastExpensiveDisabledButtonIndex-1].Disable();
+				_leastExpensiveDisabledButtonIndex--;
+			}
 		}
 	}
 

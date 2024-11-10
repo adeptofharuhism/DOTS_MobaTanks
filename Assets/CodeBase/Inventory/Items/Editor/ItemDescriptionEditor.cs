@@ -11,6 +11,8 @@ namespace Assets.CodeBase.Inventory.Items
 		private const int SpacePixels = 6;
 		private const string WeaponSettingsLabelText = "Weapon Settings";
 
+		private SerializedProperty _itemName;
+		private SerializedProperty _itemCost;
 		private SerializedProperty _itemImage;
 		private SerializedProperty _weaponPrefab;
 		private SerializedProperty _itemType;
@@ -18,6 +20,8 @@ namespace Assets.CodeBase.Inventory.Items
 		private void OnEnable() {
 			ItemDescription target = (ItemDescription)this.target;
 
+			_itemName = serializedObject.FindProperty(nameof(target.Name));
+			_itemCost = serializedObject.FindProperty(nameof(target.Cost));
 			_itemImage = serializedObject.FindProperty(nameof(target.Image));
 			_weaponPrefab = serializedObject.FindProperty(nameof(target.WeaponPrefab));
 			_itemType = serializedObject.FindProperty(nameof(target.ItemType));
@@ -46,11 +50,9 @@ namespace Assets.CodeBase.Inventory.Items
 		private void DrawCommonOptions(ItemDescription target) {
 			GUILayout.Label(nameof(target.Name));
 
-			string updatedName = GUILayout.TextField(target.Name);
-			target.Name = updatedName;
-
-			int updatedCost = EditorGUILayout.IntField(new GUIContent(nameof(target.Cost)), target.Cost);
-			target.Cost = updatedCost;
+			EditorGUILayout.PropertyField(_itemName, new GUIContent(nameof(target.Name)));
+			
+			EditorGUILayout.PropertyField(_itemCost, new GUIContent(nameof(target.Cost)));
 
 			EditorGUILayout.PropertyField(_itemImage, new GUIContent(nameof(target.Image)));
 

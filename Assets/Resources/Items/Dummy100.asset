@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 778e338ea70e54d45bb8dad43fb93e67, type: 3}
+  m_Name: Dummy100
+  m_EditorClassIdentifier: 
+  Id: 0
+  Name: Dummy100
+  Cost: 100
+  Image: {fileID: 2800000, guid: 78794f23a7b6e7a49843829dbd49c4a1, type: 3}
+  ItemType: 0
+  WeaponPrefab: {fileID: 0}

@@ -16,7 +16,6 @@ namespace Assets.CodeBase.UI.MainScene
         [SerializeField] private VisualTreeAsset _waitingPanel;
         [Header("In Game mode")]
         [SerializeField] private VisualTreeAsset _inGamePanel;
-        [SerializeField] private VisualTreeAsset _itemGroup;
         [Header("End Game mode")]
         [SerializeField] private VisualTreeAsset _endGamePanel;
         [SerializeField] private VisualTreeAsset _blueWinnerAsset;
