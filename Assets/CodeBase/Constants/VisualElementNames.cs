@@ -58,6 +58,12 @@
 					public const string ItemGroupName = "ItemGroupName";
 					public const string ItemContainer = "ItemContainer";
 				}
+
+				public static class ShopButtonTemplate
+				{
+					public const string Button = "Button";
+					public const string Label = "Label";
+				}
 			}
 
 			public static class EndGamePanel

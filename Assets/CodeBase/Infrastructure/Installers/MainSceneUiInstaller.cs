@@ -14,6 +14,7 @@ namespace Assets.CodeBase.Infrastructure.Installers
 		[SerializeField] private MainSceneView _mainSceneView;
 		[SerializeField] private ItemCollection _itemCollection;
 		[SerializeField] private VisualTreeAsset _itemGroup;
+		[SerializeField] private VisualTreeAsset _shopButtonTemplate;
 
 		public override void InstallBindings() {
 			RegisterItemDescriptionAccessService();
@@ -38,7 +39,7 @@ namespace Assets.CodeBase.Infrastructure.Installers
 				.BindInterfacesTo<ItemButtonFactory>()
 				.FromNew()
 				.AsSingle()
-				.WithArguments(_itemGroup)
+				.WithArguments(_itemGroup, _shopButtonTemplate)
 				.NonLazy();
 
 		private void RegisterInventoryService() =>

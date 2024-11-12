@@ -99,7 +99,7 @@ namespace Assets.CodeBase.Inventory
 				};
 
 				RefRW<MoneyAmount> moneyAmount = SystemAPI.GetComponentRW<MoneyAmount>(playerEntity);
-				moneyAmount.ValueRW.Value -= removalPrefabs[soldItemId].SellCost;
+				moneyAmount.ValueRW.Value += removalPrefabs[soldItemId].SellCost;
 
 				RespawnedEntity respawnedEntity = SystemAPI.GetComponent<RespawnedEntity>(playerEntity);
 

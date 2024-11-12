@@ -10,10 +10,16 @@ namespace Assets.CodeBase.Infrastructure.Services.UiFactories
 	{
 		private readonly IItemDescriptionAccess _itemDescriptionAccess;
 		private readonly VisualTreeAsset _itemGroup;
+		private readonly VisualTreeAsset _shopButtonTemplate;
 
-		public ItemButtonFactory(IItemDescriptionAccess itemDescriptionAccess, VisualTreeAsset itemGroup) {
+		public ItemButtonFactory(
+			IItemDescriptionAccess itemDescriptionAccess,
+			VisualTreeAsset itemGroup,
+			VisualTreeAsset shopButtonTemplate) {
+
 			_itemDescriptionAccess = itemDescriptionAccess;
 			_itemGroup = itemGroup;
+			_shopButtonTemplate = shopButtonTemplate;
 		}
 
 		public InventoryButton CreateButton(Action<int> onClick, int slotId) =>
@@ -42,7 +48,7 @@ namespace Assets.CodeBase.Infrastructure.Services.UiFactories
 						.Q<VisualElement>(Constants.VisualElementNames.GameUI.InGamePanel.ItemGroup.ItemContainer);
 
 				foreach (ItemDescription itemDescription in groupedItemDescriptions[i].ItemDescriptions) {
-					ShopButton newButton = new(onClickShopButton, itemDescription.Id, itemDescription);
+					ShopButton newButton = new(onClickShopButton, itemDescription, _shopButtonTemplate);
 					newButton.Disable();
 
 					itemContainer.Add(newButton.VisualElement);

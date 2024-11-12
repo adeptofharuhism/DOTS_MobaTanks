@@ -618,6 +618,8 @@ MonoBehaviour:
   _itemCollection: {fileID: 11400000, guid: 579c23fb665d8bf42bc52e73f2d66cd9, type: 2}
   _itemGroup: {fileID: 9197481963319205126, guid: 3f286aa6a873f3842bd452c5adf2f7b1,
     type: 3}
+  _shopButtonTemplate: {fileID: 9197481963319205126, guid: 1b09ae2e422dbab4aad06b910b32d392,
+    type: 3}
 --- !u!1 &1252991803
 GameObject:
   m_ObjectHideFlags: 0
@@ -742,7 +744,6 @@ MonoBehaviour:
     type: 3}
   _inGamePanel: {fileID: 9197481963319205126, guid: 4875fe3de2285944fa72692489462b5c,
     type: 3}
-  _itemGroup: {fileID: 0}
   _endGamePanel: {fileID: 9197481963319205126, guid: 569ed4134c90ec9438bef6fc4146187e,
     type: 3}
   _blueWinnerAsset: {fileID: 9197481963319205126, guid: 1f86e55699d652e4388a87d3304f2f1a,

@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement>
+        <ui:Button parse-escape-sequences="false" display-tooltip-when-elided="false" name="Button" class="shopButton" />
+        <ui:VisualElement>
+            <ui:Label tabindex="-1" text="999999" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Label" class="itemCostLabel" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

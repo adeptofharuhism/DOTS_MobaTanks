@@ -47,7 +47,7 @@ namespace Assets.CodeBase.Shop
     }
 
     [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
-    [UpdateInGroup(typeof(ShopSystemGroup))]
+    [UpdateInGroup(typeof(ShopSystemGroup), OrderFirst = true)]
     public partial struct ClientShopActivatorInitializationSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
