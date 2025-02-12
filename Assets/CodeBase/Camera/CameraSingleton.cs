@@ -10,7 +10,6 @@ namespace Assets.CodeBase.Camera
         public static CameraSingleton Instance => _instance;
 
         [SerializeField] private float3 _lookOffset = float3.zero;
-        [SerializeField] private float _smoothTime = 0.2f;
 
         private Vector3 _smoothVelocity = Vector3.zero;
 
@@ -27,7 +26,7 @@ namespace Assets.CodeBase.Camera
         }
 
         private void LateUpdate() {
-            transform.position = Vector3.SmoothDamp(transform.position, _targetPosition + _lookOffset, ref _smoothVelocity, _smoothTime);
+            transform.position = _targetPosition + _lookOffset;
         }
     }
 }
