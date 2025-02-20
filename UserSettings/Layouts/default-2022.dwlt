@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 997
   m_ShowMode: 4
-  m_Title: Hierarchy
+  m_Title: Project
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -145,7 +145,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 100}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 17
+  controlID: 36
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -562,9 +562,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 087c0000
-      m_LastClickedID: 31752
-      m_ExpandedIDs: 2abdfeff5820ffff4c38ffff0afbffff0cfbffff4ab90000
+      m_SelectedIDs: 08830000
+      m_LastClickedID: 0
+      m_ExpandedIDs: 4eebfeff0afbffff0cfbfffffc7b0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -993,9 +993,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -163.99677, y: 202.65488, z: -235.04646}
+    m_Target: {x: -19.817167, y: 60.747177, z: 191.99597}
     speed: 2
-    m_Value: {x: -163.99677, y: 202.65488, z: -235.04646}
+    m_Value: {x: -19.817167, y: 60.747177, z: 191.99597}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1033,7 +1033,7 @@ MonoBehaviour:
       m_Fade:
         m_Target: 0
         speed: 2
-        m_Value: 0
+        m_Value: 1
       m_Color: {r: 0.5, g: 0.5, b: 0.5, a: 0.4}
       m_Pivot: {x: 0, y: 0, z: 0}
       m_Size: {x: 1, y: 1}
@@ -1041,20 +1041,20 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.37604168, y: 0.0125238765, z: -0.004391782, w: 0.9266209}
+    m_Target: {x: -0.544794, y: -0.01685857, z: 0.010207537, w: -0.83846176}
     speed: 2
-    m_Value: {x: 0.37599522, y: 0.013912334, z: -0.0049553197, w: 0.92650384}
+    m_Value: {x: -0.5447217, y: -0.01811437, z: 0.011023575, w: -0.8383488}
   m_Size:
-    m_Target: 7.071068
+    m_Target: 0.8660254
     speed: 2
-    m_Value: 5.1244564
+    m_Value: 0.86602813
   m_Ortho:
     m_Target: 0
     speed: 2
     m_Value: 0
   m_CameraSettings:
-    m_Speed: 1.1404299
-    m_SpeedNormalized: 0.56999993
+    m_Speed: 1.2003998
+    m_SpeedNormalized: 0.5999999
     m_SpeedMin: 0.001
     m_SpeedMax: 2
     m_EasingEnabled: 1
@@ -1065,7 +1065,7 @@ MonoBehaviour:
     m_FarClip: 10000
     m_DynamicClip: 1
     m_OcclusionCulling: 0
-  m_LastSceneViewRotation: {x: -0.08717229, y: 0.89959055, z: -0.21045254, w: -0.3726226}
+  m_LastSceneViewRotation: {x: 0.38536793, y: 0.044316895, z: -0.017782131, w: 0.9216464}
   m_LastSceneViewOrtho: 0
   m_ReplacementShader: {fileID: 0}
   m_ReplacementString: 
@@ -1190,9 +1190,9 @@ MonoBehaviour:
     m_IsLocked: 1
   m_FolderTreeState:
     scrollPos: {x: 0, y: 11}
-    m_SelectedIDs: fcae0000
-    m_LastClickedID: 44796
-    m_ExpandedIDs: 00000000d0870000d2870000d4870000d6870000d8870000da870000dc870000de870000e0870000e4870000e6870000e887000000ca9a3bffffff7f
+    m_SelectedIDs: 08830000
+    m_LastClickedID: 33544
+    m_ExpandedIDs: 00000000e2820000e4820000e6820000e8820000ea820000ec820000ee820000f0820000f2820000f4820000f6820000f8820000fa820000fc82000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1220,7 +1220,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000d0870000d2870000d4870000d6870000d8870000da870000dc870000de870000e0870000e2870000e4870000e6870000e8870000
+    m_ExpandedIDs: 00000000e2820000e4820000e6820000e8820000ea820000ec820000ee820000f0820000f2820000f4820000f6820000f8820000fa820000fc820000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1322,7 +1322,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Prefabs/UI
+    - Assets/Prefabs/MapBlocks
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -1330,16 +1330,16 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Prefabs/UI
+  - Assets/Prefabs/MapBlocks
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Unity\Projects\DOTS_MobaTanks
   m_LockTracker:
     m_IsLocked: 1
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 180}
-    m_SelectedIDs: 66a80000
-    m_LastClickedID: 43110
-    m_ExpandedIDs: 00000000d0870000d2870000d4870000d6870000d8870000da870000dc870000de870000e0870000e2870000e4870000e6870000e8870000f2870000f887000074a9000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 175}
+    m_SelectedIDs: 10830000
+    m_LastClickedID: 33552
+    m_ExpandedIDs: 00000000e2820000e4820000e6820000e8820000ea820000ec820000ee820000f0820000f2820000f4820000f6820000f8820000fa820000fc82000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1367,7 +1367,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000d0870000d2870000d4870000d6870000d8870000da870000dc870000de870000e0870000e2870000e4870000e6870000e8870000
+    m_ExpandedIDs: 00000000e2820000e4820000e6820000e8820000ea820000ec820000ee820000f0820000f2820000f4820000f6820000f8820000fa820000fc820000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1398,18 +1398,18 @@ MonoBehaviour:
     m_ExpandedInstanceIDs: 
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: VehicleHealthBarCanvas
-      m_OriginalName: VehicleHealthBarCanvas
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 33840
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 13}
     m_CreateAssetUtility:
