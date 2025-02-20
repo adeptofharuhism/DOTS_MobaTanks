@@ -23,10 +23,16 @@ namespace Assets.CodeBase.Camera
             }
 
             _instance = this;
+            
+            ModifyLookOffset();
         }
 
         private void LateUpdate() {
             transform.position = _targetPosition + _lookOffset;
+        }
+
+        private void ModifyLookOffset() {
+            _lookOffset.y *= math.SQRT2;
         }
     }
 }

@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &3975043581283880712
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1464213602567278495, guid: 5b0afcf13041ffa4587f803bd7a9d7c9,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 0dc2ee87adec81e4db5d851047e6e22d, type: 2}
+    - target: {fileID: 4493924113444969383, guid: 5b0afcf13041ffa4587f803bd7a9d7c9,
+        type: 3}
+      propertyPath: m_Name
+      value: MapQuad005-010
+      objectReference: {fileID: 0}
+    - target: {fileID: 4493924113444969383, guid: 5b0afcf13041ffa4587f803bd7a9d7c9,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 126
+      objectReference: {fileID: 0}
+    - target: {fileID: 8907508251678046121, guid: 5b0afcf13041ffa4587f803bd7a9d7c9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8907508251678046121, guid: 5b0afcf13041ffa4587f803bd7a9d7c9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8907508251678046121, guid: 5b0afcf13041ffa4587f803bd7a9d7c9,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5b0afcf13041ffa4587f803bd7a9d7c9, type: 3}

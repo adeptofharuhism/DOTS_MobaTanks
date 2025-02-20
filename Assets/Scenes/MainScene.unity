@@ -209,9 +209,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lookOffset:
-    x: 35
-    y: 35
-    z: -35
+    x: 50
+    y: 50
+    z: -50
 --- !u!1001 &252877693
 PrefabInstance:
   m_ObjectHideFlags: 0
