@@ -59,7 +59,8 @@ namespace Assets.CodeBase.Vehicles.Wheels
                 foreach (var springInfo in springBuffer) {
                     if (springInfo.Index == index.Value) {
 
-                        RefRW<LocalTransform> modelTransform = SystemAPI.GetComponentRW<LocalTransform>(modelParameters.ModelContainer);
+                        RefRW<LocalTransform> modelTransform =
+                            SystemAPI.GetComponentRW<LocalTransform>(modelParameters.ModelContainer);
                         modelTransform.ValueRW.Position.y = modelParameters.Diameter - springInfo.Value;
                         break;
                     }
