@@ -112,4 +112,17 @@ namespace Assets.CodeBase.Vehicles.Wheels
         public bool RotatesClockwise;
         public float MaxRotationAngle;
     }
+
+    [GhostComponent(PrefabType = GhostPrefabType.Client)]
+    public struct WheelCompressedSpringLength : IComponentData
+    {
+        public float Value;
+    }
+
+    [GhostComponent(PrefabType = GhostPrefabType.Server)]
+    public struct WheelModelUpdateCountdown : IComponentData
+    {
+        public float AwaitTime;
+        public float TimeLeftForNextUpdate;
+    }
 }

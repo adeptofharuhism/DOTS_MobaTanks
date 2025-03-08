@@ -6,6 +6,7 @@ using Unity.Transforms;
 
 namespace Assets.CodeBase.Vehicles.Wheels
 {
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(WheelPhysicsSystemGroup))]
     [UpdateBefore(typeof(WheelLookForGroundContactSystem))]
     public partial struct WheelCalculateLinearVelocitySystem : ISystem
@@ -52,9 +53,9 @@ namespace Assets.CodeBase.Vehicles.Wheels
             math.dot(linearVelocity, axis);
     }
 
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(WheelPhysicsSystemGroup))]
     [UpdateAfter(typeof(WheelCalculateLinearVelocitySystem))]
-    [UpdateBefore(typeof(WheelAccelerationEnableSystem))]
     public partial struct WheelLookForGroundContactSystem : ISystem
     {
         private CollisionFilter _collisionFilter;
@@ -85,7 +86,9 @@ namespace Assets.CodeBase.Vehicles.Wheels
 
                 RaycastInput raycastInput = new RaycastInput {
                     Start = forceCastTransform.ValueRO.Position,
-                    End = forceCastTransform.ValueRO.Position - math.normalize(forceCastTransform.ValueRO.Up) * springRestDistance.Value,
+                    End = forceCastTransform.ValueRO.Position -
+                        math.normalize(forceCastTransform.ValueRO.Up) *
+                        springRestDistance.Value,
                     Filter = _collisionFilter
                 };
 
@@ -106,9 +109,9 @@ namespace Assets.CodeBase.Vehicles.Wheels
             springRestDistance * (1 - compressionCoefficient);
     }
 
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(WheelPhysicsSystemGroup))]
     [UpdateAfter(typeof(WheelLookForGroundContactSystem))]
-    [UpdateBefore(typeof(WheelAccelerationForceCalculationSystem))]
     public partial struct WheelAccelerationEnableSystem : ISystem
     {
         private const float Epsilon = 1e-06f;
@@ -139,9 +142,9 @@ namespace Assets.CodeBase.Vehicles.Wheels
         }
     }
 
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(WheelPhysicsSystemGroup))]
     [UpdateAfter(typeof(WheelAccelerationEnableSystem))]
-    [UpdateBefore(typeof(WheelSteeringForceCalculationSystem))]
     public partial struct WheelAccelerationForceCalculationSystem : ISystem
     {
         private const float Epsilon = 1e-06f;
@@ -229,9 +232,9 @@ namespace Assets.CodeBase.Vehicles.Wheels
             HyperbolicOffsetY + (HyperbolaAngleMultiplier / (x + HyperbolicOffsetX));
     }
 
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(WheelPhysicsSystemGroup))]
     [UpdateAfter(typeof(WheelAccelerationForceCalculationSystem))]
-    [UpdateBefore(typeof(WheelBrakingForceCalculationSystem))]
     public partial struct WheelSteeringForceCalculationSystem : ISystem
     {
         private const float Epsilon = 1E-06f;
@@ -277,9 +280,9 @@ namespace Assets.CodeBase.Vehicles.Wheels
             math.square(velocityX) / (Epsilon + math.square(velocityX) + math.square(velocityZ));
     }
 
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(WheelPhysicsSystemGroup))]
     [UpdateAfter(typeof(WheelSteeringForceCalculationSystem))]
-    [UpdateBefore(typeof(WheelSpringForceCalculationSystem))]
     public partial struct WheelBrakingForceCalculationSystem : ISystem
     {
         private const float Epsilon = .2f;
@@ -325,9 +328,9 @@ namespace Assets.CodeBase.Vehicles.Wheels
         }
     }
 
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(WheelPhysicsSystemGroup))]
     [UpdateAfter(typeof(WheelBrakingForceCalculationSystem))]
-    [UpdateBefore(typeof(WheelSpringLengthGhostPassSystem))]
     public partial struct WheelSpringForceCalculationSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
@@ -371,32 +374,9 @@ namespace Assets.CodeBase.Vehicles.Wheels
             (springStrength * springCompression - springDamper * velocityY) * SystemAPI.Time.DeltaTime;
     }
 
+    [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     [UpdateInGroup(typeof(WheelPhysicsSystemGroup))]
     [UpdateAfter(typeof(WheelSpringForceCalculationSystem))]
-    [UpdateBefore(typeof(WheelForceApplySystem))]
-    public partial struct WheelSpringLengthGhostPassSystem : ISystem
-    {
-        [BurstCompile]
-        public void OnUpdate(ref SystemState state) {
-            foreach (var (springCompression, springRestDistance, parent, index)
-                in SystemAPI.Query<WheelSpringCompression, WheelSpringRestDistance, WheelParent, WheelIndex>()
-                .WithAll<WheelInitializedTag>()) {
-
-                DynamicBuffer<VehicleSpringLengthCompressedBuffer> springBuffer =
-                    SystemAPI.GetBuffer<VehicleSpringLengthCompressedBuffer>(parent.Value);
-
-                springBuffer.RemoveAt(0);
-
-                springBuffer.Add(new VehicleSpringLengthCompressedBuffer {
-                    Index = index.Value,
-                    Value = springRestDistance.Value - springCompression.Value
-                });
-            }
-        }
-    }
-
-    [UpdateInGroup(typeof(WheelPhysicsSystemGroup))]
-    [UpdateAfter(typeof(WheelSpringLengthGhostPassSystem))]
     public partial struct WheelForceApplySystem : ISystem
     {
         [BurstCompile]
@@ -424,6 +404,57 @@ namespace Assets.CodeBase.Vehicles.Wheels
                     parentTransform.ValueRO.Rotation,
                     forceVector,
                     forceCastTransform.ValueRO.Position);
+            }
+        }
+    }
+
+
+
+    [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
+    [UpdateInGroup(typeof(WheelPhysicsSystemGroup))]
+    public partial struct ClientWheelDetermineCompressedLengthSystem : ISystem
+    {
+        private CollisionFilter _collisionFilter;
+
+        public void OnCreate(ref SystemState state) {
+            _collisionFilter = new CollisionFilter {
+                BelongsTo = 1 << 2,
+                CollidesWith = 1 << 0 | 1 << 1 | 1 << 3
+            };
+
+            state.RequireForUpdate<PhysicsWorldSingleton>();
+            state.RequireForUpdate<WheelModelUpdateCountdown>();
+        }
+
+        public void OnUpdate(ref SystemState state) {
+            CollisionWorld collisionWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().CollisionWorld;
+            RefRW<WheelModelUpdateCountdown> updateCountdown = SystemAPI.GetSingletonRW<WheelModelUpdateCountdown>();
+
+            updateCountdown.ValueRW.TimeLeftForNextUpdate -= SystemAPI.Time.DeltaTime;
+            if (updateCountdown.ValueRO.TimeLeftForNextUpdate > 0)
+                return;
+
+            updateCountdown.ValueRW.TimeLeftForNextUpdate = updateCountdown.ValueRO.AwaitTime;
+
+            foreach (var (forceCastPoint, springRestDistance, compressedLength)
+                in SystemAPI.Query<WheelForceCastPoint, WheelSpringRestDistance, RefRW<WheelCompressedSpringLength>>()
+                .WithAll<WheelInitializedTag>()) {
+
+                RefRO<LocalToWorld> forceCastTransform = SystemAPI.GetComponentRO<LocalToWorld>(forceCastPoint.Value);
+
+                RaycastInput raycastInput = new RaycastInput {
+                    Start = forceCastTransform.ValueRO.Position,
+                    End = forceCastTransform.ValueRO.Position -
+                        math.normalize(forceCastTransform.ValueRO.Up) *
+                        springRestDistance.Value,
+                    Filter = _collisionFilter
+                };
+
+                bool hasHit = collisionWorld.CastRay(raycastInput, out RaycastHit closestHit);
+
+                float compressionCoefficient = hasHit ? closestHit.Fraction : 1;
+
+                compressedLength.ValueRW.Value = springRestDistance.Value * compressionCoefficient;
             }
         }
     }

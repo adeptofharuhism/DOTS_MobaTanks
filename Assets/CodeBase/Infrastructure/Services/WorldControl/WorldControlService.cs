@@ -85,6 +85,8 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldControl
         private void StartServer() {
             World serverWorld = ClientServerBootstrap.ServerWorld;
 
+            RemoveStupidWarnAboutBatchedTicksSystem(serverWorld);
+
             NetworkEndpoint serverEndpoint = NetworkEndpoint.AnyIpv4.WithPort(_connectionInfo.ConnectionPort.Value);
 
             using (EntityQuery networkDriverQuery =
@@ -105,6 +107,12 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldControl
             clientWorld.EntityManager.AddComponentData(connectionDataEntity, new ConnectionRequestData {
                 PlayerName = _connectionInfo.PlayerName.Value
             });
+        }
+
+        private void RemoveStupidWarnAboutBatchedTicksSystem(World world) {
+            ref SystemState stupidSystem = 
+                ref world.Unmanaged.ResolveSystemStateRef(world.GetExistingSystem<WarnAboutBatchedTicksSystem>());
+            stupidSystem.Enabled = false;
         }
     }
 }

@@ -50,21 +50,12 @@ namespace Assets.CodeBase.Vehicles.Wheels
     {
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            foreach (var (parent, modelParameters, index)
-                in SystemAPI.Query<WheelParent, WheelModelParameters, WheelIndex>()) {
+            foreach(var (modelParameters, compressedLength)
+                in SystemAPI.Query<WheelModelParameters, WheelCompressedSpringLength>()) {
 
-                DynamicBuffer<VehicleSpringLengthCompressedBuffer> springBuffer =
-                    SystemAPI.GetBuffer<VehicleSpringLengthCompressedBuffer>(parent.Value);
-
-                foreach (var springInfo in springBuffer) {
-                    if (springInfo.Index == index.Value) {
-
-                        RefRW<LocalTransform> modelTransform =
-                            SystemAPI.GetComponentRW<LocalTransform>(modelParameters.ModelContainer);
-                        modelTransform.ValueRW.Position.y = modelParameters.Diameter - springInfo.Value;
-                        break;
-                    }
-                }
+                RefRW<LocalTransform> modelTransform =
+                    SystemAPI.GetComponentRW<LocalTransform>(modelParameters.ModelContainer);
+                modelTransform.ValueRW.Position.y = modelParameters.Diameter - compressedLength.Value;
             }
         }
     }

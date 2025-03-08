@@ -24,13 +24,6 @@ namespace Assets.CodeBase.Vehicles
                 AddComponent<VehicleMovementInput>(vehicle);
                 AddComponent(vehicle, new VehicleWheelAmount { Value = authoring.WheelAmount });
 
-                DynamicBuffer<VehicleSpringLengthCompressedBuffer> springBuffer = AddBuffer<VehicleSpringLengthCompressedBuffer>(vehicle);
-                for (int i = 0; i < authoring.WheelAmount; i++)
-                    springBuffer.Add(new VehicleSpringLengthCompressedBuffer {
-                        Index = i,
-                        Value = 0
-                    });
-
                 AddComponent(vehicle, new VehicleItemSlot {
                     Value = GetEntity(authoring.ItemSlot, TransformUsageFlags.Dynamic)
                 });

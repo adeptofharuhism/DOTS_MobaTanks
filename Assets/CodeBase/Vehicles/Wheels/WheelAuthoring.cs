@@ -22,7 +22,7 @@ namespace Assets.CodeBase.Vehicles.Wheels
         public WheelRotationType RotationType => _rotationType;
         public WheelParameters WheelParameters => _wheelParameters;
 
-        public class WheelBaker : Baker<WheelAuthoring>
+        private class Baker : Baker<WheelAuthoring>
         {
             public override void Bake(WheelAuthoring authoring) {
                 Entity wheel = GetEntity(TransformUsageFlags.Dynamic);
@@ -39,7 +39,9 @@ namespace Assets.CodeBase.Vehicles.Wheels
             private void AddCommonWheelComponents(Entity wheel, WheelAuthoring authoring) {
                 AddComponent<NewWheelTag>(wheel);
                 AddComponent(wheel, new WheelIndex { Value = authoring.WheelIndex });
-                AddComponent(wheel, new WheelForceCastPoint { Value = GetEntity(authoring.ForceCastPoint, TransformUsageFlags.Dynamic) });
+                AddComponent(wheel, new WheelForceCastPoint {
+                    Value = GetEntity(authoring.ForceCastPoint, TransformUsageFlags.Dynamic)
+                });
                 AddComponent(wheel, new WheelModelParameters {
                     ModelContainer = GetEntity(authoring.WheelModel, TransformUsageFlags.Dynamic),
                     Diameter = authoring.WheelParameters.WheelDiameter
@@ -65,6 +67,8 @@ namespace Assets.CodeBase.Vehicles.Wheels
                 AddComponent(wheel, new WheelAxisForceAcceleration { Value = float3.zero });
 
                 AddComponent<WheelBrakingTag>(wheel);
+
+                AddComponent(wheel, new WheelCompressedSpringLength { Value = 0 });
             }
 
             private void AddRotatingWheelComponents(Entity wheel, WheelAuthoring authoring) {
