@@ -61,13 +61,13 @@ namespace Assets.CodeBase.Inventory
 	{
 		public void OnCreate(ref SystemState state) {
 			state.RequireForUpdate<InGameState>();
-			state.RequireForUpdate<ItemRemovalPrefab>();
+			state.RequireForUpdate<ItemRemovalPrefabElement>();
 		}
 
 		public void OnUpdate(ref SystemState state) {
 			EntityCommandBuffer ecb = new(Allocator.Temp);
 
-			DynamicBuffer<ItemRemovalPrefab> removalPrefabs = SystemAPI.GetSingletonBuffer<ItemRemovalPrefab>();
+			DynamicBuffer<ItemRemovalPrefabElement> removalPrefabs = SystemAPI.GetSingletonBuffer<ItemRemovalPrefabElement>();
 
 			foreach (var (sellRpc, requestSource, requestEntity)
 				in SystemAPI.Query<SellItemRpc, ReceiveRpcCommandRequest>()
@@ -126,13 +126,13 @@ namespace Assets.CodeBase.Inventory
 	{
 		public void OnCreate(ref SystemState state) {
 			state.RequireForUpdate<InGameState>();
-			state.RequireForUpdate<ItemCreationPrefab>();
+			state.RequireForUpdate<ItemCreationPrefabElement>();
 		}
 
 		public void OnUpdate(ref SystemState state) {
 			EntityCommandBuffer ecb = new(Allocator.Temp);
 
-			DynamicBuffer<ItemCreationPrefab> itemBuffer = SystemAPI.GetSingletonBuffer<ItemCreationPrefab>();
+			DynamicBuffer<ItemCreationPrefabElement> itemBuffer = SystemAPI.GetSingletonBuffer<ItemCreationPrefabElement>();
 
 			foreach (var (itemRpc, requestSource, requestEntity)
 				in SystemAPI.Query<BuyItemRpc, ReceiveRpcCommandRequest>()
@@ -213,7 +213,7 @@ namespace Assets.CodeBase.Inventory
 		public void OnUpdate(ref SystemState state) {
 			EntityCommandBuffer ecb = new(Allocator.Temp);
 
-			DynamicBuffer<ItemCreationPrefab> itemBuffer = SystemAPI.GetSingletonBuffer<ItemCreationPrefab>();
+			DynamicBuffer<ItemCreationPrefabElement> itemBuffer = SystemAPI.GetSingletonBuffer<ItemCreationPrefabElement>();
 
 			foreach (var (team, inventory, respawnedEntity, playerEntity)
 				in SystemAPI.Query<UnitTeam, ItemSlotCollection, RespawnedEntity>()

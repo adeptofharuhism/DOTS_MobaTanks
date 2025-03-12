@@ -1,4 +1,7 @@
-﻿using Unity.Burst;
+﻿using Assets.CodeBase.Inventory;
+using Assets.CodeBase.Inventory.Items;
+using System.Collections;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -57,6 +60,49 @@ namespace Assets.CodeBase.Vehicles
         protected override void OnUpdate() {
             Entity vehicle = SystemAPI.GetSingletonEntity<OwnerVehicleTag>();
             EntityManager.SetComponentData(vehicle, new VehicleMovementInput { Value = _movementVector });
+        }
+    }
+
+    [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
+    [UpdateInGroup(typeof(VehicleSystemGroup))]
+    [UpdateAfter(typeof(VehicleMovementInputSystem))]
+    public partial class VehicleTargetZoneUpdateSystem : SystemBase
+    {
+        private const int InventorySize = 7;
+        private const int BasicWeaponRange = 50;
+        private const float TargetZoneMultiplier = 1.11f;
+
+        private int[] _currentInventoryRanges;
+
+        protected override void OnCreate() {
+            RequireForUpdate<UpdateTargetRangeElement>();
+        }
+
+        protected override void OnUpdate() {
+            DynamicBuffer<UpdateTargetRangeElement> updateTargetRangeBuffer =
+                SystemAPI.GetSingletonBuffer<UpdateTargetRangeElement>();
+
+            if (updateTargetRangeBuffer.Length > 0) {
+                foreach (var item in updateTargetRangeBuffer) {
+                    UnityEngine.Debug.Log(item.TargetRange);
+                    UnityEngine.Debug.Log(item.SlotId);
+                }
+
+                updateTargetRangeBuffer.Clear();
+            }
+
+
+            foreach (Entity vehicle
+                in SystemAPI.QueryBuilder()
+                .WithAll<NewVehicleTag, GhostOwnerIsLocal>()
+                .Build().ToEntityArray(Allocator.Temp)) {
+
+
+            }
+        }
+
+        private void UpdateItemRanges(int inventoryIndex, int itemIndex) {
+
         }
     }
 }

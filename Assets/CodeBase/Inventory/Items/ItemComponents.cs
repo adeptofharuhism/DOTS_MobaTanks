@@ -17,7 +17,7 @@ namespace Assets.CodeBase.Inventory.Items
 	{ }
 
 	[GhostComponent(PrefabType = GhostPrefabType.Server)]
-	public struct ItemCreationPrefab : IBufferElementData
+	public struct ItemCreationPrefabElement : IBufferElementData
 	{
 		public int BuyCost;
 		public Entity Command;
@@ -51,7 +51,7 @@ namespace Assets.CodeBase.Inventory.Items
 	}
 
 	[GhostComponent(PrefabType = GhostPrefabType.Server)]
-	public struct ItemRemovalPrefab : IBufferElementData
+	public struct ItemRemovalPrefabElement : IBufferElementData
 	{
 		public int SellCost;
 		public Entity Item;
@@ -61,5 +61,17 @@ namespace Assets.CodeBase.Inventory.Items
 	public struct EmptyItemCommand : IComponentData
 	{
 		public Entity Command;
+	}
+
+
+	[GhostComponent(PrefabType = GhostPrefabType.Client)]
+	public struct ItemInfoElement : IBufferElementData {
+		public float TargetRange;
+	}
+
+	[GhostComponent(PrefabType = GhostPrefabType.Client)]
+	public struct UpdateTargetRangeElement : IBufferElementData {
+		public int SlotId;
+		public float TargetRange;
 	}
 }

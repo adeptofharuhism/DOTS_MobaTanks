@@ -13,6 +13,7 @@ namespace Assets.CodeBase.Inventory.Items
 		public ItemType ItemType;
 
 		public GameObject WeaponPrefab;
+		public float TargetingRange;
 	}
 
 	public enum ItemType

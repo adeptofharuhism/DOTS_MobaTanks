@@ -4,90 +4,106 @@ using UnityEngine;
 
 namespace Assets.CodeBase.Inventory.Items
 {
-	public class ItemCollectionSettingsAuthoring : MonoBehaviour
-	{
-		[SerializeField] private ItemCollection _itemCollection;
+    public class ItemCollectionSettingsAuthoring : MonoBehaviour
+    {
+        [SerializeField] private ItemCollection _itemCollection;
 
-		public ItemCollection ItemCollection => _itemCollection;
+        public ItemCollection ItemCollection => _itemCollection;
 
-		public class ItemCollectionSettingsBaker : Baker<ItemCollectionSettingsAuthoring>
-		{
-			private const string CreationSuffix = "ForCreation";
-			private const string RemovalSuffix = "ForRemoval";
+        public class Baker : Baker<ItemCollectionSettingsAuthoring>
+        {
+            private const string CreationSuffix = "ForCreation";
+            private const string RemovalSuffix = "ForRemoval";
 
-			public override void Bake(ItemCollectionSettingsAuthoring authoring) {
-				Entity settings = GetEntity(TransformUsageFlags.None);
+            public override void Bake(ItemCollectionSettingsAuthoring authoring) {
+                Entity settings = GetEntity(TransformUsageFlags.None);
 
-				AddComponent(settings, new EmptyItemCommand() { Command = CreateEmptyItemCommand() });
-				
-				DynamicBuffer<ItemCreationPrefab> creationBuffer = AddBuffer<ItemCreationPrefab>(settings);
-				DynamicBuffer<ItemRemovalPrefab> removalBuffer = AddBuffer<ItemRemovalPrefab>(settings);
+                AddComponent(settings, new EmptyItemCommand() { Command = CreateEmptyItemCommand() });
 
-				foreach (ItemDescription item in authoring.ItemCollection.ItemDescriptions) {
-					creationBuffer.Add(new ItemCreationPrefab {
-						Command = MakeItemCreationPrefab(item),
-						BuyCost = item.Cost
-					});
+                DynamicBuffer<ItemCreationPrefabElement> creationBuffer = AddBuffer<ItemCreationPrefabElement>(settings);
+                DynamicBuffer<ItemRemovalPrefabElement> removalBuffer = AddBuffer<ItemRemovalPrefabElement>(settings);
+                DynamicBuffer<ItemInfoElement> clientSideInfo = AddBuffer<ItemInfoElement>(settings);
+                DynamicBuffer<UpdateTargetRangeElement> updateTargetRangeBuffer =
+                    AddBuffer<UpdateTargetRangeElement>(settings);
 
-					removalBuffer.Add(new ItemRemovalPrefab {
-						Item = MakeItemRemovalPrefab(item),
-						SellCost = (int)(item.Cost * authoring.ItemCollection.SellMultiplier)
-					});
-				}
-			}
+                foreach (ItemDescription item in authoring.ItemCollection.ItemDescriptions) {
+                    creationBuffer.Add(new ItemCreationPrefabElement {
+                        Command = MakeItemCreationPrefab(item),
+                        BuyCost = item.Cost
+                    });
 
-			private Entity CreateEmptyItemCommand() {
-				Entity emptyItemCommand = CreateAdditionalEntity(TransformUsageFlags.None);
+                    removalBuffer.Add(new ItemRemovalPrefabElement {
+                        Item = MakeItemRemovalPrefab(item),
+                        SellCost = (int)(item.Cost * authoring.ItemCollection.SellMultiplier)
+                    });
 
-				AddComponent<Prefab>(emptyItemCommand);
-				AddComponent<ItemCommandTag>(emptyItemCommand);
+                    clientSideInfo.Add(new ItemInfoElement {
+                        TargetRange =
+                            item.ItemType == ItemType.Weapon
+                                ? item.TargetingRange
+                                : 0
+                    });
+                }
 
-				return emptyItemCommand;
-			}
+                //Basic weapon target range. Stays there unchanged until inventory and basic weapon rework.
+                updateTargetRangeBuffer.Add(new UpdateTargetRangeElement {
+                    SlotId = 0,
+                    TargetRange = 50
+                });
+            }
 
-			private Entity MakeItemCreationPrefab(ItemDescription item) {
-				Entity itemCreationEntity =
-					CreateAdditionalEntity(TransformUsageFlags.None, entityName: item.Name + CreationSuffix);
+            private Entity CreateEmptyItemCommand() {
+                Entity emptyItemCommand = CreateAdditionalEntity(TransformUsageFlags.None);
 
-				AddCommonComponents(itemCreationEntity);
+                AddComponent<Prefab>(emptyItemCommand);
+                AddComponent<ItemCommandTag>(emptyItemCommand);
 
-				AddComponent<ItemCreationTag>(itemCreationEntity);
-				AddComponent<InstantiatedItem>(itemCreationEntity);
+                return emptyItemCommand;
+            }
 
-				switch (item.ItemType) {
-					case ItemType.VehicleVitality:
-						break;
-					case ItemType.Weapon:
-						AddComponent<SpawnableItemSettings>(itemCreationEntity);
-						AddComponent(itemCreationEntity, new SpawnableItem {
-							Value = GetEntity(item.WeaponPrefab, TransformUsageFlags.Dynamic)
-						});
-						break;
-					case ItemType.SpawnableUnit:
-						break;
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-				
-				return itemCreationEntity;
-			}
+            private Entity MakeItemCreationPrefab(ItemDescription item) {
+                Entity itemCreationEntity =
+                    CreateAdditionalEntity(TransformUsageFlags.None, entityName: item.Name + CreationSuffix);
 
-			private Entity MakeItemRemovalPrefab(ItemDescription item) {
-				Entity itemRemovalEntity =
-					CreateAdditionalEntity(TransformUsageFlags.None, entityName: item.Name + RemovalSuffix);
+                AddCommonComponents(itemCreationEntity);
 
-				AddCommonComponents(itemRemovalEntity);
+                AddComponent<ItemCreationTag>(itemCreationEntity);
+                AddComponent<InstantiatedItem>(itemCreationEntity);
 
-				AddComponent<ItemRemovalPrefab>(itemRemovalEntity);
+                switch (item.ItemType) {
+                    case ItemType.VehicleVitality:
+                        break;
+                    case ItemType.Weapon:
+                        AddComponent<SpawnableItemSettings>(itemCreationEntity);
+                        AddComponent(itemCreationEntity, new SpawnableItem {
+                            Value = GetEntity(item.WeaponPrefab, TransformUsageFlags.Dynamic)
+                        });
+                        break;
+                    case ItemType.SpawnableUnit:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
 
-				return itemRemovalEntity;
-			}
+                return itemCreationEntity;
+            }
 
-			private void AddCommonComponents(Entity entity) {
-				AddComponent<Prefab>(entity);
-				AddComponent<ItemCommandTag>(entity);
-				AddComponent<VehicleWithItem>(entity);
-			}
-		}
-	}
+            private Entity MakeItemRemovalPrefab(ItemDescription item) {
+                Entity itemRemovalEntity =
+                    CreateAdditionalEntity(TransformUsageFlags.None, entityName: item.Name + RemovalSuffix);
+
+                AddCommonComponents(itemRemovalEntity);
+
+                AddComponent<ItemRemovalPrefabElement>(itemRemovalEntity);
+
+                return itemRemovalEntity;
+            }
+
+            private void AddCommonComponents(Entity entity) {
+                AddComponent<Prefab>(entity);
+                AddComponent<ItemCommandTag>(entity);
+                AddComponent<VehicleWithItem>(entity);
+            }
+        }
+    }
 }

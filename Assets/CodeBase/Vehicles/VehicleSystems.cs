@@ -4,7 +4,7 @@ using Unity.Entities;
 
 namespace Assets.CodeBase.Vehicles
 {
-    [UpdateInGroup(typeof(VehicleSystemGroup), OrderFirst = true)]
+    [UpdateInGroup(typeof(VehicleSystemGroup), OrderLast = true)]
     public partial struct InitializeVehicleSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {

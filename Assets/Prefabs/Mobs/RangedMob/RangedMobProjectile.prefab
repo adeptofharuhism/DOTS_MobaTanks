@@ -55,12 +55,12 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7753857312031998921}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
+  m_DynamicOccludee: 0
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
-  m_LightProbeUsage: 1
+  m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
@@ -117,12 +117,15 @@ MonoBehaviour:
   SupportedGhostModes: 1
   OptimizationMode: 0
   Importance: 100
+  MaxSendRate: 0
   prefabId: 0251de7a585ca284ebe55f112fda45cf
   HasOwner: 0
   SupportAutoCommandTarget: 1
   TrackInterpolationDelay: 0
   GhostGroup: 0
   UsePreSerialization: 1
+  RollbackPredictedSpawnedGhostState: 0
+  RollbackPredictionOnStructuralChanges: 1
 --- !u!114 &-3571208237390883436
 MonoBehaviour:
   m_ObjectHideFlags: 0

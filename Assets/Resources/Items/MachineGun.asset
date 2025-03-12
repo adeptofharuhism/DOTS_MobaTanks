@@ -19,3 +19,4 @@ MonoBehaviour:
   ItemType: 1
   WeaponPrefab: {fileID: 5503501951114558050, guid: a4d61f5d3ba003e429f2b0441e2624ad,
     type: 3}
+  TargetingRange: 30

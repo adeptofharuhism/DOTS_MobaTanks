@@ -1,11 +1,11 @@
+using Assets.CodeBase.Inventory.Items;
 using Assets.CodeBase.Utility;
-using ModestTree.Util;
 using System;
 using Unity.Entities;
 
 namespace Assets.CodeBase.Inventory
 {
-	[WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
+    [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
 	[UpdateInGroup(typeof(InventorySystemGroup))]
 	public partial class UpdateClientInventorySystem : SystemBase
 	{
@@ -17,6 +17,8 @@ namespace Assets.CodeBase.Inventory
 
 		protected override void OnCreate() {
 			RequireForUpdate<BasicInventoryCapacity>();
+			RequireForUpdate<ItemInfoElement>();
+			RequireForUpdate<UpdateTargetRangeElement>();
 		}
 
 		protected override void OnUpdate() {
@@ -31,6 +33,10 @@ namespace Assets.CodeBase.Inventory
 				InventorySize.Value = inventoryCapacity;
 			}
 
+            DynamicBuffer<ItemInfoElement> itemInfo = SystemAPI.GetSingletonBuffer<ItemInfoElement>();
+			DynamicBuffer<UpdateTargetRangeElement> updateTargetRangeBuffer =
+				SystemAPI.GetSingletonBuffer<UpdateTargetRangeElement>();
+
 			foreach (DynamicBuffer<GhostInventorySlot> ghostInventory
 				in SystemAPI.Query<DynamicBuffer<GhostInventorySlot>>()) {
 
@@ -38,8 +44,17 @@ namespace Assets.CodeBase.Inventory
 					if (_clientInventory[i] == ghostInventory[i].ItemId)
 						continue;
 
+					int newItemId = ghostInventory[i].ItemId;
 
-					_clientInventory[i] = ghostInventory[i].ItemId;
+					updateTargetRangeBuffer.Add(new UpdateTargetRangeElement {
+						SlotId = i + 1,
+						TargetRange = 
+							newItemId==InventorySlot.UndefinedItem
+								? 0
+								: itemInfo[newItemId].TargetRange
+					});
+
+					_clientInventory[i] = newItemId;
 					OnChangedItem?.Invoke(i, _clientInventory[i]);
 				}
 			}
