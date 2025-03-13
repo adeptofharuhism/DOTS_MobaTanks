@@ -22,9 +22,6 @@ namespace Assets.CodeBase.Inventory.Items
 
                 DynamicBuffer<ItemCreationPrefabElement> creationBuffer = AddBuffer<ItemCreationPrefabElement>(settings);
                 DynamicBuffer<ItemRemovalPrefabElement> removalBuffer = AddBuffer<ItemRemovalPrefabElement>(settings);
-                DynamicBuffer<ItemInfoElement> clientSideInfo = AddBuffer<ItemInfoElement>(settings);
-                DynamicBuffer<UpdateTargetRangeElement> updateTargetRangeBuffer =
-                    AddBuffer<UpdateTargetRangeElement>(settings);
 
                 foreach (ItemDescription item in authoring.ItemCollection.ItemDescriptions) {
                     creationBuffer.Add(new ItemCreationPrefabElement {
@@ -36,20 +33,7 @@ namespace Assets.CodeBase.Inventory.Items
                         Item = MakeItemRemovalPrefab(item),
                         SellCost = (int)(item.Cost * authoring.ItemCollection.SellMultiplier)
                     });
-
-                    clientSideInfo.Add(new ItemInfoElement {
-                        TargetRange =
-                            item.ItemType == ItemType.Weapon
-                                ? item.TargetingRange
-                                : 0
-                    });
                 }
-
-                //Basic weapon target range. Stays there unchanged until inventory and basic weapon rework.
-                updateTargetRangeBuffer.Add(new UpdateTargetRangeElement {
-                    SlotId = 0,
-                    TargetRange = 50
-                });
             }
 
             private Entity CreateEmptyItemCommand() {

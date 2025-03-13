@@ -1,4 +1,4 @@
-using Assets.CodeBase.Inventory.Items;
+using Assets.CodeBase.Inventory.TargetingRange;
 using Assets.CodeBase.Utility;
 using System;
 using Unity.Entities;

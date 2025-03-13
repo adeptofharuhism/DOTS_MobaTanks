@@ -1,11 +1,11 @@
-﻿using Assets.CodeBase.Inventory;
-using Assets.CodeBase.Inventory.Items;
-using System.Collections;
+﻿using Assets.CodeBase.Effects.Following;
+using Assets.CodeBase.Inventory.TargetingRange;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.NetCode;
+using Unity.Transforms;
 using UnityEngine;
 
 namespace Assets.CodeBase.Vehicles
@@ -69,12 +69,21 @@ namespace Assets.CodeBase.Vehicles
     public partial class VehicleTargetZoneUpdateSystem : SystemBase
     {
         private const int InventorySize = 7;
-        private const int BasicWeaponRange = 50;
-        private const float TargetZoneMultiplier = 1.11f;
+        private const float TargetZoneMultiplier = 2.1f;
 
-        private int[] _currentInventoryRanges;
+        private float[] _currentInventoryRanges;
+
+        private int _farRangeIndex;
+        private int _closeRangeIndex;
+        private Entity _farRangeDecal;
+        private Entity _closeRangeDecal;
+
+        private bool _shouldUpdateScales = false;
 
         protected override void OnCreate() {
+            _currentInventoryRanges = new float[InventorySize];
+
+            RequireForUpdate<TargetingDecalPrefabs>();
             RequireForUpdate<UpdateTargetRangeElement>();
         }
 
@@ -83,26 +92,67 @@ namespace Assets.CodeBase.Vehicles
                 SystemAPI.GetSingletonBuffer<UpdateTargetRangeElement>();
 
             if (updateTargetRangeBuffer.Length > 0) {
-                foreach (var item in updateTargetRangeBuffer) {
-                    UnityEngine.Debug.Log(item.TargetRange);
-                    UnityEngine.Debug.Log(item.SlotId);
-                }
+                //Set ranges inside local array
+                foreach (UpdateTargetRangeElement item in updateTargetRangeBuffer)
+                    _currentInventoryRanges[item.SlotId] = item.TargetRange;
 
                 updateTargetRangeBuffer.Clear();
+
+                //Update far and close ranges
+                _farRangeIndex = _closeRangeIndex = 0;
+                for (int i = 1; i < _currentInventoryRanges.Length; i++) {
+                    _farRangeIndex =
+                        _currentInventoryRanges[i] > _currentInventoryRanges[_farRangeIndex]
+                            ? i
+                            : _farRangeIndex;
+                    _closeRangeIndex =
+                        (_currentInventoryRanges[i] < _currentInventoryRanges[_closeRangeIndex] &&
+                        _currentInventoryRanges[i] > 1)
+                            ? i
+                            : _closeRangeIndex;
+                }
+
+                _shouldUpdateScales = true;
             }
 
-
-            foreach (Entity vehicle
-                in SystemAPI.QueryBuilder()
+            //Instantiate decals and link them to vehicle, if new vehicle spawns
+            foreach(var (linkedEntityGroup, vehicle)
+                in SystemAPI.Query<DynamicBuffer<LinkedEntityGroup>>()
                 .WithAll<NewVehicleTag, GhostOwnerIsLocal>()
-                .Build().ToEntityArray(Allocator.Temp)) {
+                .WithEntityAccess()) {
 
+                TargetingDecalPrefabs targetingRangePrefab = SystemAPI.GetSingleton<TargetingDecalPrefabs>();
 
+                _farRangeDecal = EntityManager.Instantiate(targetingRangePrefab.FarRangeDecalPrefab);
+                _closeRangeDecal = EntityManager.Instantiate(targetingRangePrefab.CloseRangeDecalPrefab);
+
+                linkedEntityGroup.Add(_farRangeDecal);
+                linkedEntityGroup.Add(_closeRangeDecal);
+
+                EntityManager.SetComponentData(_farRangeDecal, new FollowTarget { Value = vehicle });
+                EntityManager.SetComponentData(_closeRangeDecal, new FollowTarget { Value = vehicle });
+
+                _shouldUpdateScales = true;
             }
-        }
 
-        private void UpdateItemRanges(int inventoryIndex, int itemIndex) {
+            //Update existing decals, if they exist
+            if (_shouldUpdateScales) {
+                ComponentLookup<LocalTransform> transformLookup = SystemAPI.GetComponentLookup<LocalTransform>();
+                bool decalExists =
+                    transformLookup.TryGetComponent(_farRangeDecal, out LocalTransform farRangeDecalTransform);
 
+                if (decalExists) {
+                    LocalTransform closeRangeDecalTransform = transformLookup[_closeRangeDecal];
+
+                    farRangeDecalTransform.Scale = _currentInventoryRanges[_farRangeIndex] * TargetZoneMultiplier;
+                    closeRangeDecalTransform.Scale = _currentInventoryRanges[_closeRangeIndex] * TargetZoneMultiplier;
+
+                    transformLookup[_farRangeDecal] = farRangeDecalTransform;
+                    transformLookup[_closeRangeDecal] = closeRangeDecalTransform;
+                }
+
+                _shouldUpdateScales = false;
+            }
         }
     }
 }

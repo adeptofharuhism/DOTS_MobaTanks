@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6230813117453433532}
   - component: {fileID: 1486344308419397404}
+  - component: {fileID: 7523204349770225799}
+  - component: {fileID: 8951973421834370470}
   m_Layer: 0
   m_Name: TargetZoneDecalProjectorFar
   m_TagString: Untagged
@@ -56,3 +58,28 @@ MonoBehaviour:
   m_Offset: {x: 0, y: 0, z: 250}
   m_Size: {x: 1, y: 1, z: 500}
   m_FadeFactor: 0.3
+--- !u!114 &7523204349770225799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3537370134735474983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 865ca5afc65702749a429a6d382b73f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _followingOffset: {x: 0, y: 100, z: 0}
+--- !u!114 &8951973421834370470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3537370134735474983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04f06a32674a97a459f959899633e4fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -62,16 +62,4 @@ namespace Assets.CodeBase.Inventory.Items
 	{
 		public Entity Command;
 	}
-
-
-	[GhostComponent(PrefabType = GhostPrefabType.Client)]
-	public struct ItemInfoElement : IBufferElementData {
-		public float TargetRange;
-	}
-
-	[GhostComponent(PrefabType = GhostPrefabType.Client)]
-	public struct UpdateTargetRangeElement : IBufferElementData {
-		public int SlotId;
-		public float TargetRange;
-	}
 }
