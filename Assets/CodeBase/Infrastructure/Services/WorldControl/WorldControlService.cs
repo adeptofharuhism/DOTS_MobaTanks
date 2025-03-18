@@ -85,7 +85,9 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldControl
         private void StartServer() {
             World serverWorld = ClientServerBootstrap.ServerWorld;
 
+#if UNITY_EDITOR
             RemoveStupidWarnAboutBatchedTicksSystem(serverWorld);
+#endif
 
             NetworkEndpoint serverEndpoint = NetworkEndpoint.AnyIpv4.WithPort(_connectionInfo.ConnectionPort.Value);
 
@@ -109,10 +111,12 @@ namespace Assets.CodeBase.Infrastructure.Services.WorldControl
             });
         }
 
+#if UNITY_EDITOR
         private void RemoveStupidWarnAboutBatchedTicksSystem(World world) {
             ref SystemState stupidSystem = 
                 ref world.Unmanaged.ResolveSystemStateRef(world.GetExistingSystem<WarnAboutBatchedTicksSystem>());
             stupidSystem.Enabled = false;
         }
+#endif
     }
 }

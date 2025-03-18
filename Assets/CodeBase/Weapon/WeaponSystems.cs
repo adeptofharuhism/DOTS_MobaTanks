@@ -2,6 +2,7 @@
 using Assets.CodeBase.Targeting;
 using Assets.CodeBase.Teams;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -18,7 +19,7 @@ namespace Assets.CodeBase.Weapon
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
+            EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
             foreach (var (cooldown, timeOnCooldown, weapon)
                 in SystemAPI.Query<WeaponCooldown, RefRW<WeaponTimeOnCooldown>>()
@@ -50,7 +51,7 @@ namespace Assets.CodeBase.Weapon
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
+            EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
             foreach (var (weaponBuffer, container, team, entity)
                 in SystemAPI.Query<DynamicBuffer<WeaponBufferElement>, WeaponGroupSlot, UnitTeam>()
@@ -87,7 +88,7 @@ namespace Assets.CodeBase.Weapon
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state) {
-            EntityCommandBuffer ecb = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
+            EntityCommandBuffer ecb = new EntityCommandBuffer(Allocator.Temp);
 
             foreach (var (projectilePrefab, currentTarget, projectileSpawnPoint, team, weapon)
                 in SystemAPI.Query<WeaponProjectilePrefab, CurrentTarget, WeaponProjectileSpawnPoint, UnitTeam>()
@@ -103,11 +104,11 @@ namespace Assets.CodeBase.Weapon
                 RefRO<LocalToWorld> currentTargetTransform = SystemAPI.GetComponentRO<LocalToWorld>(currentTarget.Value);
 
                 LocalTransform projectileSpawnTransform =
-                    LocalTransform.FromPositionRotation(
-                        spawnPointTransform.ValueRO.Position,
-                        quaternion.LookRotationSafe(
-                            math.normalize(currentTargetTransform.ValueRO.Position - spawnPointTransform.ValueRO.Position),
-                            math.up()));
+                LocalTransform.FromPositionRotation(
+                    spawnPointTransform.ValueRO.Position,
+                    quaternion.LookRotationSafe(
+                        math.normalize(currentTargetTransform.ValueRO.Position - spawnPointTransform.ValueRO.Position),
+                        math.up()));
 
                 Entity projectile = ecb.Instantiate(projectilePrefab.Value);
 
