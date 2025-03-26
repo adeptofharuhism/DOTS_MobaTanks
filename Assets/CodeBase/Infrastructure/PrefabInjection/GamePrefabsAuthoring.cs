@@ -31,12 +31,10 @@ namespace Assets.CodeBase.Infrastructure.PrefabInjection
                 AddComponent(entity, new GamePrefabs {
                     Player = GetEntity(authoring.PlayerEntity, TransformUsageFlags.None),
                     Vehicle = GetEntity(authoring.Vehicle, TransformUsageFlags.Dynamic),
-                    Base = GetEntity(authoring.Base, TransformUsageFlags.Dynamic)
-                });
-
-                AddComponentObject(entity, new UIPrefabs {
-                    HealthBar = authoring.HealthBar,
-                    VehicleHealthBar = authoring.VehicleHealthBar,
+                    Base = GetEntity(authoring.Base, TransformUsageFlags.Dynamic),
+                    
+                    HealthBar = GetEntity(authoring.HealthBar,TransformUsageFlags.Dynamic),
+                    VehicleHealthBar = GetEntity(authoring.VehicleHealthBar,TransformUsageFlags.Dynamic),
                 });
             }
         }

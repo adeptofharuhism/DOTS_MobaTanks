@@ -474,6 +474,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -514,6 +517,7 @@ MonoBehaviour:
   AnimationModelName: RangedMobAnimated
   DefaultClipName: RangedMob_Run
   DefaultPlaySpeed: 1
+  DefaultCommand: 2
   AnimationDb: {fileID: 11400000, guid: 88603df6599271840bd9229b52a3f86f, type: 2}
 --- !u!114 &216546180058539608
 MonoBehaviour:

@@ -1,21 +1,22 @@
 ﻿using Unity.Entities;
+using Unity.NetCode.Hybrid;
 using UnityEngine;
 
 namespace Assets.CodeBase.Combat.Health
 {
     public class HealthAuthoring : MonoBehaviour
     {
-        [Header("Health params")]
-        [SerializeField] private int _maximalHealth;
+        [Header("Health params")] [SerializeField]
+        private int _maximalHealth;
 
-        [Header("View params")]
-        [SerializeField] private Vector3 _healthBarOffset;
+        [Header("View params")] [SerializeField]
+        private Vector3 _healthBarOffset;
 
         public int MaximalHealth => _maximalHealth;
-        
+
         public Vector3 HealthBarOffset => _healthBarOffset;
 
-        public class HealthBaker : Baker<HealthAuthoring>
+        private class Baker : Baker<HealthAuthoring>
         {
             public override void Bake(HealthAuthoring authoring) {
                 Entity entity = GetEntity(TransformUsageFlags.Dynamic);
@@ -25,7 +26,8 @@ namespace Assets.CodeBase.Combat.Health
                 AddComponent(entity, new DamageThisFrame { Value = 0 });
                 AddBuffer<DamageBufferElement>(entity);
 
-                AddComponent<HealthBarInitializationTag>(entity);
+                AddComponent<HealthInitializationTag>(entity);
+                AddComponent<ReferenceToHealthBarFillArea>(entity);
                 AddComponent(entity, new HealthBarOffset { Value = authoring.HealthBarOffset });
             }
         }

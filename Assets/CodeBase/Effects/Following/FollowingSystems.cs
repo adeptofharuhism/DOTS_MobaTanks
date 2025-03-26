@@ -6,6 +6,41 @@ namespace Assets.CodeBase.Effects.Following
 {
     [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
     [UpdateInGroup(typeof(EffectsSystemGroup))]
+    public partial struct LinkToTargetSystem : ISystem
+    {
+        public void OnCreate(ref SystemState state) {
+            state.RequireForUpdate<FollowTarget>();
+            state.RequireForUpdate<LinkToTarget>();
+        }
+
+        public void OnUpdate(ref SystemState state) {
+            foreach (var (followTarget, entity)
+                in SystemAPI.Query<FollowTarget>()
+                    .WithAll<LinkToTarget>()
+                    .WithEntityAccess()) {
+
+                bool hasBuffer = SystemAPI.HasBuffer<LinkedEntityGroup>(followTarget.Value);
+
+                LinkedEntityGroup link = new() { Value = entity };
+
+                if (hasBuffer)
+                    SystemAPI.GetBuffer<LinkedEntityGroup>(followTarget.Value).Add(link);
+                else {
+                    DynamicBuffer<LinkedEntityGroup> newBuffer =
+                        state.EntityManager.AddBuffer<LinkedEntityGroup>(followTarget.Value);
+
+                    newBuffer.Add(link);
+                }
+            }
+
+            EntityQuery cleanupQuery = SystemAPI.QueryBuilder().WithAll<LinkToTarget>().Build();
+            state.EntityManager.RemoveComponent<LinkToTarget>(cleanupQuery);
+        }
+    }
+
+    [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
+    [UpdateInGroup(typeof(EffectsSystemGroup))]
+    [UpdateAfter(typeof(LinkToTargetSystem))]
     public partial struct FollowTargetSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {

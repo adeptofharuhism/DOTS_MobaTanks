@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Assets.CodeBase.Inventory.Items;
+using Unity.Entities;
 using UnityEngine;
 
 namespace Assets.CodeBase.Effects.Following

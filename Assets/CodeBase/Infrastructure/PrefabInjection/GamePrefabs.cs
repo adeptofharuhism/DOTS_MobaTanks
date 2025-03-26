@@ -11,11 +11,8 @@ namespace Assets.CodeBase.Infrastructure.PrefabInjection
         public Entity Player;
         public Entity Vehicle;
         public Entity Base;
-    }
-
-    public class UIPrefabs : IComponentData
-    {
-        public GameObject HealthBar;
-        public GameObject VehicleHealthBar;
+        
+        public Entity HealthBar;
+        public Entity VehicleHealthBar;
     }
 }

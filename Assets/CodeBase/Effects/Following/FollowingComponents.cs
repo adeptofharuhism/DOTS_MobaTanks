@@ -3,6 +3,8 @@ using Unity.Mathematics;
 
 namespace Assets.CodeBase.Effects.Following
 {
+    public struct LinkToTarget : IComponentData { }
+
     public struct FollowTarget : IComponentData
     {
         public Entity Value;

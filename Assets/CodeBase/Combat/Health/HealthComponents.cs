@@ -28,7 +28,7 @@ namespace Assets.CodeBase.Combat.Health
     }
 
     [GhostComponent(PrefabType = GhostPrefabType.Client)]
-    public struct HealthBarInitializationTag : IComponentData { }
+    public struct HealthInitializationTag : IComponentData { }
 
     [GhostComponent(PrefabType = GhostPrefabType.Client)]
     public struct HealthBarOffset : IComponentData
@@ -36,8 +36,11 @@ namespace Assets.CodeBase.Combat.Health
         public float3 Value;
     }
 
-    public struct VehicleHealthTag : IComponentData { }
-    public struct InitializePlayerNameTag : IComponentData { }
+    [GhostComponent(PrefabType = GhostPrefabType.Client)]
+    public struct ReferenceToHealthBarFillArea : IComponentData
+    {
+        public Entity Value;
+    }
 
     public struct PlayerName : IComponentData
     {
