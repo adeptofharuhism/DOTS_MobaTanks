@@ -1,4 +1,5 @@
-﻿using UnityEngine.UIElements;
+﻿using Assets.CodeBase.Utility.Extensions;
+using UnityEngine.UIElements;
 
 namespace Assets.CodeBase.Utility.MVVM
 {

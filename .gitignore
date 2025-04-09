@@ -6,6 +6,8 @@
 [Bb]uilds/
 .idea/
 
+mono_crash.*
+
 t?
 p?
 

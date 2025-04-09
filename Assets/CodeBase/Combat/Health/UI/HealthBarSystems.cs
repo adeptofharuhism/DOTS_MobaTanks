@@ -2,6 +2,7 @@
 using Assets.CodeBase.Effects.Following;
 using Assets.CodeBase.Infrastructure.PrefabInjection;
 using Assets.CodeBase.Teams;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Rendering;
@@ -17,6 +18,7 @@ namespace Assets.CodeBase.Combat.Health.UI
             state.RequireForUpdate<HealthInitializationTag>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             Entity healthBar = SystemAPI.GetSingleton<GamePrefabs>().HealthBar;
 
@@ -46,15 +48,19 @@ namespace Assets.CodeBase.Combat.Health.UI
     public partial struct HealthBarInitializationSystem : ISystem
     {
         public void OnCreate(ref SystemState state) {
+            state.RequireForUpdate<TeamColorElement>();
             state.RequireForUpdate<HealthBarInitializeTag>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
+            DynamicBuffer<TeamColorElement> colors = SystemAPI.GetSingletonBuffer<TeamColorElement>();
+            
             foreach (var (healthBarParts, team)
                 in SystemAPI.Query<HealthBarParts, UnitTeam>()
                     .WithAll<HealthBarInitializeTag>()) {
 
-                float4 teamColor = TeamColorsForModels.GetColorByTeam(team.Value);
+                float4 teamColor = colors[(int)team.Value].Value;
 
                 state.EntityManager.SetComponentData(
                     healthBarParts.Fill,
@@ -75,6 +81,7 @@ namespace Assets.CodeBase.Combat.Health.UI
     [UpdateAfter(typeof(HealthBarInitializationSystem))]
     public partial struct HealthBarUpdateSystem : ISystem
     {
+        [BurstCompile]
         public void OnUpdate(ref SystemState state) {
             foreach (var (referenceToFillArea, currentHealth, maxHealth)
                 in SystemAPI.Query<ReferenceToHealthBarFillArea, CurrentHealthPoints, MaximalHealthPoints>())

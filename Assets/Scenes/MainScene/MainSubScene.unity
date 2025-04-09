@@ -14318,7 +14318,7 @@ PrefabInstance:
     - target: {fileID: 4119982251233534741, guid: 8a9bfeacfbb434941b44fdf58428427c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.02
+      value: 0.07
       objectReference: {fileID: 0}
     - target: {fileID: 4119982251233534741, guid: 8a9bfeacfbb434941b44fdf58428427c,
         type: 3}
@@ -41737,6 +41737,53 @@ MonoBehaviour:
     type: 3}
   _vehicleHealthBar: {fileID: 9114969170442722820, guid: de2b0a3066c122d19806973a766d1c70,
     type: 3}
+--- !u!1 &1931738303
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1931738305}
+  - component: {fileID: 1931738304}
+  m_Layer: 0
+  m_Name: TeamColorSettings
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1931738304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1931738303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fce7faf9b224ea1848e5257202a5ca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _noneTeamColor: {r: 1, g: 1, b: 1, a: 1}
+  _blueTeamColor: {r: 0, g: 1, b: 1, a: 1}
+  _orangeTeamColor: {r: 1, g: 0.4, b: 0, a: 1}
+--- !u!4 &1931738305
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1931738303}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1935217299
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -48497,6 +48544,7 @@ SceneRoots:
   - {fileID: 1050699876}
   - {fileID: 458738870}
   - {fileID: 1267232610}
+  - {fileID: 1931738305}
   - {fileID: 822203620}
   - {fileID: 908852556}
   - {fileID: 5148597067728029813}
